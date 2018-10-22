@@ -126,28 +126,35 @@ export default {
   height:100%;
   display: flex;
   .medical-page_silde {
-    width: 185px;
+    width: 180px;
     height: 100%;
     position: relative;
     z-index: 3;
     background-color: $medical-bgCol_white;
     box-shadow: 0px 0px 15px $medical-shadow_grey;
     transition: all 0.4s;
-    .medical-head_flexIcon {
-      position: absolute;
-      z-index: 99;
-      right: 10px;
-      top: 5px;
-      color: $medical-col_white;
-    }
+    background:$medical-bgCol_gradientred;
+      .medical-head_flexIcon{
+          position: absolute;
+          z-index: 99;
+          width:100%;
+          top: auto;
+          bottom: 10px;
+          color: $medical-col_white;
+          right: 0px;
+          text-align: right;
+          i{
+              margin-right: 15px;
+          }
+      }
     .medical-page_head {
       height: 220px;
       padding-top: 15px;
       padding-right: 20%;
       box-sizing: border-box;
       position: relative;
-      background: url('./../assets/person_bg.png') no-repeat;
-      background-size: 100% 100%;
+      /*background: url('./../assets/person_bg.png') no-repeat;
+      background-size: 100% 100%;*/
       color: $medical-col_white;
       .medical-page_headImg {
         width: 100px;
@@ -185,12 +192,14 @@ export default {
       border-right: 0px;
       margin-top:10px;
       text-align: left;
+      background-color:$medical-bgCol_tran;
       .el-menu-item {
         font-size: 15px;
         height: 50px;
         line-height: 50px;
         margin: 8px 0px;
-        border-left: 5px solid $medical-borCol_white;
+        border-left: 5px solid $medical-borCol_tran;
+        color:rgba(255,255,255,0.8);
         .el-menu_icon{
           width:30px;
           display: inline-block;
@@ -198,12 +207,12 @@ export default {
           margin-right:5px;
           i {
             font-size:$medical-font_16;
-            color: $medical-col_green;
+            color:rgba(255,255,255,0.8);
           }
         }
         &.is-active {
-          border-left: 5px solid $medical-borCol_orange;
-          color: #333;
+          border-left: 5px solid $medical-borCol_tran;
+          /*color: #333;*/
           background-color: $medical-bgCol_grey;
         }
       }
@@ -214,16 +223,10 @@ export default {
   }
   .medical-page_silde.silde-collapse{
       width: 80px;
-      background:linear-gradient(to bottom, rgb(127,169,181) , rgb(170,120,149));
-      .medical-head_flexIcon{
-          width:100%;
-          top: auto;
-          bottom: 10px;
-          right: 0px;
-          text-align: center;
-      }
+      background:$medical-bgCol_gradientred;
+
       .medical-page_head{
-          background:none;
+          /*background:none;*/
           padding-right:0px;
           .medical-page_headImg{
               width:60px;

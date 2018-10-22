@@ -71,6 +71,7 @@ export default {
       & .el-input .el-input__inner{
         box-shadow: 0px 0px 10px $medical-shadow_lightGrey;
         background-color:$medical-bgCol_grey;
+        border-radius: 4px;
       }
     }
     .slideTab-list{
@@ -120,7 +121,7 @@ export default {
       }
       & > li.active{
         color:$medical-col_white;
-        background-color:$medical-bgCol_blue;
+        background-color:rgba(141,155,181,1);
       }
       & > li:first-child{
         border-top:1px solid $medical-borCol_ddd;

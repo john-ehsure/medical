@@ -169,9 +169,9 @@ dfdsfdsfdsfdsfds
                           <span v-else class="col_999">{{tr.unit}}</span>
                       </td>
                       <td><span :class="tr.result == tr.scope ?'col_green':'col_orange'">{{tr.result == tr.scope ?'正常':'不正常'}}</span></td>
-                      <td v-if="item.finishType != '1'">
-                          <i class="el-icon-circle-plus-outline" @click = "addTrList(item,tr,trNum)"></i>
-                          <i class="el-icon-remove-outline" @click = "removeTrList(item,tr,trNum)"></i>
+                      <td v-if="item.finishType != '1'" class="col_tran_grey">
+                          <i class="el-icon-circle-plus" @click = "addTrList(item,tr,trNum)"></i>
+                          <i class="el-icon-remove" @click = "removeTrList(item,tr,trNum)"></i>
                       </td>
                     </tr>
                   </table>
@@ -432,18 +432,30 @@ export default {
         .personList-contain_tab{
             padding:0px 35px;
             span{
-                padding: 3px 15px;
+                padding: 5px 15px;
                 vertical-align: bottom;
                 display: inline-block;
                 border-radius: 10px 10px 0px 0px;
                 font-size:16px;
-                background-color:#ddd;
-                color:#666;
+                /*background-color:#ddd;
+                color:#666;*/
                 margin-right:5px;
+                &:nth-child(1){
+                    background-color:$medical-bgCol_white;
+                    color:$medical-col_blue;
+                }
+                &:nth-child(2){
+                    background-color:$medical-bgCol_cyan;
+                    color:$medical-col_white;
+                }
+                &:nth-child(3){
+                    background-color:$medical-bgCol_grey;
+                    color:$medical-col_white;
+                }
                 &.tab-active{
-                    background-color: #00d6f2;
-                    color:#fff;
-                    padding: 8px 15px;
+                    /*background-color: #00d6f2;
+                    color:#fff;*/
+                    padding: 12px 15px;
                 }
             }
         }
