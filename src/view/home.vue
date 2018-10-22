@@ -129,7 +129,7 @@ export default {
     width: 180px;
     height: 100%;
     position: relative;
-    z-index: 3;
+    /*z-index: 3;*/
     background-color: $medical-bgCol_white;
     box-shadow: 0px 0px 15px $medical-shadow_grey;
     transition: all 0.4s;

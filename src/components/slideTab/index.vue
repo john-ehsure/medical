@@ -16,6 +16,9 @@
         </div>
       </li>
     </ul>
+    <div class="slideTab-add" ref="slideTabAdd">
+        <el-button type="text" icon="el-icon-plus">新增患者</el-button>
+    </div>
   </div>
 </template>
 
@@ -34,6 +37,10 @@ export default {
     //   type: String,
     //   default: ''
     // },
+    hasAdd: {
+      type: Boolean,
+      default: true
+    },
     listData: {
       type: Array,
       default: function () {
@@ -42,6 +49,9 @@ export default {
     }
   },
   mounted () {
+    if (hasAdd) {
+
+    }
     this.slideListHeight = document.documentElement.clientHeight - this.$refs.slideSearchHei.offsetHeight;
   },
   methods: {
