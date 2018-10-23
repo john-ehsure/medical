@@ -1,6 +1,6 @@
 <template>
   <div class="medical-page">
-    <div class="medical-page_silde" :class="{'silde-collapse':collapse}">
+    <div class="medical-page_silde" :class="{'silde-collapse':collapse}" :style="{'z-index': isFrist?'auto':''}">
         <span class="medical-head_flexIcon" @click="collapse = !collapse">
           <i class="hui-icon-ziyuan5"></i>
         </span>
@@ -10,6 +10,7 @@
               placement="right-start"
               width="600"
               :offset="20"
+              :disabled="isFrist"
               trigger="click">
               <el-row :gutter="20">
                   <el-col :span="8" v-for="item in person.personMes">
@@ -58,6 +59,7 @@ export default {
   name: 'Home',
   data () {
     return {
+      isFrist: true,//是否是第一次登陆进来的
       collapse: false,//默认是不收起  true为收起
       routesOptions: [],//菜单导航
       person: {//个人信息详情
@@ -129,7 +131,7 @@ export default {
     width: 180px;
     height: 100%;
     position: relative;
-    /*z-index: 3;*/
+    z-index: 3;
     background-color: $medical-bgCol_white;
     box-shadow: 0px 0px 15px $medical-shadow_grey;
     transition: all 0.4s;
@@ -161,6 +163,7 @@ export default {
         height: 100px;
         transition: all 0.4s;
         position: relative;
+        z-index: 9999;
         box-sizing: border-box;
         font-size: 0px;
         border-radius: 100%;

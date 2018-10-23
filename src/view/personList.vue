@@ -513,6 +513,11 @@ export default {
         }
       }
       .personList-items{
+          padding:15px 15px 25px;
+          margin:0px 20px 20px;
+          border-radius: 10px;
+          background-color:$medical-bgCol_white;
+          box-shadow: 0px 0px 10px $medical-shadow_lightGrey;
         & > .medical-table{
           padding:0px 0px;
         }

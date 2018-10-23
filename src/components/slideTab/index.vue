@@ -49,10 +49,11 @@ export default {
     }
   },
   mounted () {
-    if (hasAdd) {
-
+    let slideTabAddHei = 0
+    if (this.hasAdd) {
+      slideTabAddHei = this.$refs.slideTabAdd.offsetHeight;
     }
-    this.slideListHeight = document.documentElement.clientHeight - this.$refs.slideSearchHei.offsetHeight;
+    this.slideListHeight = document.documentElement.clientHeight - this.$refs.slideSearchHei.offsetHeight - slideTabAddHei;
   },
   methods: {
     handleSlideLi (item, index) {
