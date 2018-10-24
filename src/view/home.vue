@@ -328,6 +328,7 @@ export default {
             position: absolute;
             right: 5px;
             top:-15px;
+            color:#c5cae2;
             font-size: 20px;
         }
     }

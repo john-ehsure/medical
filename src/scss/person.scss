@@ -1,0 +1,196 @@
+
+  .personList-content{
+    flex:1;
+    text-align: left;
+    height:100%;
+    overflow-y: auto;
+    .personList-title{
+      display: flex;
+      justify-items: center;
+      align-items: center;
+      padding:20px 5px 20px 20px;
+      .personList-title_picture{
+        width:140px;
+        margin:0px 15px;
+        text-align: center;
+        & .el-upload--text > span{
+          display: inline-block;
+          width:100px;
+          height:100px;
+          line-height: 100px;
+          color:$medical-col_999;
+          border-radius:100%;
+          background-color:$medical-bgCol_ddd;
+          border:3px solid $medical-borCol_white;
+          box-shadow: 0px 0px 10px $medical-shadow_grey;
+        }
+        & > img{
+          width:100px;
+          height:100px;
+          border-radius:100%;
+          border:3px solid $medical-borCol_white;
+          box-shadow: 0px 0px 10px $medical-shadow_grey;
+        }
+      }
+      .personList-title_personMes{
+        color:$medical-col_999;
+        & > p{
+          line-height:24px;
+          i{
+            margin-right:8px;
+          }
+        }
+        &.top-form{
+          .el-form-item--mini.el-form-item{
+            margin-bottom: 0px;
+          }
+          .el-input.el-input--mini{
+            width:90px;
+            .el-input__inner{
+              height:20px;
+              line-height:20px;
+              padding:0 5px;
+            }
+            .el-input__prefix{
+              display: none;
+            }
+          }
+          .top-form_name{
+            .el-input.el-input--mini{
+              width:110px;
+              .el-input__inner{
+                height:32px;
+                line-height:32px;
+                font-size:16px;
+              }
+            }
+          }
+          .top-form_sex{
+            .el-radio+.el-radio{
+              margin-left: 10px;
+            }
+          }
+        }
+      }
+      .personList-title_info{
+        flex:1;
+        text-align: right;
+        & > .personList-title_infoNum{
+          display: inline-block;
+          position: relative;
+          padding:0px 20px;
+          text-align: center;
+          color:$medical-col_blue;
+          &:first-child:after{
+            position: absolute;
+            right: -1px;
+            bottom:0px;
+            content: '';
+            width:1px;
+            height:100%;
+            background-color:$medical-bgCol_blue;
+          }
+          & > p{
+            font-size:87px;
+            line-height:1;
+          }
+        }
+      }
+    }
+    .personList-contain_tab{
+      padding:0px 35px;
+      span{
+        padding: 2px 15px;
+        vertical-align: bottom;
+        display: inline-block;
+        border-radius: 10px 10px 0px 0px;
+        font-size:16px;
+        /*background-color:#ddd;
+        color:#666;*/
+        margin-right:5px;
+        &:nth-child(1){
+          background-color:$medical-bgCol_white;
+          color:$medical-col_blue;
+        }
+        &:nth-child(2){
+          background-color:$medical-bgCol_cyan;
+          color:$medical-col_white;
+        }
+        &:nth-child(3){
+          background-color:$medical-bgCol_grey;
+          color:$medical-col_white;
+        }
+        &.tab-active{
+          /*background-color: #00d6f2;
+          color:#fff;*/
+          padding: 8px 15px;
+        }
+      }
+    }
+    .personList-contain{
+      background-color: #fff;
+    }
+    .personList-detail{
+      padding:0px 20px 30px;
+      box-sizing: border-box;
+      position: relative;
+      & > ul{
+        margin:0px;
+        border-radius:10px;
+        background-color: #fff;
+        padding:20px 20px 30px;
+        box-shadow: 0px 0px 10px $medical-shadow_lightGrey;
+        & > li{
+          padding:5px 5px;
+          border-bottom:1px solid $medical-borCol_ddd;
+          font-size:$medical-font_16;
+          color:$medical-col_blue;
+          overflow: hidden;
+          & > span{
+            font-size:$medical-font_14;
+            color:$medical-col_666;
+            float: right;
+          }
+        }
+      }
+      .personList-detail_btnGroud{
+        width:100%;
+        position: absolute;
+        left: 0px;
+        bottom:15px;
+        text-align: center;
+      }
+    }
+    .personList-editDetail{
+      padding:20px;
+      margin:0px 20px 35px;
+      border-radius:10px;
+      background-color:#fff;
+      position: relative;
+      .el-form-item__label{
+        color:$medical-col_blue;
+        text-align: left;
+        font-size:$medical-font_16;
+      }
+      .personList-editDetail_btnGroud{
+        position: absolute;
+        left: 0px;
+        width:100%;
+        bottom:-15px;
+        text-align: center;
+      }
+    }
+    .personList-items{
+      padding:15px 15px 15px;
+      margin:0px 20px 20px;
+      border-radius: 10px;
+      background-color:$medical-bgCol_white;
+      box-shadow: 0px 0px 10px $medical-shadow_lightGrey;
+      & > .medical-table{
+        padding:0px 0px;
+      }
+    }
+    .el-input .el-input__inner{
+      border-radius:4px;
+    }
+  }

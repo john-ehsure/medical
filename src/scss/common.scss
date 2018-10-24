@@ -119,7 +119,7 @@
   color:$medical-col_white !important;
   background-color:$medical-col_green !important;
 }
-/*日期插件样式修改 缩小版*/
+/*日期区间插件样式修改 缩小版*/
 .mini-datePicker{
   &.el-date-range-picker{
     width:480px;
@@ -232,7 +232,7 @@
     font-family: fontHYQiHei !important;
   }
   /*日期字体*/
-  .el-date-range-picker__header button.el-picker-panel__icon-btn{
+  .el-date-range-picker__header button.el-picker-panel__icon-btn,.el-date-picker__header button.el-picker-panel__icon-btn{
     font-family: element-icons !important;
   }
   .el-button{
@@ -240,6 +240,34 @@
   }
   .el-button--mini, .el-button--small{
     font-size: $medical-font_12;
+  }
+  /*日期样式*/
+  .el-date-picker{
+    width:260px;
+    .el-date-picker__header{
+      margin:7px;
+      & > span{
+        color:$medical-col_green;
+        font-size:$medical-font_14;
+      }
+      .el-picker-panel__icon-btn{
+        color:$medical-col_orange;
+      }
+    }
+    .el-picker-panel__content{
+      width:auto;
+      margin:7px;
+      .el-date-table td{
+        padding:2px 0px;
+      }
+      .el-date-table td.current:not(.disabled) span{
+        background-color:$medical-bgCol_lightblue;
+        color:$medical-col_white;
+      }
+      .el-date-table td.today span{
+        color:$medical-col_lightblue;
+      }
+    }
   }
 }
 

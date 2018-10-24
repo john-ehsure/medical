@@ -17,7 +17,7 @@
       </li>
     </ul>
     <div class="slideTab-add" v-if="hasAdd" ref="slideTabAdd">
-        <el-button type="text" icon="el-icon-plus">新增患者</el-button>
+        <el-button type="text" @click.native="addTab" icon="el-icon-plus">新增患者</el-button>
     </div>
   </div>
 </template>
@@ -62,6 +62,10 @@ export default {
       }
       this.activeIndex = index;
       this.$emit('changeTabList', item);
+    },
+    addTab () {
+      this.activeIndex = null
+      this.$emit('addTab');
     }
   }
 }

@@ -1,12 +1,20 @@
 <template>
   <div class="personList-page">
-    <slideTab class="personList-slide" @changeTabList="changeList" :listData="tablistData"></slideTab>
+    <slideTab class="personList-slide" @changeTabList="changeList" @addTab="addTabPerson" :listData="tablistData"></slideTab>
     <div class="personList-content">
       <div class="personList-title" ref="titleHei">
-        <div class="personList-title_picture">
+        <div class="personList-title_picture" v-if="!newAddPerson">
           <img src="./../assets/logo.png"/>
         </div>
-        <div class="personList-title_personMes">
+          <!--上传图片-->
+          <div class="personList-title_picture" v-else>
+              <el-upload
+                  action=""
+                  :on-preview="handlePictureCardPreview">
+                  <span>上传图片</span>
+              </el-upload>
+          </div>
+        <div class="personList-title_personMes" v-if="!newAddPerson">
           <p><span class="col_blue fontSize_26 fontFamily-BigHYQiHei">{{personDetail.topTitle.personName}}</span> <i class="marginLeft_15" :class="personDetail.topTitle.personSex?'hui-icon-ziyuan18 col_orange':'hui-icon-ziyuan19 col_green'"></i></p>
           <P class="fontSize_12">
               <i class="hui-icon-ziyuan6 fontSize_14 col_d3"></i>
@@ -16,12 +24,43 @@
           <P class="fontSize_12"><i class="hui-icon-ziyuan8 fontSize_14 col_d3"></i> {{personDetail.topTitle.personPhone}}</P>
           <P class="col_orange fontSize_12"><i class="hui-icon-ziyuan2 fontSize_14"></i> 向上转诊</P>
         </div>
+         <!--新增患者start-->
+          <el-form ref="newForm" v-else class="personList-title_personMes top-form" :model="newForm" label-width="0px" size="mini">
+              <el-form-item label="">
+                  <span class="top-form_name">
+                      <el-input v-model="newForm.name" placeholder="姓名"></el-input>
+                  </span>
+                  <span class="top-form_sex">
+                      <el-radio-group v-model="newForm.sex">
+                          <el-radio :label="0">男</el-radio>
+                          <el-radio :label="1">女</el-radio>
+                      </el-radio-group>
+                  </span>
+              </el-form-item>
+              <el-form-item>
+                  <i class="hui-icon-ziyuan6"></i>
+                  <el-date-picker type="date" :editable="false" :clearable="false" v-model="newForm.birthday" placeholder="生日">
+                  </el-date-picker>
+              </el-form-item>
+              <el-form-item>
+                  <i class="hui-icon-ziyuan13"></i>
+                  <el-input v-model="newForm.number" placeholder="编号">
+                  </el-input>
+              </el-form-item>
+              <el-form-item>
+                  <i class="hui-icon-ziyuan8"></i>
+                  <el-input v-model="newForm.phone" placeholder="联系方式">
+                  </el-input>
+              </el-form-item>
+              <P class="col_orange fontSize_12"><i class="hui-icon-ziyuan2 fontSize_14"></i> 向上转诊</P>
+          </el-form>
+          <!--新增患者 end-->
         <div class="personList-title_info">
           <div class="personList-title_infoNum">
-            未完成<p class="col_orange fontFamily-regular">{{personDetail.topTitle.finish}}</p>
+            未完成<p class="fontFamily-regular" :class= "[ newAddPerson ?'col_d3':'col_orange']">{{newAddPerson?0:personDetail.topTitle.finish}}</p>
           </div>
           <div class="personList-title_infoNum">
-            已完成<p class="col_cyan fontFamily-regular">{{personDetail.topTitle.unfinish}}</p>
+            已完成<p class="fontFamily-regular" :class ="[newAddPerson?'col_d3':'col_cyan']">{{newAddPerson?0:personDetail.topTitle.unfinish}}</p>
           </div>
         </div>
       </div>
@@ -202,14 +241,19 @@ export default {
   },
   data () {
     return {
+      newAddPerson: false,//是否为新增患者
       warpHeight: 500,
       buttonActive: true,//判断显示病例 还是 项目列表
       isEditDetail: false,//false 显示资料展示  true 显示资料编辑
-      sizeForm: {
-        name: '',
-      },
       newForm: {
-        name
+        name: '',
+        birthday: '',
+        sex: '',
+        number: '',
+        phone: ''
+      },
+      sizeForm: {
+        name: ''
       },
       tablistData: [
         {img: require("./../assets/logo.png"), personName: '刘奇', personAge: 22, personPhone: '188-1111-2222', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 3, unfinish: 4},
@@ -295,6 +339,14 @@ export default {
   mounted () {
   },
   methods: {
+    //  添加新患者
+    addTabPerson () {
+      this.newAddPerson = true
+    },
+    //上传头像
+    handlePictureCardPreview (file) {
+      this.imageUrl = file.url;
+    },
     //table表格填写编辑时  新增操作
     addTrList (item, tr, index) {// item 项目的总详情  tr 当前操作的tr详情  index 当前操作的tr索引
       let newTr = {name: '', result: '', scope: '', unit: '', type: 'add'};
@@ -349,7 +401,7 @@ export default {
       if (val == false) {
           this.$nextTick(function () {
               // console.log(this.$refs.titleHei.offsetHeight,this.$refs.table_title.offsetHeight)
-              this.warpHeight = document.documentElement.clientHeight - this.$refs.titleHei.offsetHeight - this.$refs.table_title.offsetHeight -35;
+              this.warpHeight = document.documentElement.clientHeight - this.$refs.titleHei.offsetHeight - this.$refs.table_title.offsetHeight -35 -50 - 10;
           })
       }
       console.log(this.buttonActive)
@@ -369,159 +421,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
   @import '../scss/default.scss';
-  .personList-page{
-    height:100%;
-    display: flex;
-    .personList-content{
-      flex:1;
-      text-align: left;
-      height:100%;
-      overflow-y: auto;
-      .personList-title{
-        display: flex;
-        justify-items: center;
-        align-items: center;
-        padding:20px 5px 20px 20px;
-        .personList-title_picture{
-          width:140px;
-          margin:0px 15px;
-          text-align: center;
-          & > img{
-            width:100px;
-            height:100px;
-            border-radius:100%;
-            border:3px solid $medical-borCol_white;
-            box-shadow: 0px 0px 10px $medical-shadow_grey;
-          }
-        }
-        .personList-title_personMes{
-          color:$medical-col_999;
-          & > p{
-            line-height:24px;
-            i{
-              margin-right:8px;
-            }
-          }
-        }
-        .personList-title_info{
-          flex:1;
-          text-align: right;
-          & > .personList-title_infoNum{
-            display: inline-block;
-            position: relative;
-            padding:0px 20px;
-            text-align: center;
-            color:$medical-col_blue;
-            &:first-child:after{
-              position: absolute;
-              right: -1px;
-              bottom:0px;
-              content: '';
-              width:1px;
-              height:100%;
-              background-color:$medical-bgCol_blue;
-            }
-            & > p{
-              font-size:87px;
-              line-height:1;
-            }
-          }
-        }
-      }
-        .personList-contain_tab{
-            padding:0px 35px;
-            span{
-                padding: 5px 15px;
-                vertical-align: bottom;
-                display: inline-block;
-                border-radius: 10px 10px 0px 0px;
-                font-size:16px;
-                /*background-color:#ddd;
-                color:#666;*/
-                margin-right:5px;
-                &:nth-child(1){
-                    background-color:$medical-bgCol_white;
-                    color:$medical-col_blue;
-                }
-                &:nth-child(2){
-                    background-color:$medical-bgCol_cyan;
-                    color:$medical-col_white;
-                }
-                &:nth-child(3){
-                    background-color:$medical-bgCol_grey;
-                    color:$medical-col_white;
-                }
-                &.tab-active{
-                    /*background-color: #00d6f2;
-                    color:#fff;*/
-                    padding: 12px 15px;
-                }
-            }
-        }
-        .personList-contain{
-            background-color: #fff;
-        }
-      .personList-detail{
-        padding:0px 20px 30px;
-        box-sizing: border-box;
-        position: relative;
-        & > ul{
-          margin:0px;
-          border-radius:10px;
-          background-color: #fff;
-          padding:20px 20px 30px;
-          box-shadow: 0px 0px 10px $medical-shadow_lightGrey;
-          & > li{
-            padding:5px 5px;
-            border-bottom:1px solid $medical-borCol_ddd;
-            font-size:$medical-font_16;
-            color:$medical-col_blue;
-            overflow: hidden;
-            & > span{
-              font-size:$medical-font_14;
-              color:$medical-col_666;
-              float: right;
-            }
-          }
-        }
-        .personList-detail_btnGroud{
-          width:100%;
-          position: absolute;
-          left: 0px;
-          bottom:15px;
-          text-align: center;
-        }
-      }
-      .personList-editDetail{
-        padding:20px;
-        margin:0px 20px 35px;
-        border-radius:10px;
-        background-color:#fff;
-        position: relative;
-        .el-form-item__label{
-          color:$medical-col_blue;
-          text-align: left;
-          font-size:$medical-font_16;
-        }
-        .personList-editDetail_btnGroud{
-          position: absolute;
-          left: 0px;
-          width:100%;
-          bottom:-15px;
-          text-align: center;
-        }
-      }
-      .personList-items{
-          padding:15px 15px 25px;
-          margin:0px 20px 20px;
-          border-radius: 10px;
-          background-color:$medical-bgCol_white;
-          box-shadow: 0px 0px 10px $medical-shadow_lightGrey;
-        & > .medical-table{
-          padding:0px 0px;
-        }
-      }
-    }
+  @import '../scss/person.scss';
+  .personList-page {
+      height: 100%;
+      display: flex;
   }
-
 </style>
