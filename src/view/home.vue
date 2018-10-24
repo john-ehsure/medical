@@ -1,6 +1,6 @@
 <template>
   <div class="medical-page">
-    <div class="medical-page_silde" :class="{'silde-collapse':collapse}" :style="{'z-index': isFrist?'auto':''}">
+    <div class="medical-page_silde" :class="{'silde-collapse':collapse}" :style="{'z-index': isFristLogin?'auto':''}">
         <span class="medical-head_flexIcon" @click="collapse = !collapse">
           <i class="hui-icon-ziyuan5"></i>
         </span>
@@ -10,15 +10,18 @@
               placement="right-start"
               width="600"
               :offset="20"
-              :disabled="isFrist"
+              @show="popoverShow"
               trigger="click">
               <el-row :gutter="20">
+                  <i class="el-icon-edit popover-icon" v-if="!isFrist" @click="isFrist = !isFrist"></i>
+                  <i class="el-icon-check popover-icon" v-else @click="isFrist = !isFrist; isFristLogin = false"></i>
                   <el-col :span="8" v-for="item in person.personMes">
                       <div class="medical-col_flex">
                           <i class="medical-col_icon" :class="item.icon"></i>
                           <div class="medical-col_content">
                               <p class="medical-col_title">{{item.title}}</p>
-                              <p class="medical-col_detail">{{item.value}}</p>
+                              <p class="medical-col_detail" v-if="!isFrist">{{item.value}}</p>
+                              <el-input v-model="item.value" v-else placeholder="请输入内容" size="mini"></el-input>
                           </div>
                       </div>
                   </el-col>
@@ -30,15 +33,7 @@
         </el-popover>
         <span class="medical-page_headTitle">{{person.name}}</span>
       </div>
-
-      <!--<el-menu :default-active="$route.path" class="medical-page_menu" >
-        <template v-for="item in routesOptions">
-          <el-menu-item :index="item.path" @click.native="linkTo(item)">
-            <span class="el-menu_icon"><i :class="item.iconType"></i></span>
-            {{item.title}}
-          </el-menu-item>
-        </template>
-      </el-menu>-->
+        <!--左侧导航部分-->
       <ul class="medical-page_menu el-menu">
           <li class="el-menu-item" :class="{'is-active':$route.path == item.path}" v-for="item in routesOptions" @click="linkTo(item)">
               <span class="el-menu_icon"><i :class="item.iconType"></i></span>
@@ -51,6 +46,11 @@
         <router-view/>
       </transition>
     </div>
+     <div class="medical-guide" v-if="isFristLogin">
+        <div class="medical-guide_one" v-if="guideone">
+            <img src="./../assets/guide_one.png" />
+        </div>
+     </div>
   </div>
 </template>
 
@@ -59,7 +59,9 @@ export default {
   name: 'Home',
   data () {
     return {
-      isFrist: true,//是否是第一次登陆进来的
+      isFristLogin: true,//是否是第一次登陆进来的
+      guideone: true,//是否显示引导页的第一页
+      isFrist: false,//是否填写主页的个人信息
       collapse: false,//默认是不收起  true为收起
       routesOptions: [],//菜单导航
       person: {//个人信息详情
@@ -105,6 +107,13 @@ export default {
     linkTo (item) {
       console.log(item)
       this.$router.push({path:item.path})
+    },
+    //监听弹窗显示事件
+    popoverShow () {
+      this.guideone = false
+      if (this.isFristLogin) {
+        this.isFrist = true
+      }
     }
   }
 }
@@ -274,6 +283,23 @@ export default {
     flex: 1;
     background-color: $medical-bgCol_grey;
   }
+    .medical-guide{
+        position: absolute;
+        width:100%;
+        height:100%;
+        left:0px;
+        top:0px;
+        z-index:2000;
+        background-color:rgba(0,0,0,0.2);
+        .medical-guide_one{
+            width:500px;
+            font-size: 0px;
+            margin:60px 0px 0px 130px;
+            img{
+                width:100%;
+            }
+        }
+    }
 }
   /*个人资料弹窗*/
   .medical-col_flex{
@@ -297,4 +323,12 @@ export default {
       }
     }
   }
+    .el-popover{
+        .el-row .popover-icon{
+            position: absolute;
+            right: 5px;
+            top:-15px;
+            font-size: 20px;
+        }
+    }
 </style>

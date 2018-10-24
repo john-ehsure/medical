@@ -5,14 +5,13 @@
       <div class="personList-title" ref="titleHei">
         <div class="personList-title_picture">
           <img src="./../assets/logo.png"/>
-          <!--<p>
-            <el-button :type="buttonActive?'primary':''" size="mini" round @click="handleDeatil(true)">病例</el-button>
-            <el-button :type="!buttonActive?'primary':''" size="mini" round @click="handleDeatil(false)">项目</el-button>
-          </p>-->
         </div>
         <div class="personList-title_personMes">
           <p><span class="col_blue fontSize_26 fontFamily-BigHYQiHei">{{personDetail.topTitle.personName}}</span> <i class="marginLeft_15" :class="personDetail.topTitle.personSex?'hui-icon-ziyuan18 col_orange':'hui-icon-ziyuan19 col_green'"></i></p>
-          <P class="fontSize_12"><i class="hui-icon-ziyuan6 fontSize_14 col_d3"></i> {{personDetail.topTitle.personAge}} 岁</P>
+          <P class="fontSize_12">
+              <i class="hui-icon-ziyuan6 fontSize_14 col_d3"></i>
+              <span>{{personDetail.topTitle.personAge}} 岁</span>
+          </P>
           <P class="fontSize_12"><i class="hui-icon-ziyuan13 fontSize_14 col_d3"></i> {{personDetail.topTitle.personNumber}}</P>
           <P class="fontSize_12"><i class="hui-icon-ziyuan8 fontSize_14 col_d3"></i> {{personDetail.topTitle.personPhone}}</P>
           <P class="col_orange fontSize_12"><i class="hui-icon-ziyuan2 fontSize_14"></i> 向上转诊</P>
@@ -31,9 +30,6 @@
             <span :class="{'tab-active':buttonActive}" @click="handleDeatil(true)">病例</span>
             <span :class="{'tab-active':!buttonActive}" @click="handleDeatil(false)">项目</span>
         </div>
-        <!--<div class="personList-contain">
-dfdsfdsfdsfdsfds
-        </div>-->
       <!--个人病例部分 start-->
       <div class="personList-detail" v-if="buttonActive && !isEditDetail">
         <!--信息展示 start-->
@@ -47,37 +43,37 @@ dfdsfdsfdsfdsfds
         <!--信息编辑 start-->
         <el-form ref="form" :model="sizeForm" label-width="80px" size="mini">
           <el-form-item label="病人主诉">
-            <el-input v-model="sizeForm.name"></el-input>
+            <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="现病史">
-            <el-input v-model="sizeForm.name"></el-input>
+            <el-input v-model="sizeForm.name"  placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="既往史">
-            <el-input v-model="sizeForm.name"></el-input>
+            <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="个人史">
-            <el-input v-model="sizeForm.name"></el-input>
+            <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="家族史">
-            <el-input v-model="sizeForm.name"></el-input>
+            <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="体格检查">
-            <el-input v-model="sizeForm.name"></el-input>
+            <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="专科检查">
-            <el-input v-model="sizeForm.name"></el-input>
+            <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="辅助检查">
-            <el-input v-model="sizeForm.name"></el-input>
+            <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="诊断">
-            <el-input v-model="sizeForm.name"></el-input>
+            <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="本次医嘱">
-            <el-input v-model="sizeForm.name"></el-input>
+            <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="西城药">
-            <el-input v-model="sizeForm.name"></el-input>
+            <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
           </el-form-item>
         </el-form>
         <span class="personList-editDetail_btnGroud">
@@ -211,6 +207,9 @@ export default {
       isEditDetail: false,//false 显示资料展示  true 显示资料编辑
       sizeForm: {
         name: '',
+      },
+      newForm: {
+        name
       },
       tablistData: [
         {img: require("./../assets/logo.png"), personName: '刘奇', personAge: 22, personPhone: '188-1111-2222', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 3, unfinish: 4},
@@ -495,7 +494,7 @@ export default {
       }
       .personList-editDetail{
         padding:20px;
-        margin:20px 20px 35px;
+        margin:0px 20px 35px;
         border-radius:10px;
         background-color:#fff;
         position: relative;

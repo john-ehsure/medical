@@ -16,7 +16,7 @@
         </div>
       </li>
     </ul>
-    <div class="slideTab-add" ref="slideTabAdd">
+    <div class="slideTab-add" v-if="hasAdd" ref="slideTabAdd">
         <el-button type="text" icon="el-icon-plus">新增患者</el-button>
     </div>
   </div>
@@ -138,5 +138,12 @@ export default {
         border-top:1px solid $medical-borCol_ddd;
       }
     }
+      .slideTab-add{
+          .el-button--text{
+              width:100%;
+              color:$medical-col_666;
+              text-align: left;
+          }
+      }
   }
 </style>

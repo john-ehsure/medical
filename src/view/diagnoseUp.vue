@@ -1,6 +1,6 @@
 <template>
   <div class="diagnoseUp-page">
-    <slideTab @changeTabList="changeList" :listData="tablistData"></slideTab>
+    <slideTab @changeTabList="changeList" :hasAdd="false" :listData="tablistData"></slideTab>
     <div class="diagnoseUpt-content">
       <div class="diagnoseUpt-top" ref="diagnoseUptStepsHei">
         <el-steps :active="stepsNum" align-center>

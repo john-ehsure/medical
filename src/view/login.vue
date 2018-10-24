@@ -25,12 +25,12 @@
                         <el-form ref="loginForm" :model="loginForm" label-width="0px" size="medium ">
                             <el-form-item>
                                 <el-input v-model="loginForm.name" placeholder="姓名">
-                                    <i slot="prefix" class="el-input__icon hui-icon-ziyuan9 col_blue"></i>
+                                    <i slot="prefix" class="el-input__icon hui-icon-ziyuan9 "></i>
                                 </el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-input v-model="loginForm.password" placeholder="密码">
-                                    <i slot="prefix" class="el-input__icon hui-icon-ziyuan col_blue"></i>
+                                    <i slot="prefix" class="el-input__icon hui-icon-ziyuan "></i>
                                 </el-input>
                             </el-form-item>
                             <p class="medical-login_formTitle">
@@ -44,22 +44,22 @@
                         <el-form ref="registerForm" :model="registerForm" label-width="0px" size="medium ">
                             <el-form-item>
                                 <el-input v-model="registerForm.number" placeholder="医生执业证编号">
-                                    <i slot="prefix" class="el-input__icon hui-icon-ziyuan14 col_blue"></i>
+                                    <i slot="prefix" class="el-input__icon hui-icon-ziyuan14 "></i>
                                 </el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-input v-model="registerForm.hospital" placeholder="医院">
-                                    <i slot="prefix" class="el-input__icon hui-icon-ziyuan12 col_blue"></i>
+                                    <i slot="prefix" class="el-input__icon hui-icon-ziyuan12 "></i>
                                 </el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-input v-model="registerForm.section" placeholder="科室">
-                                    <i slot="prefix" class="el-input__icon hui-icon-ziyuan11 col_blue"></i>
+                                    <i slot="prefix" class="el-input__icon hui-icon-ziyuan11 "></i>
                                 </el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-input v-model="registerForm.name" placeholder="姓名">
-                                    <i slot="prefix" class="el-input__icon hui-icon-ziyuan9 col_blue"></i>
+                                    <i slot="prefix" class="el-input__icon hui-icon-ziyuan9 "></i>
                                 </el-input>
                             </el-form-item>
                         </el-form>
@@ -70,12 +70,12 @@
                         <el-form ref="setPassForm" :model="setPassForm" label-width="0px" size="medium ">
                             <el-form-item>
                                 <el-input v-model="setPassForm.password" placeholder="密码">
-                                    <i slot="prefix" class="el-input__icon hui-icon-ziyuan col_blue"></i>
+                                    <i slot="prefix" class="el-input__icon hui-icon-ziyuan "></i>
                                 </el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-input v-model="setPassForm.checkPassword" placeholder="再次确认">
-                                    <i slot="prefix" class="el-input__icon el-icon-circle-check col_blue"></i>
+                                    <i slot="prefix" class="el-input__icon el-icon-circle-check "></i>
                                 </el-input>
                             </el-form-item>
                         </el-form>
@@ -337,6 +337,9 @@ export default {
         color:$medical-col_999;
       }
     }
+  }
+  .el-input--medium .el-input__icon{
+      color:#c5cae2;
   }
 }
 </style>
