@@ -1,14 +1,18 @@
 <template>
-  <div class="hello">
+  <div class="chart-page">
     <!--<h1>{{ msg }}</h1>-->
       <el-button @click="closeAudio">关闭声音</el-button>
       <el-button @click="openAudio">打开声音</el-button>
       <el-button @click="closeVideo">关闭视频</el-button>
       <el-button @click="openVideo">打开视频</el-button>
       <el-button @click="stopWs">断开当前视频</el-button>
-      <video id="localVideo" muted autoplay playsinline></video>
-      <!-- 远端视频流 -->
-      <video id="remoteVideo" autoplay playsinline></video>
+      <el-button @click="showVideo">显示视频</el-button>
+      <div class="chart-video" v-show = "isShowVideo">
+          <video id="localVideo" muted autoplay playsinline></video>
+          <!-- 远端视频流 -->
+          <video id="remoteVideo" autoplay playsinline></video>
+      </div>
+
   </div>
 </template>
 
@@ -19,10 +23,15 @@ export default {
   data () {
     return {
       msg: '当前功能正在建设中...',
+        isShowVideo: false,//是否显示视频界面
+        screenWidth: 1000,//屏幕宽度
+        screenHeight: 500,//屏幕高度
         RTC: {}
     }
   },
   mounted () {
+      this.screenHeight = document.documentElement.clientHeight;
+      this.screenWidth = document.documentElement.clientWidth;
       var roomid= 900099;
       var stream;
       let self = this;
@@ -81,6 +90,12 @@ export default {
       })
   },
     methods:{
+        showVideo () {
+            this.isShowVideo = true
+            document.querySelector("#localVideo").style.width = this.screenWidth +'px'
+            document.querySelector("#localVideo").style.height = this.screenHeight +'px'
+
+        },
         closeAudio () {
             alert(1)
           this.RTC.closeAudio();
@@ -102,19 +117,16 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+<style lang="scss">
+.chart-page{
+    .chart-video{
+        position: fixed;
+        left:0px;
+        top:0px;
+        width:100%;
+        height:100%;
+        z-index: 9999;
+        background-color:rgba(0,0,0,1)
+    }
 }
 </style>

@@ -290,7 +290,7 @@ export default {
         left:0px;
         top:0px;
         z-index:2000;
-        background-color:rgba(0,0,0,0.2);
+        background-color:rgba(0,0,0,0.6);
         .medical-guide_one{
             width:500px;
             font-size: 0px;

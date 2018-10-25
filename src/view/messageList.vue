@@ -1,8 +1,10 @@
 <template>
   <div class="messageList">
     <div class="medical-search" ref="searchHei">
-      <el-input size="medium" placeholder="请输入内容" prefix-icon="el-icon-search"  v-model="searchInput">
-      </el-input>
+        <el-form>
+            <el-input size="medium" placeholder="请输入内容" prefix-icon="el-icon-search"  v-model="searchInput" @keyup.enter.native="ceshi">
+            </el-input>
+        </el-form>
     </div>
     <div class="medical-table">
       <div ref="table_row" class="padding_lr_20">
@@ -264,6 +266,9 @@ export default {
     this.warpHeight = document.documentElement.clientHeight - this.$refs.searchHei.offsetHeight - this.$refs.table_title.offsetHeight - this.$refs.table_row.offsetHeight -55;
   },
   methods: {
+      ceshi () {
+          alert('测试成功')
+      },
       liClick(){
           alert('1')
       },

@@ -46,14 +46,14 @@ export default new Router({
                     iconType: 'hui-icon-ziyuan2',
                     component: diagnoseUp
                 },
-                // {
-                //   name: 'communicate',
-                //   path: '/communicate',
-                //   title:'转院沟通',
-                //   miniTitle: '沟通',
-                //   iconType: 'hui-icon-ziyuan20',
-                //   component: building
-                // },
+                {
+                  name: 'communicate',
+                  path: '/communicate',
+                  title:'转院沟通',
+                  miniTitle: '沟通',
+                  iconType: 'hui-icon-ziyuan20',
+                  component: building
+                },
                 {
                     name: 'historyMes',
                     path: '/historyMes',

@@ -274,7 +274,7 @@ export default {
     toHistory () {
       alert(this.doctor.hospital,111)
     },
-    //列表选择事件
+    //列表选择事件close
     changeList (item) {
       this.doctorDetail = item;
     },
