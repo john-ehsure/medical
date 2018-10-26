@@ -59,7 +59,7 @@ export default {
   name: 'Home',
   data () {
     return {
-      isFristLogin: true,//是否是第一次登陆进来的
+      isFristLogin: false,//是否是第一次登陆进来的
       guideone: true,//是否显示引导页的第一页
       isFrist: false,//是否填写主页的个人信息
       collapse: false,//默认是不收起  true为收起

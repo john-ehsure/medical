@@ -6,7 +6,7 @@ const messageList = () => import(/* webpackChunkName: "group-home" */  '@/view/m
 const personList = () => import(/* webpackChunkName: "group-home" */  '@/view/personList')
 const historyMes = () => import(/* webpackChunkName: "group-home" */  '@/view/historyMes')
 const diagnoseUp = () => import(/* webpackChunkName: "group-home" */  '@/view/diagnoseUp')
-const building = () => import(/* webpackChunkName: "group-home" */  '@/view/building')
+const chart = () => import(/* webpackChunkName: "group-home" */  '@/view/chart')
 Vue.use(Router)
 
 export default new Router({
@@ -52,7 +52,7 @@ export default new Router({
                   title:'转院沟通',
                   miniTitle: '沟通',
                   iconType: 'hui-icon-ziyuan20',
-                  component: building
+                  component: chart
                 },
                 {
                     name: 'historyMes',
