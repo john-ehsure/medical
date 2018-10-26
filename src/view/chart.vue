@@ -42,9 +42,11 @@
                 </ul>
             </div>
             <div class="chart-imSend" ref="imSend">
-                <div class="el-input el-input--small">
-                    <input type="text" autocomplete="off" placeholder="请输入内容" class="el-input__inner">
-                </div>
+                <!--<el-form>-->
+                    <div class="el-input el-input--small">
+                        <input type="text" autocomplete="off" @keyup="abb(event)" @click="abc(event)" @keydown="acc(event)" placeholder="请输入内容" class="el-input__inner">
+                    </div>
+                <!--</el-form>-->
                 <i class="el-icon-picture-outline imSend-icon"></i>
                 <i class="el-icon-printer imSend-icon"></i>
             </div>
@@ -119,6 +121,21 @@
             this.imDialogueHei = this.screenHeight - this.$refs.imSend.offsetHeight - this.$refs.imTitle.offsetHeight - this.$refs.imTable.offsetHeight -2;
         },
         methods: {
+            abb (e){
+                if(event.keyCode == 13){
+                    alert(1)
+                }
+            },
+            abc(e){
+                if(event.keyCode == 13){
+                    alert(2)
+                }
+            },
+            acc (e) {
+                if(event.keyCode == 13){
+                    alert(3)
+                }
+            },
             //点击人员列表回调事件
             changeList (item) {
                 this.personDetail = item;
