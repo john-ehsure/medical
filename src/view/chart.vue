@@ -6,31 +6,32 @@
                 <span>{{personDetail.personName}}</span>
                 <span class="marginLeft_15">{{personDetail.downHospital}}</span>
             </div>
-            <div class="medical-table" ref="imTable">
-                <div class="chart-nowTime"><el-button type="info" size="mini" round disabled>03:22</el-button></div>
-                <ul class="medical-table_list">
-                    <li>
-                        <div class="medical-list_flex" :class=" personDetail.isRead ? 'medical-list_read' : 'medical-list_unread' ">
-                            <div class="medical-list_img">
-                                <img :src="personDetail.img"/>
-                            </div>
-                            <div class="medical-list_mes">
-                                {{personDetail.personName}}<br>编号{{personDetail.personNumber}}
-                            </div>
-                            <div class="medical-list_operation">
-                                <span v-if="personDetail.mesType == '1'">本地新进患者通知</span>
-                                <span v-if="personDetail.mesType == '2'">检查结果通知</span>
-                                <span v-if="personDetail.mesType == '3'">转诊申请通知</span>
-                                <span v-if="personDetail.mesType == '4'">转诊结果通知</span>
-                            </div>
-                            <div class="medical-list_operation col-green">
-                                <span>{{personDetail.time}}</span>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+
             <div class="chart-imDialogue" :style="{height: imDialogueHei+'px'}">
+                <div class="medical-table">
+                    <div class="chart-nowTime"><el-button type="info" size="mini" round disabled>03:22</el-button></div>
+                    <ul class="medical-table_list">
+                        <li>
+                            <div class="medical-list_flex" :class=" personDetail.isRead ? 'medical-list_read' : 'medical-list_unread' ">
+                                <div class="medical-list_img">
+                                    <img :src="personDetail.img"/>
+                                </div>
+                                <div class="medical-list_mes">
+                                    {{personDetail.personName}}<br>编号{{personDetail.personNumber}}
+                                </div>
+                                <div class="medical-list_operation">
+                                    <span v-if="personDetail.mesType == '1'">本地新进患者通知</span>
+                                    <span v-if="personDetail.mesType == '2'">检查结果通知</span>
+                                    <span v-if="personDetail.mesType == '3'">转诊申请通知</span>
+                                    <span v-if="personDetail.mesType == '4'">转诊结果通知</span>
+                                </div>
+                                <div class="medical-list_operation col-green">
+                                    <span>{{personDetail.time}}</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
                 <ul>
                     <li :class="[item.isSelf?'imDialogue_self':'']" v-for="item in imDialogue">
                         <div class="chart-imDialogue_img"><img :src="item.isSelf ? selfDetail.img : personDetail.img"/></div>
@@ -118,7 +119,7 @@
             this.screenWidth = document.documentElement.clientWidth;
             this.personDetail = this.personlistData[0];
             /*im 聊天部分高度设置*/
-            this.imDialogueHei = this.screenHeight - this.$refs.imSend.offsetHeight - this.$refs.imTitle.offsetHeight - this.$refs.imTable.offsetHeight -2;
+            this.imDialogueHei = this.screenHeight - this.$refs.imSend.offsetHeight - this.$refs.imTitle.offsetHeight;
         },
         methods: {
             abb (e){
@@ -253,16 +254,16 @@
         }
         .chart-im{
             flex:1;
-            background-color:$medical-bgCol_white;
+            /*background-color:$medical-bgCol_white;*/
             .chart-imTitle{
                 text-align: center;
-                font-size: $medical-font_18;
+                font-size: 24px;
                 position: relative;
-                color:$medical-col_999;
+                color:#a4a4a6;
                 margin:0px 15px;
                 padding:10px 0px;
                 box-sizing: border-box;
-                border-bottom:1px solid $medical-borCol_ddd;
+                /*border-bottom:1px solid $medical-borCol_ddd;*/
             }
             .chart-nowTime{
                 text-align: center;
@@ -356,6 +357,7 @@
                 display: flex;
                 align-items:center;
                 padding:7px 15px;
+                background-color:$medical-bgCol_white;
                 .imSend-icon{
                     font-size: 24px;
                     color:$medical-col_999;

@@ -1,8 +1,8 @@
 <template>
   <div class="medical-page">
     <div class="medical-page_silde" :class="{'silde-collapse':collapse}" :style="{'z-index': isFristLogin?'auto':''}">
-        <span class="medical-head_flexIcon" @click="collapse = !collapse">
-          <i class="hui-icon-ziyuan5"></i>
+        <span class="medical-head_flexIcon">
+          <i class="hui-icon-ziyuan5" @click="collapse = !collapse"></i>
         </span>
       <div class="medical-page_head">
           <!--个人资料弹窗部分-->
@@ -161,7 +161,7 @@ export default {
     .medical-page_head {
       height: 220px;
       padding-top: 15px;
-      padding-right: 20%;
+      /*padding-right: 20%;*/
       box-sizing: border-box;
       position: relative;
       /*background: url('./../assets/person_bg.png') no-repeat;
