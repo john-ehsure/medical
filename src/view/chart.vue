@@ -99,7 +99,7 @@
 </template>
 
 <script>
-    import webRTCAPI from '../webRTCAPI/webRTCAPI.min'
+    // import webRTCAPI from '../webRTCAPI/webRTCAPI.min'
     import slideTab from '../components/slideTab/index.vue'
     export default {
         name: 'chart',
@@ -206,9 +206,10 @@
             },
             showVideo () {
                 this.isShowVideo = true
+                this.isVideoState = true
                 // document.querySelector("#localVideo").style.width = this.screenWidth +'px'
                 // document.querySelector("#localVideo").style.height = this.screenHeight +'px'
-                this.videoOnline();
+                // this.videoOnline();
                 this.dropImg = this.videoMes[0].photo;
             },
             closeAudio () {
@@ -225,7 +226,7 @@
                 this.RTC.openVideo();
             },
             stopWs (){
-                this.RTC.global.websocket.close();
+                // this.RTC.global.websocket.close();
                 this.isShowVideo=false;
             },
             videoOnline () {
@@ -479,7 +480,7 @@
         }
     }
     .chart-video{
-        position: fixed;
+        position: absolute;
         left:0px;
         top:0px;
         width:100%;
@@ -508,7 +509,7 @@
             z-index: 100;
             bottom:20px;
             left:0px;
-            width:70%;
+            width:75%;
             text-align: center;
             i{
                 font-size: 24px;
@@ -524,10 +525,10 @@
             }
         }
         .chart-video_photo{
-            width:30%;
+            width:25%;
             position: absolute;
             height:100%;
-            z-index: 11;
+            z-index: 101;
             right:0px;
             top:0px;
             background-color:rgba(255,255,255,0.5);
@@ -611,7 +612,7 @@
     .edit-photo_content{
         position: absolute;
         z-index: 99;
-        width:70%;
+        width:75%;
         left:0%;
         display: flex;
         justify-content: center;
@@ -628,7 +629,8 @@
             border:2px dashed $medical-borCol_white;
             font-size: 0px;
             .edit-photo_dropImg{
-                width:100%;
+                max-width:100%;
+                max-height:100%;
             }
         }
     }
