@@ -27,7 +27,7 @@ export default new Router({
                     path: '/',
                     title: '消息列表',
                     miniTitle: '消息',
-                    iconType: 'hui-icon-ziyuan1',
+                    iconType: 'hui-icon-ziyuan26',
                     component: messageList
                 },
                 {
@@ -35,7 +35,7 @@ export default new Router({
                     path: '/personList',
                     title: '患者列表',
                     miniTitle: '患者',
-                    iconType: 'hui-icon-ziyuan3',
+                    iconType: 'hui-icon-ziyuan27',
                     component: personList
                 },
                 {
@@ -43,7 +43,7 @@ export default new Router({
                     path: '/diagnoseUp',
                     title: '向上转诊',
                     miniTitle: '转诊',
-                    iconType: 'hui-icon-ziyuan2',
+                    iconType: 'hui-icon-ziyuan28',
                     component: diagnoseUp
                 },
                 {
@@ -51,7 +51,7 @@ export default new Router({
                   path: '/communicate',
                   title:'转院沟通',
                   miniTitle: '沟通',
-                  iconType: 'hui-icon-ziyuan20',
+                  iconType: 'hui-icon-ziyuan29',
                   component: chart
                 },
                 {
@@ -59,7 +59,7 @@ export default new Router({
                     path: '/historyMes',
                     title: '历史消息',
                     miniTitle: '历史',
-                    iconType: 'hui-icon-ziyuan4',
+                    iconType: 'hui-icon-ziyuan30',
                     component: historyMes
                 }
             ]

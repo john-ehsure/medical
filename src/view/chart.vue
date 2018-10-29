@@ -3,8 +3,14 @@
         <slideTab @changeTabList="changeList" :hasAdd="false" :listData="personlistData"></slideTab>
         <div class="chart-im">
             <div class="chart-imTitle" ref="imTitle">
+                <span class="chart-adverse_input">对方正在输入...</span>
                 <span>{{personDetail.personName}}</span>
                 <span class="marginLeft_15">{{personDetail.downHospital}}</span>
+                <div class="chart-imTitle_button">
+                    <i class="hui-icon-ziyuan36"></i>
+                    <i class="hui-icon-ziyuan32" @click="showVideo"></i>
+                    <i class="hui-icon-ziyuan33"></i>
+                </div>
             </div>
 
             <div class="chart-imDialogue" :style="{height: imDialogueHei+'px'}">
@@ -38,18 +44,18 @@
                         <div class="chart-imDialogue_content">
                             <img v-if="item.isImg" :src="item.img" />
                             <span v-else>{{item.title}}</span>
+                            <div class="mesage-state">已读</div>
                         </div>
                     </li>
                 </ul>
             </div>
             <div class="chart-imSend" ref="imSend">
                 <!--<el-form>-->
-                    <div class="el-input el-input--small">
-                        <input type="text" autocomplete="off" @keyup="abb(event)" @click="abc(event)" @keydown="acc(event)" placeholder="请输入内容" class="el-input__inner">
+                    <div class="el-input">
+                        <input type="text" autocomplete="off" placeholder="请输入内容" class="el-input__inner">
                     </div>
                 <!--</el-form>-->
-                <i class="el-icon-picture-outline imSend-icon"></i>
-                <i class="el-icon-printer imSend-icon"></i>
+                <el-button type="success" class="imSend-botton" @click.native="sendMes">发送</el-button>
             </div>
         </div>
         <div style="display: none">
@@ -60,10 +66,33 @@
             <el-button @click="stopWs">断开当前视频</el-button>
             <el-button @click="showVideo">显示视频</el-button>
         </div>
-        <div class="chart-video" v-show = "isShowVideo">
+        <div class="chart-video" :class="[isVideoState?'':'chart-editPhoto']" v-show = "isShowVideo">
+            <!-- 本地视频流 -->
             <video class="localVideo" id="localVideo" muted autoplay playsinline></video>
             <!-- 远端视频流 -->
             <video class="remoteVideo" id="remoteVideo" autoplay playsinline></video>
+            <div class="chart-video_button">
+                <i class="el-icon-edit" v-if="isVideoState" @click="isVideoState = !isVideoState"></i>
+                <i class="el-icon-phone-outline" v-else  @click="isVideoState = !isVideoState"></i>
+                <i class="el-icon-edit close-video" @click="stopWs"></i>
+            </div>
+            <div class="edit-photo_content" v-if="!isVideoState">
+                <drop class="edit-photo_drop" @arrive="arrive" @away="away" name="imgDrag">
+                    <img class="edit-photo_dropImg" :src="dropImg">
+                </drop>
+            </div>
+            <div class="chart-video_photo">
+                <ul>
+                    <li :class="[item.isSelf?'self-photo':'']" v-for="item in videoMes">
+                        <div class="chart-video_img"><img :src="item.isSelf ? selfDetail.img : personDetail.img"/></div>
+                        <div class="chart-video_content">
+                            <drag duplicate constantly @dragend="dragEnd" :packet="{img:item}" target="imgDrag">
+                                <img :src="item.photo"/>
+                            </drag>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
 
     </div>
@@ -107,6 +136,14 @@
                     {isSelf:false,title:'这是一个好东西啊'},
                     {isSelf:true,title:'这是一个好东西啊'},
                 ],
+                isVideoState: true,//是否为视频状态  false为编辑图片状态
+                videoMes:[
+                    {isSelf:true,photo:require("./../assets/photo.jpg")},
+                    {isSelf:false,photo:require("./../assets/logo.png")},
+                    {isSelf:true,photo:require("./../assets/logo.png")},
+                    {isSelf:false,photo:require("./../assets/photo.jpg")},
+                ],
+                dropImg:'',//默认编辑的图片
                 isShowVideo: false,//是否显示视频界面
                 imDialogueHei: 400,//聊天信息部分默认高度
                 screenWidth: 1000,//屏幕宽度
@@ -122,29 +159,57 @@
             this.imDialogueHei = this.screenHeight - this.$refs.imSend.offsetHeight - this.$refs.imTitle.offsetHeight;
         },
         methods: {
-            abb (e){
-                if(event.keyCode == 13){
-                    alert(1)
-                }
+            /**
+             * 离开
+             * @param dropComponent
+             */
+            away(dropComponent) {
+                console.log(dropComponent,'----')
+                dropComponent.$el.style.opacity = '1'
+                dropComponent.$el.style.backgroundColor = ''
             },
-            abc(e){
-                if(event.keyCode == 13){
-                    alert(2)
-                }
+            /**
+             * 进入
+             * @param packet
+             * @param dropComponent
+             */
+            arrive(packet, dropComponent) {
+                console.log(packet, dropComponent,'++++')
+                dropComponent.$el.style.backgroundColor = '#a9b7c6'
+                dropComponent.$el.style.opacity = '.6'
             },
-            acc (e) {
-                if(event.keyCode == 13){
-                    alert(3)
+            /**
+             * 拖动结束
+             * @param e
+             * @param self
+             * @param dropComponent
+             */
+            dragEnd(e, self, dropComponent) {
+                console.log(e, self, dropComponent,'====')
+                if (!dropComponent) { // 没有落在drop组件中,dropComponent为null
+                    return
                 }
+                let itemImg = dropComponent.$el
+                this.dropImg = self.packet.img.photo;
+                console.log(itemImg)
+                // itemImg.style.backgroundImage = `url('${self.packet.img.photo}')`
+                itemImg.style.border = '2px dashed #ccc'
+                itemImg.style.opacity = '1'
             },
+            sendMes () {
+                console.log('11s')
+            },
+
             //点击人员列表回调事件
             changeList (item) {
                 this.personDetail = item;
             },
             showVideo () {
                 this.isShowVideo = true
-                document.querySelector("#localVideo").style.width = this.screenWidth +'px'
-                document.querySelector("#localVideo").style.height = this.screenHeight +'px'
+                // document.querySelector("#localVideo").style.width = this.screenWidth +'px'
+                // document.querySelector("#localVideo").style.height = this.screenHeight +'px'
+                this.videoOnline();
+                this.dropImg = this.videoMes[0].photo;
             },
             closeAudio () {
                 alert(1)
@@ -161,6 +226,7 @@
             },
             stopWs (){
                 this.RTC.global.websocket.close();
+                this.isShowVideo=false;
             },
             videoOnline () {
                 var roomid= 900099;
@@ -256,14 +322,32 @@
             flex:1;
             /*background-color:$medical-bgCol_white;*/
             .chart-imTitle{
-                text-align: center;
+                text-align: left;
                 font-size: 24px;
                 position: relative;
                 color:#a4a4a6;
-                margin:0px 15px;
-                padding:10px 0px;
+                margin:0px 20px;
+                padding:10px 0px 20px;
                 box-sizing: border-box;
-                /*border-bottom:1px solid $medical-borCol_ddd;*/
+                & > .chart-adverse_input{
+                    position: absolute;
+                    left:0px;
+                    bottom:5px;
+                    font-size:$medical-font_14;
+                    color:$medical-col_d3;
+                }
+                .chart-imTitle_button{
+                    float: right;
+                    display: inline-block;
+                    vertical-align: middle;
+                    font-size: 0px;
+                    margin-top:8px;
+                    color:#7d90d2;
+                    & > i{
+                        font-size: 24px;
+                        margin-left:15px;
+                    }
+                }
             }
             .chart-nowTime{
                 text-align: center;
@@ -273,6 +357,13 @@
                 padding-bottom: 0px;
                 .medical-table_list{
                     margin:0px 0px;
+                    padding: 0px 0px;
+                    & > li{
+                        padding:10px 10px;
+                    }
+                    /*.medical-list_flex{
+                        box-shadow: none;
+                    }*/
                 }
             }
             .chart-imDialogue{
@@ -310,8 +401,8 @@
                         color:$medical-col_white;
                         font-size:0px;
                         padding:7px 7px;
-                        border-radius:18px;
-                        background-color:$medical-bgCol_cyan;
+                        border-radius:7px;
+                        background:$medical-bgCol_gradientIm;
                         & > img{
                             max-width: 150px;
                             margin:3px;
@@ -321,7 +412,15 @@
                             font-size:$medical-font_15;
                             margin:0px 8px;
                         }
-                        &:before{
+                        & > .mesage-state{
+                            position: absolute;
+                            display: inline-block;
+                            right:-35px;
+                            bottom:0px;
+                            font-size:$medical-font_12;
+                            color:#b8b8ba;
+                        }
+                        /*&:before{
                             position: absolute;
                             content:'';
                             left:-7px;
@@ -332,7 +431,7 @@
                             border-top:5px solid transparent;
                             border-bottom:5px solid transparent;
                             z-index: 2;
-                        }
+                        }*/
                     }
                     &.imDialogue_self{
                         text-align: right;
@@ -342,13 +441,17 @@
                         .chart-imDialogue_content{
                             margin-left:0px;
                             margin-right: 20px;
-                            background-color:$medical-bgCol_ce;
-                            &:before{
+                            background:#b1b8c8;
+                            & > .mesage-state{
+                                right:auto;
+                                left:-35px;
+                            }
+                           /* &:before{
                                 border-right-width:0px;
                                 left:auto;
                                 right:-7px;
                                 border-left:8px solid $medical-borCol_ce;
-                            }
+                            }*/
                         }
                     }
                 }
@@ -356,18 +459,20 @@
             .chart-imSend{
                 display: flex;
                 align-items:center;
-                padding:7px 15px;
+                padding:5px 15px 5px 5px;
                 background-color:$medical-bgCol_white;
-                .imSend-icon{
-                    font-size: 24px;
-                    color:$medical-col_999;
+                .imSend-botton{
+                    /*font-size: 24px;
+                    color:$medical-col_999;*/
                     margin-left:15px;
                 }
                 .el-input{
                     flex:1;
-                    box-shadow: 0px 0px 10px $medical-shadow_lightGrey;
+                    /*box-shadow: 0px 0px 10px $medical-shadow_lightGrey;*/
                     .el-input__inner{
                         border-radius: 4px;
+                        font-size: 16px;
+                        border-color:$medical-borCol_tran;
                     }
                 }
             }
@@ -380,6 +485,151 @@
         width:100%;
         height:100%;
         z-index: 9999;
-        background-color:rgba(0,0,0,1)
+        background-color:rgba(0,0,0,1);
+        .localVideo{
+            position: absolute;
+            z-index: 2;
+            width:200px;
+            left:0px;
+            top:0px;
+        }
+        .remoteVideo{
+            position: absolute;
+            display: block;
+            z-index: 1;
+            width:100%;
+            height:100%;
+            left:0px;
+            top:0px;
+        }
+        .chart-video_button{
+            display: inline-block;
+            position: absolute;
+            z-index: 100;
+            bottom:20px;
+            left:0px;
+            width:70%;
+            text-align: center;
+            i{
+                font-size: 24px;
+                margin:0px 15px;
+                border-radius: 100%;
+                padding:15px;
+                color:$medical-col_white;
+                border:2px solid $medical-borCol_white;
+                &.close-video{
+                    background-color:$medical-bgCol_orange;
+                    border-color:$medical-borCol_orange;
+                }
+            }
+        }
+        .chart-video_photo{
+            width:30%;
+            position: absolute;
+            height:100%;
+            z-index: 11;
+            right:0px;
+            top:0px;
+            background-color:rgba(255,255,255,0.5);
+            & > ul{
+                height:100%;
+                margin:0 auto;
+                overflow-y: auto;
+            }
+            & > ul > li{
+                display: flex;
+                padding:5px 10px;
+                flex-direction:row;
+                flex-wrap: nowrap;
+                .chart-video_img{
+                    width:40px;
+                    height:40px;
+                    border-radius:100%;
+                    display: inline-block;
+                    overflow: hidden;
+                    margin-right:10px;
+                    img{
+                        width:100%;
+                        height:100%;
+                    }
+                }
+                .chart-video_content{
+                    flex: 1;
+                    margin:10px 10px 0px;
+                    position: relative;
+                    padding:10px;
+                    border-radius:0px 8px 8px 8px;
+                    background:$medical-bgCol_white;
+                    font-size: 0px;
+                    .drag{
+                        width:100%;
+                    }
+                    & img{
+                        width:100%;
+                    }
+                    &:before{
+                        content:'';
+                        width:0px;
+                        height:0px;
+                        position: absolute;
+                        top:0px;
+                        left:-4px;
+                        border-bottom:8px solid transparent;
+                        border-right:5px solid $medical-borCol_white;
+                    }
+                }
+                &.self-photo{
+                    flex-direction:row-reverse;
+                    .chart-video_img{
+                        margin-right:0px;
+                        margin-left:10px;
+                    }
+                    .chart-video_content{
+                        background:linear-gradient(to right, rgb(0,209,204) , rgb(27,199,253));;
+                        border-radius:8px 0px 8px 8px;
+                        &:before{
+                            left:auto;
+                            right:-4px;
+                            border-right-width:0px;
+                            border-left:5px solid rgb(27,199,253);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .chart-video.chart-editPhoto{
+        background:url('./../assets/chart-tranBg.png') repeat;
+        background-color:$medical-bgCol_white;
+        .localVideo{
+            display: none;
+        }
+        .remoteVideo{
+            display: none;
+        }
+    }
+    .edit-photo_content{
+        position: absolute;
+        z-index: 99;
+        width:70%;
+        left:0%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        padding-bottom: 80px;
+        box-sizing: border-box;
+        .edit-photo_drop{
+            display: inline-block;
+            max-width:400px;
+            min-width: 200px;
+            min-height: 200px;
+            max-height:100%;
+            border:2px dashed $medical-borCol_white;
+            font-size: 0px;
+            .edit-photo_dropImg{
+                width:100%;
+            }
+        }
     }
 </style>

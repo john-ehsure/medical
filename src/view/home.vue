@@ -13,7 +13,7 @@
               @show="popoverShow"
               trigger="click">
               <el-row :gutter="20">
-                  <i class="el-icon-edit popover-icon" v-if="!isFrist" @click="isFrist = !isFrist"></i>
+                  <i class="hui-icon-ziyuan31 popover-icon" v-if="!isFrist" @click="isFrist = !isFrist"></i>
                   <i class="el-icon-check popover-icon" v-else @click="isFrist = !isFrist; isFristLogin = false"></i>
                   <el-col :span="8" v-for="item in person.personMes">
                       <div class="medical-col_flex">
@@ -218,7 +218,7 @@ export default {
           text-align: center;
           margin-right:5px;
           i {
-            font-size:$medical-font_16;
+            font-size:$medical-font_18;
             color:rgba(255,255,255,0.8);
           }
         }

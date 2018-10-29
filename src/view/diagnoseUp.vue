@@ -312,13 +312,6 @@ export default {
       console.log(row)
       this.dialogTableVisible = true;
       this.dialogDetail = row;
-      // this.$nextTick(function () {
-      //   let sildeWidth = document.getElementsByClassName('medical-page_silde')[0].offsetWidth;
-      //   console.log(sildeWidth)
-      //     // document.getElementsByClassName('el-dialog__wrapper')[0].style.width = '100%';
-      //     // document.getElementsByClassName('el-dialog__wrapper')[0].style.position = 'absolute';
-      //   // document.getElementsByClassName('el-dialog__wrapper')[0].style.width = (document.documentElement.clientWidth - sildeWidth - 215) +'px';
-      // })
     },
     //确认弹窗信息
     comfigDetail () {

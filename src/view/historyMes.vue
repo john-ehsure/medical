@@ -46,7 +46,7 @@
                       </div>
                   </li>
               </ul>
-              <ul class="medical-table_list marginTop_0 marginBottom_0" :style="{height:warpHeight+'px'}">
+              <ul class="medical-table_list marginTop_0 marginBottom_0" :style="{'max-height':warpHeight+'px'}">
                   <li v-for="(item,index) in tableList">
                       <!--list列表-->
                       <div class="medical-list_flex" :class=" item.isRead ? 'medical-list_read' : 'medical-list_unread' ">
@@ -231,7 +231,7 @@
                           </div>
                       </li>
                   </ul>
-                  <ul class="medical-table_list marginTop_0 marginBottom_0" :style="{height:warpDetailHeight+'px'}">
+                  <ul class="medical-table_list marginTop_0 marginBottom_0" :style="{'max-height':warpDetailHeight+'px'}">
                       <li v-for="(item,index) in tableListHistory">
                           <!--list列表-->
                           <div class="medical-list_flex" :class=" item.finishType=='1' ? 'medical-list_read' : 'medical-list_unread' ">
