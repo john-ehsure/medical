@@ -6,8 +6,6 @@
                     <img src="./../assets/medical-logo.png"/>
                 </div>
             </div>
-        <!--</transition>
-        <transition name="medical-fade-in">-->
             <div class="medical-login" v-else key="form">
                 <div class="medical-login_box">
                     <div class="medical-login_img" v-if="type != 1">
@@ -22,14 +20,14 @@
                     </div>
                     <!--登陆 start-->
                     <div class="medical-login_form form-two" v-if="type == 0">
-                        <el-form ref="loginForm" :model="loginForm" label-width="0px" size="medium ">
-                            <el-form-item>
+                        <el-form ref="loginForm" :rules="rulesLoginForm" :model="loginForm" label-width="0px" size="medium ">
+                            <el-form-item prop="name">
                                 <el-input v-model="loginForm.name" placeholder="姓名">
                                     <i slot="prefix" class="el-input__icon hui-icon-ziyuan9 "></i>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item>
-                                <el-input v-model="loginForm.password" placeholder="密码">
+                            <el-form-item prop="password">
+                                <el-input v-model="loginForm.password" type="password" placeholder="密码">
                                     <i slot="prefix" class="el-input__icon hui-icon-ziyuan "></i>
                                 </el-input>
                             </el-form-item>
@@ -41,24 +39,24 @@
                     <!--登陆 end-->
                     <!--注册 start-->
                     <div class="medical-login_form" v-if="type == 1">
-                        <el-form ref="registerForm" :model="registerForm" label-width="0px" size="medium ">
-                            <el-form-item>
-                                <el-input v-model="registerForm.number" placeholder="医生执业证编号">
+                        <el-form ref="registerForm" :rules="rulesRegisterForm" :model="registerForm" label-width="0px" size="medium ">
+                            <el-form-item prop="registerNumber">
+                                <el-input v-model="registerForm.registerNumber" placeholder="医生执业证编号">
                                     <i slot="prefix" class="el-input__icon hui-icon-ziyuan14 "></i>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item>
-                                <el-input v-model="registerForm.hospital" placeholder="医院">
+                            <el-form-item prop="registerHospital">
+                                <el-input v-model="registerForm.registerHospital" placeholder="医院">
                                     <i slot="prefix" class="el-input__icon hui-icon-ziyuan12 "></i>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item>
-                                <el-input v-model="registerForm.section" placeholder="科室">
+                            <el-form-item prop="registerSection">
+                                <el-input v-model="registerForm.registerSection" placeholder="科室">
                                     <i slot="prefix" class="el-input__icon hui-icon-ziyuan11 "></i>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item>
-                                <el-input v-model="registerForm.name" placeholder="姓名">
+                            <el-form-item prop="registerName">
+                                <el-input v-model="registerForm.registerName" placeholder="姓名">
                                     <i slot="prefix" class="el-input__icon hui-icon-ziyuan9 "></i>
                                 </el-input>
                             </el-form-item>
@@ -91,9 +89,9 @@
                     </div>
                     <!--提交成功 跳转中 end-->
                     <div class="medical-login_bottomGroup">
-                        <el-button type="info" v-if="type == 1 || type == 2" icon="el-icon-back" @click.native="type = 0" circle></el-button>
-                        <el-button type="primary" v-if="type == 0" icon="el-icon-arrow-right" @click.native="submitForm" circle></el-button>
-                        <el-button type="primary" v-if="type == 1" icon="el-icon-arrow-right" @click.native="type = 2" circle></el-button>
+                        <el-button type="info" v-if="type == 1 || type == 2" icon="el-icon-back" @click.native="backLogin" circle></el-button>
+                        <el-button type="primary" v-if="type == 0" icon="el-icon-arrow-right" @click.native="submitForm('loginForm')" circle></el-button>
+                        <el-button type="primary" v-if="type == 1" icon="el-icon-arrow-right" @click.native="submitRegisterForm('registerForm')" circle></el-button>
                         <el-button type="primary" v-if="type == 2" icon="el-icon-check" @click.native="type = 0" circle></el-button>
                     </div>
 
@@ -118,14 +116,39 @@ export default {
       //登陆
       loginForm: {
         name: '',
-        password: '',
+        password: ''
+      },
+      rulesLoginForm: {
+        name: [
+          {required: true, message: '请输入姓名', trigger: 'blur'},
+          {min: 2, max: 4, message: '长度在 2 到 4 个字符', trigger: 'blur'}
+        ],
+        password: [
+          {required: true, message: '请输入密码', trigger: 'blur'}
+        ]
       },
       //  注册
       registerForm: {
-        number: '',
-        hospital: '',
-        section: '',
-        name: ''
+          registerNumber: '',
+          registerHospital: '',
+          registerSection: '',
+          registerName: ''
+      },
+      rulesRegisterForm: {
+        registerName: [
+          {required: true, message: '请输入姓名', trigger: 'blur'},
+          {min: 2, max: 4, message: '长度在 2 到 4 个字符', trigger: 'blur'}
+        ],
+        registerNumber: [
+          {required: true, message: '请输入医生职业编号', trigger: 'blur'},
+          {min: 10, max: 10, message: '编号格式不对', trigger: 'blur'}
+        ],
+        registerHospital: [
+          {required: true, message: '请输入医院', trigger: 'blur'}
+        ],
+        registerSection: [
+          {required: true, message: '请输入科室', trigger: 'blur'}
+        ]
       },
       //  设置密码
       setPassForm: {
@@ -146,6 +169,7 @@ export default {
     },
     //注册
     register () {
+      this.$refs.loginForm.resetFields();
       this.type = 1
     },
     //忘记密码
@@ -162,15 +186,32 @@ export default {
             }
         });
     },
+    //返回登录
+    backLogin () {
+      this.type = 0
+      this.$refs.registerForm.resetFields();
+    },
+    //  注册提交
+    submitRegisterForm (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.type = 2
+        }
+      });
+    },
     //提交
-    submitForm () {
+    submitForm (formName) {
       //  调用接口 提交数据
-      let self = this
-      self.type = 3
-      sessionStorage.setItem("loginName",'liuqi')
-      setTimeout(function () {
-        self.$router.push({path: '/'})
-      }, 3000);
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let self = this
+          self.type = 3
+          sessionStorage.setItem("loginName",'liuqi')
+          setTimeout(function () {
+            self.$router.push({path: '/'})
+          }, 3000);
+        }
+      });
     }
   }
 }

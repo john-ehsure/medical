@@ -13,7 +13,7 @@
                 </div>
             </div>
 
-            <div class="chart-imDialogue" :style="{height: imDialogueHei+'px'}">
+            <div class="chart-imDialogue" :style="{height: imDialogueHei+'px'}" ref="imDialogueCartion">
                 <div class="medical-table">
                     <div class="chart-nowTime"><el-button type="info" size="mini" round disabled>03:22</el-button></div>
                     <ul class="medical-table_list">
@@ -52,7 +52,7 @@
             <div class="chart-imSend" ref="imSend">
                 <!--<el-form>-->
                     <div class="el-input">
-                        <input type="text" autocomplete="off" placeholder="请输入内容" class="el-input__inner">
+                        <input type="text" autocomplete="off" v-model="imSendMes" placeholder="请输入内容" class="el-input__inner">
                     </div>
                 <!--</el-form>-->
                 <el-button type="success" class="imSend-botton" @click.native="sendMes">发送</el-button>
@@ -76,13 +76,15 @@
                 <i class="el-icon-phone-outline" v-else  @click="isVideoState = !isVideoState"></i>
                 <i class="el-icon-edit close-video" @click="stopWs"></i>
             </div>
+            <!--修改选中的图片-->
             <div class="edit-photo_content" v-if="!isVideoState">
                 <drop class="edit-photo_drop" @arrive="arrive" @away="away" name="imgDrag">
                     <img class="edit-photo_dropImg" :src="dropImg">
                 </drop>
             </div>
+            <!--视频时右侧聊天部分-->
             <div class="chart-video_photo">
-                <ul>
+                <ul :style="{height:(screenHeight-48)+'px'}">
                     <li :class="[item.isSelf?'self-photo':'']" v-for="item in videoMes">
                         <div class="chart-video_img"><img :src="item.isSelf ? selfDetail.img : personDetail.img"/></div>
                         <div class="chart-video_content">
@@ -92,6 +94,12 @@
                         </div>
                     </li>
                 </ul>
+                <div class="chart-video_mes">
+                    <div class="el-input el-input--mini mes-flex">
+                        <input type="text" autocomplete="off" placeholder="请输入内容" class="el-input__inner">
+                    </div>
+                    <i class="el-icon-picture"></i>
+                </div>
             </div>
         </div>
 
@@ -149,6 +157,7 @@
                 screenWidth: 1000,//屏幕宽度
                 screenHeight: 500,//屏幕高度
                 RTC: {},//视频流对象信息
+                imSendMes: '',//im部分聊天发送信息
             }
         },
         mounted () {
@@ -158,13 +167,16 @@
             /*im 聊天部分高度设置*/
             this.imDialogueHei = this.screenHeight - this.$refs.imSend.offsetHeight - this.$refs.imTitle.offsetHeight;
         },
+        watch: {
+            'imDialogue': 'scrollToBottom'
+        },
         methods: {
             /**
              * 离开
              * @param dropComponent
              */
             away(dropComponent) {
-                console.log(dropComponent,'----')
+                // console.log(dropComponent,'----')
                 dropComponent.$el.style.opacity = '1'
                 dropComponent.$el.style.backgroundColor = ''
             },
@@ -174,8 +186,8 @@
              * @param dropComponent
              */
             arrive(packet, dropComponent) {
-                console.log(packet, dropComponent,'++++')
-                dropComponent.$el.style.backgroundColor = '#a9b7c6'
+                // console.log(packet, dropComponent,'++++')
+                dropComponent.$el.style.backgroundColor = '#fff'
                 dropComponent.$el.style.opacity = '.6'
             },
             /**
@@ -185,21 +197,34 @@
              * @param dropComponent
              */
             dragEnd(e, self, dropComponent) {
-                console.log(e, self, dropComponent,'====')
+                // console.log(e, self, dropComponent,'====')
                 if (!dropComponent) { // 没有落在drop组件中,dropComponent为null
                     return
                 }
                 let itemImg = dropComponent.$el
                 this.dropImg = self.packet.img.photo;
-                console.log(itemImg)
+                // console.log(itemImg)
                 // itemImg.style.backgroundImage = `url('${self.packet.img.photo}')`
                 itemImg.style.border = '2px dashed #ccc'
                 itemImg.style.opacity = '1'
             },
             sendMes () {
+                // this.imSendMes    imDialogue
+                if(this.imSendMes == ''){
+                    return
+                }
+                let newMes = {isSelf:true,title:this.imSendMes};
+                this.imDialogue.push(newMes);
+                this.imSendMes = '';
                 console.log('11s')
             },
-
+            //跳转到滚动跳底部
+            scrollToBottom () {
+                this.$nextTick(() => {
+                    let div = this.$refs.imDialogueCartion;
+                    div.scrollTop = div.scrollHeight
+                })
+            },
             //点击人员列表回调事件
             changeList (item) {
                 this.personDetail = item;
@@ -597,6 +622,26 @@
                     }
                 }
             }
+            .chart-video_mes{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color:$medical-bgCol_ce;
+                padding:10px;
+                box-sizing: border-box;
+                .mes-flex{
+                    flex:1;
+                    border-color:$medical-borCol_white;
+                    .el-input__inner{
+                        border-radius: 4px;
+                    }
+                }
+                & > i{
+                    margin-left: 10px;
+                    font-size: 28px;
+                    color: $medical-col_white;
+                }
+            }
         }
     }
     .chart-video.chart-editPhoto{
@@ -629,8 +674,7 @@
             border:2px dashed $medical-borCol_white;
             font-size: 0px;
             .edit-photo_dropImg{
-                max-width:100%;
-                max-height:100%;
+                width:100%;
             }
         }
     }
