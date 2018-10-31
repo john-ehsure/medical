@@ -105,10 +105,10 @@
         display: inline-block;
         border-radius: 10px 10px 0px 0px;
         font-size:16px;
-        /*background-color:#ddd;
-        color:#666;*/
+        background-color:$medical-bgCol_blue;
+        color:$medical-col_white;
         margin-right:5px;
-        &:nth-child(1){
+        /*&:nth-child(1){
           background-color:$medical-bgCol_white;
           color:$medical-col_blue;
         }
@@ -119,10 +119,10 @@
         &:nth-child(3){
           background-color:$medical-bgCol_grey;
           color:$medical-col_white;
-        }
+        }*/
         &.tab-active{
-          /*background-color: #00d6f2;
-          color:#fff;*/
+          background-color: $medical-bgCol_white;
+          color:$medical-col_blue;
           padding: 8px 15px;
         }
       }

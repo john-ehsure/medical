@@ -63,22 +63,22 @@
                         </el-form>
                     </div>
                     <!--注册 end-->
-                    <!--忘记密码 start-->
+                    <!--设置密码 start-->
                     <div class="medical-login_form form-two" v-if="type == 2">
-                        <el-form ref="setPassForm" :model="setPassForm" label-width="0px" size="medium ">
-                            <el-form-item>
-                                <el-input v-model="setPassForm.password" placeholder="密码">
+                        <el-form ref="setPassForm" :rules="rulesSetPassForm" :model="setPassForm" label-width="0px" size="medium ">
+                            <el-form-item prop="setpassword">
+                                <el-input v-model="setPassForm.setpassword" type="password" placeholder="密码">
                                     <i slot="prefix" class="el-input__icon hui-icon-ziyuan "></i>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item>
-                                <el-input v-model="setPassForm.checkPassword" placeholder="再次确认">
+                            <el-form-item prop="checkPassword">
+                                <el-input v-model="setPassForm.checkPassword" type="password" placeholder="再次确认">
                                     <i slot="prefix" class="el-input__icon el-icon-circle-check "></i>
                                 </el-input>
                             </el-form-item>
                         </el-form>
                     </div>
-                    <!--忘记密码 end-->
+                    <!--设置密码 end-->
                     <!--提交成功 跳转中 start-->
                     <div class="medical-login_form form-title" v-if="type == 3">
                         <p class="medical-login_formTitle">
@@ -92,7 +92,7 @@
                         <el-button type="info" v-if="type == 1 || type == 2" icon="el-icon-back" @click.native="backLogin" circle></el-button>
                         <el-button type="primary" v-if="type == 0" icon="el-icon-arrow-right" @click.native="submitForm('loginForm')" circle></el-button>
                         <el-button type="primary" v-if="type == 1" icon="el-icon-arrow-right" @click.native="submitRegisterForm('registerForm')" circle></el-button>
-                        <el-button type="primary" v-if="type == 2" icon="el-icon-check" @click.native="type = 0" circle></el-button>
+                        <el-button type="primary" v-if="type == 2" icon="el-icon-check" @click.native="submitSetPassForm('setPassForm')" circle></el-button>
                     </div>
 
                 </div>
@@ -109,11 +109,30 @@
 export default {
   name: 'login',
   data () {
+    let validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        if (this.setPassForm.checkPassword !== '') {
+          this.$refs.setPassForm.validateField('checkPassword');
+        }
+        callback();
+      }
+    };
+    let validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value !== this.setPassForm.setpassword) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
     return {
-      initialize: false,//是否为初始化状态 true 不显示登陆框
-      type:0,//0为登陆  1为注册 2 为设置密码
+      initialize: false, // 是否为初始化状态 true 不显示登陆框
+      type: 0, //   0为登陆  1为注册 2 为设置密码
       imageUrl: require('./../assets/logo.png'),
-      //登陆
+      //    登陆
       loginForm: {
         name: '',
         password: ''
@@ -129,10 +148,10 @@ export default {
       },
       //  注册
       registerForm: {
-          registerNumber: '',
-          registerHospital: '',
-          registerSection: '',
-          registerName: ''
+        registerNumber: '',
+        registerHospital: '',
+        registerSection: '',
+        registerName: ''
       },
       rulesRegisterForm: {
         registerName: [
@@ -152,9 +171,17 @@ export default {
       },
       //  设置密码
       setPassForm: {
-        password: '',
-        checkPassword: '',
+        setpassword: '',
+        checkPassword: ''
       },
+      rulesSetPassForm: {
+        setpassword: [
+          { validator: validatePass, trigger: 'blur' }
+        ],
+        checkPassword: [
+          { validator: validatePass2, trigger: 'blur' }
+        ],
+      }
     }
   },
   mounted () {
@@ -167,46 +194,62 @@ export default {
     handlePictureCardPreview (file) {
       this.imageUrl = file.url;
     },
-    //注册
+    //  注册
     register () {
       this.$refs.loginForm.resetFields();
       this.type = 1
     },
-    //忘记密码
+    //  忘记密码
     forget () {
-        this.$alert('请联系系统管理员', '', {
-            confirmButtonText: '确定',
-            center: true,
-            customClass: 'medical-alert',
-            callback: action => {
-                // this.$message({
-                //   type: 'info',
-                //   message: `action: ${ action }`
-                // });
-            }
-        });
+      this.$alert('请联系系统管理员', '', {
+        confirmButtonText: '确定',
+        center: true,
+        customClass: 'medical-alert',
+        callback: action => {
+            // this.$message({
+            //   type: 'info',
+            //   message: `action: ${ action }`
+            // });
+        }
+      });
     },
-    //返回登录
+    //  设置密码
+    submitSetPassForm (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          //  调接口
+          this.type = 0
+          this.$refs.setPassForm.resetFields();
+        }
+      });
+    },
+    //  返回登录
     backLogin () {
+      if (this.type == 1) {
+        this.$refs.registerForm.resetFields();
+      } else if (this.type == 2) {
+        this.$refs.setPassForm.resetFields();
+      }
       this.type = 0
-      this.$refs.registerForm.resetFields();
     },
     //  注册提交
     submitRegisterForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          //  调接口
           this.type = 2
+          this.$refs.registerForm.resetFields();
         }
       });
     },
-    //提交
+    //  提交
     submitForm (formName) {
       //  调用接口 提交数据
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let self = this
           self.type = 3
-          sessionStorage.setItem("loginName",'liuqi')
+          sessionStorage.setItem("loginName" ,'liuqi')
           setTimeout(function () {
             self.$router.push({path: '/'})
           }, 3000);

@@ -53,6 +53,7 @@ export default {
     if (this.hasAdd) {
       slideTabAddHei = this.$refs.slideTabAdd.offsetHeight;
     }
+    // console.log(slideTabAddHei,'=====')
     this.slideListHeight = document.documentElement.clientHeight - this.$refs.slideSearchHei.offsetHeight - slideTabAddHei;
   },
   methods: {

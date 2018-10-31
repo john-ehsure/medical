@@ -2,6 +2,7 @@
     <div class="chart-page">
         <slideTab @changeTabList="changeList" :hasAdd="false" :listData="personlistData"></slideTab>
         <div class="chart-im">
+            <!--im 标题-->
             <div class="chart-imTitle" ref="imTitle">
                 <span class="chart-adverse_input">对方正在输入...</span>
                 <span>{{personDetail.personName}}</span>
@@ -12,7 +13,7 @@
                     <i class="hui-icon-ziyuan33"></i>
                 </div>
             </div>
-
+            <!--im 聊天部分-->
             <div class="chart-imDialogue" :style="{height: imDialogueHei+'px'}" ref="imDialogueCartion">
                 <div class="medical-table">
                     <div class="chart-nowTime"><el-button type="info" size="mini" round disabled>03:22</el-button></div>
@@ -49,6 +50,7 @@
                     </li>
                 </ul>
             </div>
+            <!--im 发生消息部分-->
             <div class="chart-imSend" ref="imSend">
                 <!--<el-form>-->
                     <div class="el-input">
@@ -58,6 +60,7 @@
                 <el-button type="success" class="imSend-botton" @click.native="sendMes">发送</el-button>
             </div>
         </div>
+        <!--测试功能使用-->
         <div style="display: none">
             <el-button @click="closeAudio">关闭声音</el-button>
             <el-button @click="openAudio">打开声音</el-button>
@@ -66,6 +69,7 @@
             <el-button @click="stopWs">断开当前视频</el-button>
             <el-button @click="showVideo">显示视频</el-button>
         </div>
+        <!--打开视频通话部分-->
         <div class="chart-video" :class="[isVideoState?'':'chart-editPhoto']" v-show = "isShowVideo">
             <!-- 本地视频流 -->
             <video class="localVideo" id="localVideo" muted autoplay playsinline></video>
@@ -81,6 +85,13 @@
                 <drop class="edit-photo_drop" @arrive="arrive" @away="away" name="imgDrag">
                     <img class="edit-photo_dropImg" :src="dropImg">
                 </drop>
+                <!--工具部分-->
+                <div class="edit-photoTool">
+                    <i class="edit-photoTool_pencil"></i><br>
+                    <i class="edit-photoTool_eraser"></i><br>
+                    <i class="edit-photoTool_color tool-colorRed " :class="{'edit-photoTool_active': toolPencilType}" @click="toolPencilType = true"></i><br>
+                    <i class="edit-photoTool_color tool-colorCyan" :class="{'edit-photoTool_active': !toolPencilType}" @click="toolPencilType = false"></i>
+                </div>
             </div>
             <!--视频时右侧聊天部分-->
             <div class="chart-video_photo">
@@ -151,6 +162,7 @@
                     {isSelf:true,photo:require("./../assets/logo.png")},
                     {isSelf:false,photo:require("./../assets/photo.jpg")},
                 ],
+                toolPencilType: true,//铅笔的颜色 true 为红色  false 为青色
                 dropImg:'',//默认编辑的图片
                 isShowVideo: false,//是否显示视频界面
                 imDialogueHei: 400,//聊天信息部分默认高度
@@ -176,7 +188,6 @@
              * @param dropComponent
              */
             away(dropComponent) {
-                // console.log(dropComponent,'----')
                 dropComponent.$el.style.opacity = '1'
                 dropComponent.$el.style.backgroundColor = ''
             },
@@ -186,7 +197,6 @@
              * @param dropComponent
              */
             arrive(packet, dropComponent) {
-                // console.log(packet, dropComponent,'++++')
                 dropComponent.$el.style.backgroundColor = '#fff'
                 dropComponent.$el.style.opacity = '.6'
             },
@@ -197,14 +207,11 @@
              * @param dropComponent
              */
             dragEnd(e, self, dropComponent) {
-                // console.log(e, self, dropComponent,'====')
                 if (!dropComponent) { // 没有落在drop组件中,dropComponent为null
                     return
                 }
                 let itemImg = dropComponent.$el
                 this.dropImg = self.packet.img.photo;
-                // console.log(itemImg)
-                // itemImg.style.backgroundImage = `url('${self.packet.img.photo}')`
                 itemImg.style.border = '2px dashed #ccc'
                 itemImg.style.opacity = '1'
             },
@@ -533,8 +540,8 @@
             position: absolute;
             z-index: 100;
             bottom:20px;
-            left:0px;
-            width:75%;
+            left:20%;
+            width:35%;
             text-align: center;
             i{
                 font-size: 24px;
@@ -675,6 +682,60 @@
             font-size: 0px;
             .edit-photo_dropImg{
                 width:100%;
+            }
+        }
+        .edit-photoTool{
+            position: absolute;
+            bottom:40px;
+            left:0px;
+            z-index: 10;
+            text-align: left;
+            display: inline-block;
+            & > i{
+                display: inline-block;
+                margin:8px 0px;
+            }
+            .edit-photoTool_pencil{
+                width:123px;
+                height:32px;
+                background:url('./../assets/pencil.png') no-repeat;
+                background-size:100% 100%;
+            }
+            .edit-photoTool_eraser{
+                width:76px;
+                height:35px;
+                background:url('./../assets/eraser.png') no-repeat;
+                background-size:100% 100%;
+            }
+            .edit-photoTool_color{
+                width:32px;
+                height:32px;
+                position: relative;
+                border-radius:100%;
+                margin-bottom:0px;
+                margin-left:15px;
+                &.tool-colorRed{
+                    background-color:#ff0b0b;
+                }
+                &.tool-colorCyan{
+                    background-color:#11cbeb;
+                }
+                &.edit-photoTool_active:after{
+                    position: absolute;
+                    content: '';
+                    left:-3px;
+                    top:-3px;
+                    width:36px;
+                    height:36px;
+                    border-radius:100%;
+                    border:1px solid transparent;
+                }
+                &.tool-colorRed.edit-photoTool_active:after{
+                    border-color:#ff0b0b;
+                }
+                &.tool-colorCyan.edit-photoTool_active:after{
+                    border-color:#11cbeb;
+                }
             }
         }
     }
