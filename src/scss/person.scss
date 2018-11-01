@@ -105,7 +105,7 @@
         display: inline-block;
         border-radius: 10px 10px 0px 0px;
         font-size:16px;
-        background-color:$medical-bgCol_blue;
+        background-color:#8f99b5;
         color:$medical-col_white;
         margin-right:5px;
         /*&:nth-child(1){
@@ -130,6 +130,7 @@
     .personList-contain{
       background-color: #fff;
     }
+    /*个人基本信息*/
     .personList-detail{
       padding:0px 20px 30px;
       box-sizing: border-box;
@@ -138,7 +139,7 @@
         margin:0px;
         border-radius:10px;
         background-color: #fff;
-        padding:20px 20px 30px;
+        padding:50px 20px 50px;
         box-shadow: 0px 0px 10px $medical-shadow_lightGrey;
         & > li{
           padding:5px 5px;
@@ -161,6 +162,7 @@
         text-align: center;
       }
     }
+    /*个人基本信息 修改*/
     .personList-editDetail{
       padding:20px;
       margin:0px 20px 35px;
@@ -179,6 +181,26 @@
         bottom:-15px;
         text-align: center;
       }
+    }
+      /*基本病要表单提交*/
+    .personList-basicCheck{
+       /* width:500px;*/
+        position: relative;
+        box-sizing: border-box;
+        margin:0px 20px 20px;
+        padding:20px;
+        background-color:$medical-bgCol_white;
+        border-radius:10px;
+        box-shadow: 0px 0px 10px $medical-shadow_lightGrey;
+        .personList-swiper{
+            width:100%;
+            position: absolute;
+            box-sizing: border-box;
+        }
+        .swiper-container{
+            padding-bottom:20px;
+            box-sizing: border-box;
+        }
     }
     .personList-items{
       padding:15px 0px 15px;

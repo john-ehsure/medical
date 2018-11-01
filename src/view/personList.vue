@@ -22,7 +22,7 @@
                     </P>
                     <P class="fontSize_12"><i class="hui-icon-ziyuan13 fontSize_14 col_d3"></i> {{personDetail.topTitle.personNumber}}</P>
                     <P class="fontSize_12"><i class="hui-icon-ziyuan8 fontSize_14 col_d3"></i> {{personDetail.topTitle.personPhone}}</P>
-                    <P class="col_orange fontSize_12"><i class="hui-icon-ziyuan2 fontSize_14"></i> 向上转诊</P>
+                    <!--<P class="col_orange fontSize_12"><i class="hui-icon-ziyuan2 fontSize_14"></i> 向上转诊</P>-->
                 </div>
                 <!--新增患者start-->
                 <el-form ref="newForm" v-else class="personList-title_personMes top-form" :model="newForm" label-width="0px" size="mini">
@@ -52,7 +52,7 @@
                         <el-input v-model="newForm.phone" placeholder="联系方式">
                         </el-input>
                     </el-form-item>
-                    <P class="col_orange fontSize_12"><i class="hui-icon-ziyuan2 fontSize_14"></i> 向上转诊</P>
+                    <!--<P class="col_orange fontSize_12"><i class="hui-icon-ziyuan2 fontSize_14"></i> 向上转诊</P>-->
                 </el-form>
                 <!--新增患者 end-->
                 <div class="personList-title_info">
@@ -124,8 +124,46 @@
             </div>
             <!--个人基本信息部分 end-->
             <!--基本病要部分 start-->
-            <div class="" v-if="buttonActive == 2">
-                基本病要部分
+            <div class="personList-basicCheck" :style="{width:(contentWidth-255)+'px'}" v-show="buttonActive == 2">
+                <!--<div class="personList-swiper">-->
+                    <swiper :options="swiperOption">
+                        <swiper-slide v-for="items in basicCheckData">
+                            <div class="personList-formBox" v-for="fBox in items">
+                                <p class="personList-formBox_title">{{fBox.titleName}}</p>
+                                <el-form label-position="left" label-width="90px" :model="swiperForm" size="mini">
+                                    <el-row :gutter="10">
+                                        <el-col :span="12" v-for="box in fBox.detailList">
+                                            <el-form-item :label="box.name">
+                                                <el-input-number v-if="box.type == 1" v-model="swiperForm.number1" :min="0" :max="10"></el-input-number>
+                                                <el-switch v-if="box.type == 2" v-model="swiperForm.anomaly1"></el-switch>
+                                                <el-radio-group v-if="box.type == 3" v-model="swiperForm.type1">
+                                                    <el-radio :label="0">阴性</el-radio>
+                                                    <el-radio :label="1">阳性</el-radio>
+                                                </el-radio-group>
+                                                <el-select v-if="box.type == 4" v-model="swiperForm.blood1" placeholder="请选择">
+                                                    <el-option
+                                                        v-for="bl in bloodOptions"
+                                                        :key="bl.value"
+                                                        :label="bl.label"
+                                                        :value="bl.value">
+                                                    </el-option>
+                                                </el-select>
+                                                <span class="el-form_unit">{{box.unit}}</span>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="24">
+                                            <div class="personList-formBox_btn">
+                                                <el-button type="primary" size="mini" icon="el-icon-check"></el-button>
+                                                <el-button size="mini" icon="el-icon-view"></el-button>
+                                            </div>
+                                        </el-col>
+                                    </el-row>
+                                </el-form>
+                            </div>
+                        </swiper-slide>
+                        <div class="swiper-pagination" slot="pagination"></div>
+                    </swiper>
+               <!-- </div>-->
             </div>
             <!--基本病要部分 end-->
             <!--生殖检查部分 start-->
@@ -253,6 +291,101 @@ export default {
   },
   data () {
     return {
+
+      swiperOption: { //  swiper相关配置
+        pagination: {
+          el: '.swiper-pagination'
+        },
+        paginationClickable: true,
+        autoplay: 1500,
+        cancelable: false,
+        autoplayDisableOnInteraction: false,
+        loop: false,
+        coverflow: {
+          rotate: 30,
+          stretch: 10,
+          depth: 60,
+          modifier: 2,
+          slideShadows : true
+        }
+      },
+      //  基本病要 data数据
+      basicCheckData: [ // name 指小项目的名称  unit项目的单位 type项目类型 1num计数器 2 开关 3单选按钮 4下拉框
+        [
+            {
+                titleName: '血常规',
+                detailList: [
+                    {name: '血红蛋白', unit: '', type: 1, value: ''},
+                    {name: '红细胞计数', unit: 'X10^12/L', type: 1, value: ''},
+                    {name: '白细胞计数', unit: 'X10^12/L', type: 1, value: ''},
+                    {name: '红细胞体积', unit: '%', type: 1, value: ''},
+                    {name: '血小板', unit: 'X10^9/L', type: 1, value: ''},
+                    {name: '血沉', unit: 'mm/H', type: 1, value: ''},
+                    {name: '尿常规', unit: '', type: 2, value: ''},
+                    {name: '血型', unit: '', type: 4, value: ''},
+                    {name: 'Rh因子', unit: '', type: 3, value: ''}
+                ]
+            },
+            {
+                titleName: '血常规',
+                detailList: [
+                    {name: '血红蛋白', unit: '', type: 1, value: ''},
+                    {name: '红细胞计数', unit: 'X10^12/L', type: 1, value: ''},
+                    {name: '白细胞计数', unit: 'X10^12/L', type: 1, value: ''},
+                    {name: '红细胞体积', unit: '%', type: 1, value: ''},
+                    {name: '血小板', unit: 'X10^9/L', type: 1, value: ''},
+                    {name: '血沉', unit: 'mm/H', type: 1, value: ''},
+                    {name: '尿常规', unit: '', type: 2, value: ''},
+                    {name: '血型', unit: '', type: 4, value: ''},
+                    {name: 'Rh因子', unit: '', type: 3, value: ''}
+                ]
+            }
+        ],
+        [
+            {
+                titleName: '血常规',
+                detailList: [
+                    {name: '血红蛋白', unit: '', type: 1, value: ''},
+                    {name: '红细胞计数', unit: 'X10^12/L', type: 1, value: ''},
+                    {name: '白细胞计数', unit: 'X10^12/L', type: 1, value: ''},
+                    {name: '红细胞体积', unit: '%', type: 1, value: ''},
+                    {name: '血小板', unit: 'X10^9/L', type: 1, value: ''},
+                    {name: '血沉', unit: 'mm/H', type: 1, value: ''},
+                    {name: '尿常规', unit: '', type: 2, value: ''},
+                    {name: '血型', unit: '', type: 4, value: ''},
+                    {name: 'Rh因子', unit: '', type: 3, value: ''}
+                ]
+            },
+            {
+                titleName: '血常规',
+                detailList: [
+                    {name: '血红蛋白', unit: '', type: 1, value: ''},
+                    {name: '红细胞计数', unit: 'X10^12/L', type: 1, value: ''},
+                    {name: '白细胞计数', unit: 'X10^12/L', type: 1, value: ''},
+                    {name: '红细胞体积', unit: '%', type: 1, value: ''},
+                    {name: '血小板', unit: 'X10^9/L', type: 1, value: ''},
+                    {name: '血沉', unit: 'mm/H', type: 1, value: ''},
+                    {name: '尿常规', unit: '', type: 2, value: ''},
+                    {name: '血型', unit: '', type: 4, value: ''},
+                    {name: 'Rh因子', unit: '', type: 3, value: ''}
+                ]
+            }
+        ]
+      ],
+      //  血型下拉框
+      bloodOptions: [
+        {value: 0, label: 'A型'},
+        {value: 1, label: 'B型'},
+        {value: 2, label: 'AB型'},
+        {value: 3, label: 'O型'}
+      ],
+      //  血常规 form
+      swiperForm: {
+        number1: 0,
+        anomaly1: false,
+        type1: 1, // 0阴性 1阳性
+        blood1: 0 //  0 A型  1 B型 2 AB型 3 O型
+      },
       newAddPerson: false, //   是否为新增患者
       warpHeight: 500,
       buttonActive: 1, //    判断显示信息  1 个人基本信息 2基本病要 3 生殖检查  4 常规检查
@@ -279,20 +412,14 @@ export default {
       personDetail: {
         topTitle: {}, //    头部信息
         personInfor: [ //    个人病情资料
-          {title: '病人主诉', value: '周身皮疹2天，作瘙痒'},
-          {title: '现病史', value: '2天前起发现周身陆续出现丘疹及水泡'},
-          {title: '', value: '作瘙痒，尚无发热'},
-          {title: '既往史', value: '无药物过敏史'},
-          {title: '个人史', value: '无特殊'},
-          {title: '家族史', value: '无特殊'},
-          {title: '体格检查', value: 'T37.6一般状态尚可，心肺腹未见异常'},
-          {title: '专科检查', value: '全身见密集丘疹，水疱，部分破溃，结痂，鄂下淋巴结肿大'},
-          {title: '辅助检查', value: '血BC&，WBC7.02/L;LYM%12.84,NEUT:4.18*109'},
-          {title: '诊断', value: '(B01.901)水痘'},
-          {title: '本次医嘱', value: '血常规'},
-          {title: '', value: '病假诊断'},
-          {title: '西城药', value: '1.盐酸0.3*7片'},
-          {title: '', value: '每次0.3g，每天二次，口服'}
+          {title: '身份证', value: '无特殊'},
+          {title: '职业', value: '学生'},
+          {title: '学历', value: '本科'},
+          {title: '婚姻状况', value: '未婚'},
+          {title: '国籍', value: '中国'},
+          {title: '身份证', value: '211222199011112233'},
+          {title: '电话', value: '19922221111'},
+          {title: '通讯地址', value: '北京市西直门'}
         ]
       },
       tableList: [
@@ -343,6 +470,12 @@ export default {
           ]
         }
       ]
+    }
+  },
+  props: {
+    contentWidth: {//  swiper容器的宽带
+      type: Number,
+      default: 500
     }
   },
   created () {
@@ -404,6 +537,7 @@ export default {
       console.log(item, '++++++')
       this.personDetail.topTitle = item;
     },
+    //  选项卡切换  个人基本信息 基本病要  生殖检查  常规检查
     handleDeatil (val) {
       if (this.buttonActive == val) {
         return
@@ -423,7 +557,8 @@ export default {
     onSubmit () {
       console.log('submit!')
       this.isEditDetail = false
-    }
+    },
+
   }
 }
 </script>
@@ -435,5 +570,86 @@ export default {
   .personList-page {
       height: 100%;
       display: flex;
+      .swiper-container-horizontal > .swiper-pagination-bullets{
+          bottom: 0px;
+          .swiper-pagination-bullet-active{
+              background:$medical-bgCol_blue;
+          }
+      }
+      .personList-formBox{
+          &+.personList-formBox{
+              border-top:1px dashed $medical-borCol_ce;
+          }
+          .personList-formBox_title{
+              color:$medical-col_blue;
+              font-size:$medical-font_16;
+              padding:10px 0px;
+          }
+          .el-form-item__label{
+              color:$medical-col_999;
+          }
+          .el-form_unit{
+              font-size: $medical-font_12;
+              color:$medical-col_999;
+          }
+          .personList-formBox_btn{
+              padding:0px 0px 10px;
+              text-align: center;
+              .el-button--mini{
+                  padding:3px 20px !important;
+              }
+              .el-button+.el-button{
+                  margin-left:40px;
+              }
+          }
+          /*计数器 样式修改*/
+          .el-input-number--mini{
+              width:110px;
+              .el-input-number__increase{
+                  right: auto;
+                  left: 1px;
+                  color: $medical-col_cyan;
+                  border-radius: 4px 0 0 4px;
+                  border-left-width:0px;
+                  border-right: 1px solid $medical-borCol_blue;
+              }
+              .el-input-number__decrease{
+                  right: 1px;
+                  left:auto;
+                  color: $medical-col_cyan;
+                  border-radius: 0 4px 4px 0;
+                  border-right-width:0px;
+                  border-left: 1px solid $medical-borCol_blue;
+              }
+              .el-input__inner{
+                  border-color:$medical-borCol_blue;
+              }
+          }
+          /*下拉框 样式修改*/
+          .el-select--mini{
+              width:110px;
+          }
+          /*单选框 样式修改*/
+          .el-radio-group{
+              .el-radio__label{
+                  padding-left:5px;
+              }
+              .el-radio+.el-radio{
+                  margin-left:15px;
+              }
+              .el-radio__input.is-checked .el-radio__inner{
+                  border-color: $medical-borCol_cyan;
+                  background:$medical-bgCol_cyan;
+              }
+              .el-radio__input.is-checked+.el-radio__label{
+                  color:$medical-col_999;
+              }
+          }
+          /*开关 样式修改*/
+          .el-switch.is-checked .el-switch__core{
+              border-color: $medical-borCol_orange;
+              background-color: $medical-bgCol_orange;
+          }
+      }
   }
 </style>

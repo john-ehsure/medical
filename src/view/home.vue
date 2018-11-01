@@ -1,8 +1,8 @@
 <template>
   <div class="medical-page">
-    <div class="medical-page_silde" :class="{'silde-collapse':collapse}" :style="{'z-index': isFristLogin?'auto':''}">
+    <div class="medical-page_silde" ref="pageSilde" :class="{'silde-collapse':collapse}" :style="{'z-index': isFristLogin?'auto':''}">
         <span class="medical-head_flexIcon">
-          <i class="hui-icon-ziyuan5" @click="collapse = !collapse"></i>
+          <i class="hui-icon-ziyuan5" @click="toggleSilde"></i>
         </span>
       <div class="medical-page_head">
           <!--个人资料弹窗部分-->
@@ -43,7 +43,7 @@
     </div>
     <div class="medical-page_view">
       <transition name="fade">
-        <router-view/>
+        <router-view :contentWidth="contentWidth"/>
       </transition>
     </div>
      <div class="medical-guide" v-if="isFristLogin">
@@ -59,12 +59,13 @@ export default {
   name: 'Home',
   data () {
     return {
-      isFristLogin: false,//是否是第一次登陆进来的
-      guideone: true,//是否显示引导页的第一页
-      isFrist: false,//是否填写主页的个人信息
-      collapse: false,//默认是不收起  true为收起
-      routesOptions: [],//菜单导航
-      person: {//个人信息详情
+      contentWidth: 800, //  页面右侧容器的宽度
+      isFristLogin: false, //   是否是第一次登陆进来的
+      guideone: true, //    是否显示引导页的第一页
+      isFrist: false, //    是否填写主页的个人信息
+      collapse: false, //   默认是不收起  true为收起
+      routesOptions: [], // 菜单导航
+      person: { //  个人信息详情
         photo: require("./../assets/logo.png"),
         name: '刘奇',
         number: 2,
@@ -100,12 +101,26 @@ export default {
     }
   },
   created () {
-    console.log(this.$router.options.routes[1].children)
+    // console.log(this.$router.options.routes[1].children)
     this.routesOptions = this.$router.options.routes[1].children;
   },
+  mounted () {
+    this.contentWidth = document.documentElement.clientWidth - this.$refs.pageSilde.offsetWidth
+  },
   methods: {
+    //  导航切换
+    toggleSilde () {
+      this.collapse = !this.collapse
+      let pageSildeWidth = 180
+      if (this.collapse) {
+        pageSildeWidth = 80
+      }
+      this.contentWidth = document.documentElement.clientWidth - pageSildeWidth
+        // console.log(this.$refs.pageSilde.offsetWidth,this.contentWidth)
+    },
+    //  页面跳转
     linkTo (item) {
-      console.log(item)
+      // console.log(item)
       this.$router.push({path:item.path})
     },
     //监听弹窗显示事件
