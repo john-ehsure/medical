@@ -3,12 +3,12 @@ import qs from 'qs'
 
 export default {
   // 填写并提交个⼈人信息表单
-  practitioners: params => {
+  practitionersEdit: params => {
     return API.POST('/data_api/practitioners/', qs.stringify(params))
   },
-    practitionersDetail: params => {
-        return API.GET('/data_api/practitioners/', params)
-    },
+  practitionersDetail: params => {
+    return API.GET('/data_api/practitioners/', params)
+  },
   // 查询用户是否注册 第二步
   // reg_second: params => {
   //   return API.POST('/auth_api/reg_second/', qs.stringify(params))

@@ -14,13 +14,13 @@
               trigger="click">
               <el-row :gutter="20">
                   <i class="hui-icon-ziyuan31 popover-icon" v-if="!isFrist" @click="isFrist = !isFrist"></i>
-                  <i class="el-icon-check popover-icon" v-else @click="isFrist = !isFrist; isFristLogin = false"></i>
+                  <i class="el-icon-check popover-icon" v-else @click="infoSubmit"></i>
                   <el-col :span="8" v-for="item in person.personMes">
                       <div class="medical-col_flex">
                           <i class="medical-col_icon" :class="item.icon"></i>
                           <div class="medical-col_content">
                               <p class="medical-col_title">{{item.title}}</p>
-                              <p class="medical-col_detail" v-if="!isFrist">{{item.field == ''?item.value:formPractitioner[item.field]}}</p>
+                              <p class="medical-col_detail" v-if="!isFrist">{{item.field == ''?item.value: infoTitle(item.field) }}</p>
                               <p class="medical-col_detail" v-else-if="item.field == ''">{{item.value}}</p>
                               <el-select v-model="formPractitioner[item.field]" placeholder="请选择" size="mini" v-else-if="item.field == 'title'">
                                   <el-option key="A" label="知名专家" value="A"></el-option>
@@ -91,14 +91,15 @@ export default {
         ]
       },
       formPractitioner: {
-          id_no: '300111222333000222',
-          telecom: '13611112222',
-          hospital: '北医三院',
-          title: '住院医师',
-          qualification_id: '987654321',
-          qualification_issuer: '北医三院',
-          qualification_period: '864987543',
-          photo: ''
+        user: null,
+        id_no: '300111222333000222',
+        telecom: '13611112222',
+        hospital: '北医三院',
+        title: '住院医师',
+        qualification_id: '987654321',
+        qualification_issuer: '北医三院',
+        qualification_period: '864987543',
+        photo: ''
       }
     }
   },
@@ -116,8 +117,18 @@ export default {
     this.practitionersDetail();
   },
   methods: {
+    //  编辑提交个人信息
+      infoSubmit () {
+          APIDATA.practitionersEdit(this.formPractitioner).then((res) => {
+              console.log(res)
+              this.isFrist =  !this.isFrist
+              this.isFristLogin = false
+          })
+      },
+    //  获取个人信息
     practitionersDetail () {
       APIDATA.practitionersDetail().then((res) => {
+        this.formPractitioner.user = res[0].user
         this.formPractitioner.id_no = res[0].id_no
         this.formPractitioner.telecom = res[0].telecom
         this.formPractitioner.hospital = res[0].hospital
@@ -158,6 +169,25 @@ export default {
       if (this.isFristLogin) {
         this.isFrist = true
       }
+    },
+    infoTitle (val) {
+      let titleStr = ''
+      if (val == 'title') {
+        switch (this.formPractitioner[val]) {
+          case 'A':
+            titleStr = '知名专家'
+            break
+          case 'B':
+            titleStr = '主任医师'
+            break
+          case 'C':
+            titleStr = '副主任医师'
+            break
+        }
+      } else {
+        titleStr = this.formPractitioner[val]
+      }
+      return titleStr
     }
   }
 }
