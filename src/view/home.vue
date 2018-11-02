@@ -55,6 +55,9 @@
 </template>
 
 <script>
+import APIUSER from '@/api/api_user.js'
+import APIDATA from '@/api/api_data.js'
+import {bus} from '@/bus/bus.js'
 export default {
   name: 'Home',
   data () {
@@ -70,7 +73,7 @@ export default {
         name: '刘奇',
         number: 2,
         personMes:[
-          {icon: 'hui-icon-ziyuan6', title: '证件类型', value: '身份证'},
+          {icon: 'hui-icon-ziyuan6', title: '证件类型', value: '身份证' , },
           {icon: 'hui-icon-ziyuan10', title: '执业证书编号', value: '987654321'},
           {icon: 'hui-icon-ziyuan15', title: '医院等级', value: '三甲医院'},
           {icon: 'hui-icon-ziyuan7', title: '证件号码', value: '300111222333000222'},
@@ -81,33 +84,30 @@ export default {
           {icon: 'hui-icon-ziyuan16', title: '职称', value: '住院医师'}
         ]
       },
-      gridData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }]
+
     }
   },
   created () {
     // console.log(this.$router.options.routes[1].children)
     this.routesOptions = this.$router.options.routes[1].children;
+    bus.$on('goto', (url) => {
+      this.$router.push(url);
+    })
   },
   mounted () {
     this.contentWidth = document.documentElement.clientWidth - this.$refs.pageSilde.offsetWidth
+      this.userProfile()
   },
   methods: {
+    //  获取用户信息
+    userProfile () {
+      APIUSER.userprofile().then((res) => {
+        console.log(res)
+        let data = res[0];
+        this.isFristLogin = data.is_FirstLogin
+        this.person.name = data.username
+      })
+    },
     //  导航切换
     toggleSilde () {
       this.collapse = !this.collapse

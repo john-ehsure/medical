@@ -21,8 +21,8 @@
                     <!--登陆 start-->
                     <div class="medical-login_form form-two" v-if="type == 0">
                         <el-form ref="loginForm" :rules="rulesLoginForm" :model="loginForm" label-width="0px" size="medium ">
-                            <el-form-item prop="name">
-                                <el-input v-model="loginForm.name" placeholder="姓名">
+                            <el-form-item prop="username">
+                                <el-input v-model="loginForm.username" placeholder="姓名">
                                     <i slot="prefix" class="el-input__icon hui-icon-ziyuan9 "></i>
                                 </el-input>
                             </el-form-item>
@@ -40,23 +40,23 @@
                     <!--注册 start-->
                     <div class="medical-login_form" v-if="type == 1">
                         <el-form ref="registerForm" :rules="rulesRegisterForm" :model="registerForm" label-width="0px" size="medium ">
-                            <el-form-item prop="registerNumber">
-                                <el-input v-model="registerForm.registerNumber" placeholder="医生执业证编号">
+                            <el-form-item prop="doctor_cer">
+                                <el-input v-model="registerForm.doctor_cer" placeholder="医生执业证编号">
                                     <i slot="prefix" class="el-input__icon hui-icon-ziyuan14 "></i>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item prop="registerHospital">
-                                <el-input v-model="registerForm.registerHospital" placeholder="医院">
+                            <el-form-item prop="hos_area">
+                                <el-input v-model="registerForm.hos_area" placeholder="医院">
                                     <i slot="prefix" class="el-input__icon hui-icon-ziyuan12 "></i>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item prop="registerSection">
-                                <el-input v-model="registerForm.registerSection" placeholder="科室">
+                            <el-form-item prop="subject">
+                                <el-input v-model="registerForm.subject" placeholder="科室">
                                     <i slot="prefix" class="el-input__icon hui-icon-ziyuan11 "></i>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item prop="registerName">
-                                <el-input v-model="registerForm.registerName" placeholder="姓名">
+                            <el-form-item prop="name">
+                                <el-input v-model="registerForm.name" placeholder="姓名">
                                     <i slot="prefix" class="el-input__icon hui-icon-ziyuan9 "></i>
                                 </el-input>
                             </el-form-item>
@@ -106,6 +106,7 @@
 </template>
 
 <script>
+import API from '@/api/api_user.js'
 export default {
   name: 'login',
   data () {
@@ -134,11 +135,11 @@ export default {
       imageUrl: require('./../assets/logo.png'),
       //    登陆
       loginForm: {
-        name: '',
+        username: '',
         password: ''
       },
       rulesLoginForm: {
-        name: [
+        username: [
           {required: true, message: '请输入姓名', trigger: 'blur'},
           {min: 2, max: 4, message: '长度在 2 到 4 个字符', trigger: 'blur'}
         ],
@@ -148,25 +149,25 @@ export default {
       },
       //  注册
       registerForm: {
-        registerNumber: '',
-        registerHospital: '',
-        registerSection: '',
-        registerName: ''
+        doctor_cer: '',
+        hos_area: '',
+        subject: '',
+        name: ''
       },
       rulesRegisterForm: {
-        registerName: [
-          {required: true, message: '请输入姓名', trigger: 'blur'},
-          {min: 2, max: 4, message: '长度在 2 到 4 个字符', trigger: 'blur'}
-        ],
-        registerNumber: [
+        doctor_cer: [
           {required: true, message: '请输入医生职业编号', trigger: 'blur'},
-          {min: 10, max: 10, message: '编号格式不对', trigger: 'blur'}
+          {min: 1, max: 10, message: '编号格式不对', trigger: 'blur'}
         ],
-        registerHospital: [
+        hos_area: [
           {required: true, message: '请输入医院', trigger: 'blur'}
         ],
-        registerSection: [
+        subject: [
           {required: true, message: '请输入科室', trigger: 'blur'}
+        ],
+        name: [
+          {required: true, message: '请输入姓名', trigger: 'blur'},
+          {min: 2, max: 4, message: '长度在 2 到 4 个字符', trigger: 'blur'}
         ]
       },
       //  设置密码
@@ -218,18 +219,31 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           //  调接口
-          this.type = 0
-          this.$refs.setPassForm.resetFields();
+          let regSecondForm = {
+            username: this.registerForm.name,
+            password: this.setPassForm.setpassword,
+            qualification_id: this.registerForm.doctor_cer,
+            hospital: this.registerForm.hos_area,
+            subject: this.registerForm.subject
+          }
+          API.reg_second(regSecondForm).then((res) => {
+              localStorage.setItem('token',res.token);
+              self.type = 3
+              setTimeout(function () {
+                self.$router.push({path: '/'})
+              }, 3000);
+          })
+          // this.type = 0
+          // this.$refs.setPassForm.resetFields();
         }
       });
     },
     //  返回登录
     backLogin () {
-      if (this.type == 1) {
-        this.$refs.registerForm.resetFields();
-      } else if (this.type == 2) {
+      if (this.type == 2) {
         this.$refs.setPassForm.resetFields();
       }
+      this.$refs.registerForm.resetFields();
       this.type = 0
     },
     //  注册提交
@@ -237,22 +251,31 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           //  调接口
-          this.type = 2
-          this.$refs.registerForm.resetFields();
+          API.reg_first(this.registerForm).then((res)=>{
+              console.log(res)
+              if(res){
+                this.type = 2
+              }
+
+          })
+          // this.$refs.registerForm.resetFields();
         }
       });
     },
-    //  提交
+    //  登录提交
     submitForm (formName) {
       //  调用接口 提交数据
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let self = this
-          self.type = 3
-          sessionStorage.setItem("loginName" ,'liuqi')
-          setTimeout(function () {
-            self.$router.push({path: '/'})
-          }, 3000);
+          API.login(this.loginForm).then((res) => {
+            console.log(res)
+            localStorage.setItem("token" ,res.token)
+            self.type = 3
+            setTimeout(function () {
+              self.$router.push({path: '/'})
+            }, 3000);
+          })
         }
       });
     }

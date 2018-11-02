@@ -20,7 +20,7 @@ Vue.use(ElementUI)
 
 router.beforeEach((to, from, next) => {
   if (to.name !== 'login') {
-    if (!window.sessionStorage.getItem("loginName")) {
+    if (!window.localStorage.getItem("token")) {
       router.push({name: 'login'})
     }
   }
