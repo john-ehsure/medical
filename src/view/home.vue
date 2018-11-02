@@ -20,8 +20,13 @@
                           <i class="medical-col_icon" :class="item.icon"></i>
                           <div class="medical-col_content">
                               <p class="medical-col_title">{{item.title}}</p>
-                              <p class="medical-col_detail" v-if="!isFrist ">{{item.field == ''?item.value:formPractitioner[item.field]}}</p>
+                              <p class="medical-col_detail" v-if="!isFrist">{{item.field == ''?item.value:formPractitioner[item.field]}}</p>
                               <p class="medical-col_detail" v-else-if="item.field == ''">{{item.value}}</p>
+                              <el-select v-model="formPractitioner[item.field]" placeholder="请选择" size="mini" v-else-if="item.field == 'title'">
+                                  <el-option key="A" label="知名专家" value="A"></el-option>
+                                  <el-option key="B" label="主任医师" value="B"></el-option>
+                                  <el-option key="C" label="副主任医师" value="C"></el-option>
+                              </el-select>
                               <el-input v-model="formPractitioner[item.field]" v-else placeholder="请输入内容" size="mini"></el-input>
                           </div>
                       </div>
@@ -106,13 +111,23 @@ export default {
   },
   mounted () {
     this.contentWidth = document.documentElement.clientWidth - this.$refs.pageSilde.offsetWidth
-      APIDATA.practitionersDetail().then((res) => {
-          console.log(res)
 
-      })
-      this.userProfile()
+    this.userProfile();
+    this.practitionersDetail();
   },
   methods: {
+    practitionersDetail () {
+      APIDATA.practitionersDetail().then((res) => {
+        this.formPractitioner.id_no = res[0].id_no
+        this.formPractitioner.telecom = res[0].telecom
+        this.formPractitioner.hospital = res[0].hospital
+        this.formPractitioner.title = res[0].title
+        this.formPractitioner.qualification_id = res[0].qualification_id
+        this.formPractitioner.qualification_issuer = res[0].qualification_issuer
+        this.formPractitioner.qualification_period = res[0].qualification_period
+        this.formPractitioner.photo = res[0].photo
+      })
+    },
     //  获取用户信息
     userProfile () {
       APIUSER.userprofile().then((res) => {
@@ -349,6 +364,7 @@ export default {
       }
       .medical-col_detail{
         color:$medical-col_default;
+        min-height: 23px;
       }
     }
   }
