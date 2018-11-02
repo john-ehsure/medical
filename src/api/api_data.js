@@ -6,6 +6,9 @@ export default {
   practitioners: params => {
     return API.POST('/data_api/practitioners/', qs.stringify(params))
   },
+    practitionersDetail: params => {
+        return API.GET('/data_api/practitioners/', params)
+    },
   // 查询用户是否注册 第二步
   // reg_second: params => {
   //   return API.POST('/auth_api/reg_second/', qs.stringify(params))

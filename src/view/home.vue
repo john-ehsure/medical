@@ -20,8 +20,9 @@
                           <i class="medical-col_icon" :class="item.icon"></i>
                           <div class="medical-col_content">
                               <p class="medical-col_title">{{item.title}}</p>
-                              <p class="medical-col_detail" v-if="!isFrist">{{item.value}}</p>
-                              <el-input v-model="item.value" v-else placeholder="请输入内容" size="mini"></el-input>
+                              <p class="medical-col_detail" v-if="!isFrist ">{{item.field == ''?item.value:formPractitioner[item.field]}}</p>
+                              <p class="medical-col_detail" v-else-if="item.field == ''">{{item.value}}</p>
+                              <el-input v-model="formPractitioner[item.field]" v-else placeholder="请输入内容" size="mini"></el-input>
                           </div>
                       </div>
                   </el-col>
@@ -73,18 +74,27 @@ export default {
         name: '刘奇',
         number: 2,
         personMes:[
-          {icon: 'hui-icon-ziyuan6', title: '证件类型', value: '身份证' , },
-          {icon: 'hui-icon-ziyuan10', title: '执业证书编号', value: '987654321'},
-          {icon: 'hui-icon-ziyuan15', title: '医院等级', value: '三甲医院'},
-          {icon: 'hui-icon-ziyuan7', title: '证件号码', value: '300111222333000222'},
-          {icon: 'hui-icon-ziyuan11', title: '发证机构', value: '北医三院'},
-          {icon: 'hui-icon-ziyuan14', title: '医院编号', value: '864987543'},
-          {icon: 'hui-icon-ziyuan8', title: '联系方式', value: '13611112222'},
-          {icon: 'hui-icon-ziyuan12', title: '医院名称', value: '北医三院'},
-          {icon: 'hui-icon-ziyuan16', title: '职称', value: '住院医师'}
+          {icon: 'hui-icon-ziyuan6', title: '证件类型', value: '身份证', field: ''},
+          {icon: 'hui-icon-ziyuan10', title: '执业证书编号', value: '', field: 'qualification_id'},
+          // {icon: 'hui-icon-ziyuan15', title: '医院等级', value: '三甲医院', field: ''},
+          {icon: 'hui-icon-ziyuan7', title: '证件号码', value: '', field: 'id_no'},
+          {icon: 'hui-icon-ziyuan11', title: '发证机构', value: '', field: 'qualification_issuer'},
+          {icon: 'hui-icon-ziyuan14', title: '医生执照有效期', value: '', field: 'qualification_period'},
+          {icon: 'hui-icon-ziyuan8', title: '联系方式', value: '', field: 'telecom'},
+          {icon: 'hui-icon-ziyuan12', title: '医院名称', value: '', field: 'hospital'},
+          {icon: 'hui-icon-ziyuan16', title: '职称', value: '', field: 'title'}
         ]
       },
-
+      formPractitioner: {
+          id_no: '300111222333000222',
+          telecom: '13611112222',
+          hospital: '北医三院',
+          title: '住院医师',
+          qualification_id: '987654321',
+          qualification_issuer: '北医三院',
+          qualification_period: '864987543',
+          photo: ''
+      }
     }
   },
   created () {
@@ -96,6 +106,10 @@ export default {
   },
   mounted () {
     this.contentWidth = document.documentElement.clientWidth - this.$refs.pageSilde.offsetWidth
+      APIDATA.practitionersDetail().then((res) => {
+          console.log(res)
+
+      })
       this.userProfile()
   },
   methods: {
