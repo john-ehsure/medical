@@ -39,15 +39,19 @@ let base = '';  //接口代理地址参见：config/index.js中的proxyTable配�
 
 //通用方法
 export const POST = (url, params) => {
-  return axios.post(`${base}${url}`, params).then(res => res.data)
+  return axios.post(`${base}${url}/`, params).then(res => res.data)
+}
+
+export const POSTID = (url, id, params) => {
+  return axios.post(`${base}${url}/${id}/`, params).then(res => res.data)
 }
 
 export const GET = (url, params) => {
-  return axios.get(`${base}${url}`, {params: params}).then(res => res.data)
+  return axios.get(`${base}${url}/`, {params: params}).then(res => res.data)
 }
 
-export const GETID = (url, params) => {
-  return axios.get(`${base}${url}/${params}/`).then(res => res.data)
+export const GETID = (url, id, params) => {
+  return axios.get(`${base}${url}/${id}/`, {params: params}).then(res => res.data)
 }
 
 // export const GET = (url, params) => {
@@ -55,7 +59,11 @@ export const GETID = (url, params) => {
 // }
 
 export const PUT = (url, params) => {
-  return axios.put(`${base}${url}`, params).then(res => res.data)
+  return axios.put(`${base}${url}/`, params).then(res => res.data)
+}
+
+export const PUTID = (url, id, params) => {
+  return axios.put(`${base}${url}/${id}/`, params).then(res => res.data)
 }
 
 export const DELETE = (url, params) => {

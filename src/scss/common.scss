@@ -91,6 +91,22 @@
   background:$medical-bgCol_blue !important;
   border-color:$medical-borCol_blue !important;
 }
+.el-button--lineBlue{
+     background:#8f99b5 !important;
+     border-color:#8f99b5 !important;
+     color:#fff;
+ }
+.el-button--lineBlue:focus{
+    color:#fff;
+}
+.el-button--tranBlue{
+    background:$medical-bgCol_tran !important;
+    border-color:#8f99b5 !important;
+    color:#8f99b5;
+}
+.el-button--tranBlue:focus{
+    color:#8f99b5;
+}
 .el-button{
   border-radius: 4px !important;
   padding:8px 20px !important;

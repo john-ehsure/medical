@@ -1,20 +1,102 @@
 <template>
     <div class="personList-page">
         <slideTab class="personList-slide" @changeTabList="changeList" @addTab="addTabPerson" :listData="tablistData"></slideTab>
-        <div class="personList-content">
-            <div class="personList-title" ref="titleHei">
-                <div class="personList-title_picture" v-if="!newAddPerson">
-                    <img src="./../assets/logo.png"/>
-                </div>
+        <!--新建患者页面 start-->
+        <div class="personList-content"  v-if="newAddPerson">
+            <div class="personList-editDetail">
+                <!--信息编辑 start-->
                 <!--上传图片-->
-                <div class="personList-title_picture" v-else>
+                <div class="personList-title_picture">
                     <el-upload
                         action=""
                         :on-preview="handlePictureCardPreview">
                         <span>上传图片</span>
                     </el-upload>
                 </div>
-                <div class="personList-title_personMes" v-if="!newAddPerson">
+                <el-form ref="form" :model="sizeForm" label-width="80px" size="mini">
+                    <el-row :gutter="40">
+                        <el-col :span="12">
+                            <el-form-item label="姓名">
+                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="职业">
+                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="序列号">
+                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="学历">
+                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="年龄">
+                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="通讯地址">
+                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="民族">
+                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="电话">
+                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="13">
+                            <el-form-item label="身份证">
+                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="13">
+                            <el-form-item label="户口地址">
+                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="13">
+                            <el-form-item label="出生年月">
+                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="13">
+                            <el-form-item label="婚姻状况">
+                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="13">
+                            <el-form-item label="国籍">
+                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+
+                </el-form>
+                <span class="personList-editDetail_btnGroud">
+                  <el-button type="primary" @click="onSubmit">确定</el-button>
+                </span>
+                <!--信息编辑 end-->
+            </div>
+        </div>
+        <!--新建患者页面 end-->
+        <div class="personList-content"  v-if="!newAddPerson">
+            <div class="personList-title" ref="titleHei">
+                <div class="personList-title_picture">
+                    <img src="./../assets/logo.png"/>
+                </div>
+                <div class="personList-title_personMes">
                     <p><span class="col_blue fontSize_26 fontFamily-BigHYQiHei">{{personDetail.topTitle.personName}}</span> <i class="marginLeft_15" :class="personDetail.topTitle.personSex?'hui-icon-ziyuan18 col_orange':'hui-icon-ziyuan19 col_green'"></i></p>
                     <P class="fontSize_12">
                         <i class="hui-icon-ziyuan6 fontSize_14 col_d3"></i>
@@ -24,43 +106,14 @@
                     <P class="fontSize_12"><i class="hui-icon-ziyuan8 fontSize_14 col_d3"></i> {{personDetail.topTitle.personPhone}}</P>
                     <!--<P class="col_orange fontSize_12"><i class="hui-icon-ziyuan2 fontSize_14"></i> 向上转诊</P>-->
                 </div>
-                <!--新增患者start-->
-                <el-form ref="newForm" v-else class="personList-title_personMes top-form" :model="newForm" label-width="0px" size="mini">
-                    <el-form-item label="">
-                  <span class="top-form_name">
-                      <el-input v-model="newForm.name" placeholder="姓名"></el-input>
-                  </span>
-                        <span class="top-form_sex">
-                      <el-radio-group v-model="newForm.sex">
-                          <el-radio :label="0">男</el-radio>
-                          <el-radio :label="1">女</el-radio>
-                      </el-radio-group>
-                  </span>
-                    </el-form-item>
-                    <el-form-item>
-                        <i class="hui-icon-ziyuan6"></i>
-                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="newForm.birthday" placeholder="生日">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item>
-                        <i class="hui-icon-ziyuan13"></i>
-                        <el-input v-model="newForm.number" placeholder="编号">
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <i class="hui-icon-ziyuan8"></i>
-                        <el-input v-model="newForm.phone" placeholder="联系方式">
-                        </el-input>
-                    </el-form-item>
-                    <!--<P class="col_orange fontSize_12"><i class="hui-icon-ziyuan2 fontSize_14"></i> 向上转诊</P>-->
-                </el-form>
-                <!--新增患者 end-->
                 <div class="personList-title_info">
                     <div class="personList-title_infoNum">
-                        未完成<p class="fontFamily-regular" :class= "[ newAddPerson ?'col_d3':'col_orange']">{{newAddPerson?0:personDetail.topTitle.finish}}</p>
+                        <p class="fontFamily-regular" :class= "[ newAddPerson ?'col_d3':'col_orange']">{{newAddPerson?0:personDetail.topTitle.finish}}</p>
+                        <el-button type="tranBlue" size="mini" round>男性</el-button>
                     </div>
                     <div class="personList-title_infoNum">
-                        已完成<p class="fontFamily-regular" :class ="[newAddPerson?'col_d3':'col_cyan']">{{newAddPerson?0:personDetail.topTitle.unfinish}}</p>
+                        <p class="fontFamily-regular" :class ="[newAddPerson?'col_d3':'col_cyan']">{{newAddPerson?0:personDetail.topTitle.unfinish}}</p>
+                        <el-button type="lineBlue" size="mini" round>女性</el-button>
                     </div>
                 </div>
             </div>
@@ -78,53 +131,12 @@
                     <li v-for="item in personDetail.personInfor">{{item.title}}<span>{{item.value}}</span></li>
                 </ul>
                 <!--信息展示 end-->
-                <span class="personList-detail_btnGroud"><el-button type="primary" @click="editDetail">修改</el-button></span>
+                <!--<span class="personList-detail_btnGroud"><el-button type="primary" @click="editDetail">修改</el-button></span>-->
             </div>
-            <div class="personList-editDetail" v-if="buttonActive == 1 && isEditDetail">
-                <!--信息编辑 start-->
-                <el-form ref="form" :model="sizeForm" label-width="80px" size="mini">
-                    <el-form-item label="病人主诉">
-                        <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
-                    </el-form-item>
-                    <el-form-item label="现病史">
-                        <el-input v-model="sizeForm.name"  placeholder="请输入"></el-input>
-                    </el-form-item>
-                    <el-form-item label="既往史">
-                        <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
-                    </el-form-item>
-                    <el-form-item label="个人史">
-                        <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
-                    </el-form-item>
-                    <el-form-item label="家族史">
-                        <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
-                    </el-form-item>
-                    <el-form-item label="体格检查">
-                        <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
-                    </el-form-item>
-                    <el-form-item label="专科检查">
-                        <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
-                    </el-form-item>
-                    <el-form-item label="辅助检查">
-                        <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
-                    </el-form-item>
-                    <el-form-item label="诊断">
-                        <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
-                    </el-form-item>
-                    <el-form-item label="本次医嘱">
-                        <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
-                    </el-form-item>
-                    <el-form-item label="西城药">
-                        <el-input v-model="sizeForm.name" placeholder="请输入"></el-input>
-                    </el-form-item>
-                </el-form>
-                <span class="personList-editDetail_btnGroud">
-          <el-button type="primary" @click="onSubmit">确定</el-button>
-        </span>
-                <!--信息编辑 end-->
-            </div>
+
             <!--个人基本信息部分 end-->
             <!--基本病要部分 start-->
-            <div class="personList-basicCheck" :style="{width:(contentWidth-255)+'px'}" v-show="buttonActive == 2">
+            <div class="personList-basicCheck" :style="{width:(contentWidth-255)+'px'}" v-if="buttonActive == 2">
                 <!--<div class="personList-swiper">-->
                     <swiper :options="swiperOption">
                         <swiper-slide v-for="items in basicCheckData">
@@ -134,8 +146,12 @@
                                     <el-row :gutter="10">
                                         <el-col :span="12" v-for="box in fBox.detailList">
                                             <el-form-item :label="box.name">
+                                                <p v-if="box.type == 0" class="form-tran"></p>
                                                 <el-input-number v-if="box.type == 1" v-model="swiperForm.number1" :min="0" :max="10"></el-input-number>
-                                                <el-switch v-if="box.type == 2" v-model="swiperForm.anomaly1"></el-switch>
+                                                <i-switch v-if="box.type == 2" size ="large" v-model="swiperForm.anomaly1">
+                                                    <span slot="open">异常</span>
+                                                    <span slot="close">正常</span>
+                                                </i-switch>
                                                 <el-radio-group v-if="box.type == 3" v-model="swiperForm.type1">
                                                     <el-radio :label="0">阴性</el-radio>
                                                     <el-radio :label="1">阳性</el-radio>
@@ -148,6 +164,8 @@
                                                         :value="bl.value">
                                                     </el-option>
                                                 </el-select>
+                                                <el-input v-if="box.type == 5" v-model="swiperForm.text" placeholder="请填写"></el-input>
+                                                <el-date-picker v-if="box.type == 6" :editable="false" :clearable="false" v-model="swiperForm.date" type="date" placeholder="选择日期"></el-date-picker>
                                                 <span class="el-form_unit">{{box.unit}}</span>
                                             </el-form-item>
                                         </el-col>
@@ -167,8 +185,50 @@
             </div>
             <!--基本病要部分 end-->
             <!--生殖检查部分 start-->
-            <div class="" v-if="buttonActive == 3">
-                生殖检查部分
+            <div class="personList-reproductiveCheck" :style="{width:(contentWidth-255)+'px'}" v-if="buttonActive == 3">
+                <swiper :options="swiperOption">
+                    <swiper-slide v-for="items in reproductiveCheckData">
+                        <div class="personList-formBox" v-for="fBox in items">
+                            <p class="personList-formBox_title">{{fBox.titleName}}</p>
+                            <el-form label-position="left" label-width="90px" :model="swiperForm" size="mini">
+                                <el-row :gutter="10">
+                                    <el-col :span="12" v-for="box in fBox.detailList">
+                                        <el-form-item :label="box.name">
+                                            <p v-if="box.type == 0" class="form-tran"></p>
+                                            <el-input-number v-if="box.type == 1" v-model="swiperForm.number1" :min="0" :max="10"></el-input-number>
+                                            <i-switch v-if="box.type == 2" size ="large" v-model="swiperForm.anomaly1">
+                                                <span slot="open">异常</span>
+                                                <span slot="close">正常</span>
+                                            </i-switch>
+                                            <el-radio-group v-if="box.type == 3" v-model="swiperForm.type1">
+                                                <el-radio :label="0">阴性</el-radio>
+                                                <el-radio :label="1">阳性</el-radio>
+                                            </el-radio-group>
+                                            <el-select v-if="box.type == 4" v-model="swiperForm.blood1" placeholder="请选择">
+                                                <el-option
+                                                    v-for="bl in bloodOptions"
+                                                    :key="bl.value"
+                                                    :label="bl.label"
+                                                    :value="bl.value">
+                                                </el-option>
+                                            </el-select>
+                                            <el-input v-if="box.type == 5" v-model="swiperForm.text" placeholder="请填写"></el-input>
+                                            <el-date-picker v-if="box.type == 6" :editable="false" :clearable="false" v-model="swiperForm.date" type="date" placeholder="选择日期"></el-date-picker>
+                                            <span class="el-form_unit">{{box.unit}}</span>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="24">
+                                        <div class="personList-formBox_btn">
+                                            <el-button type="primary" size="mini" icon="el-icon-check"></el-button>
+                                            <el-button size="mini" icon="el-icon-view"></el-button>
+                                        </div>
+                                    </el-col>
+                                </el-row>
+                            </el-form>
+                        </div>
+                    </swiper-slide>
+                    <div class="swiper-pagination" slot="pagination"></div>
+                </swiper>
             </div>
             <!--生殖检查部分 end-->
             <!--个人检查项目列表 start-->
@@ -284,14 +344,15 @@
 
 <script>
 import slideTab from '../components/slideTab/index.vue'
+import iSwitch from '../components/switch/index.vue'
 export default {
   name: 'personList',
   components: {
+    iSwitch,
     slideTab
   },
   data () {
     return {
-
       swiperOption: { //  swiper相关配置
         pagination: {
           el: '.swiper-pagination'
@@ -372,6 +433,70 @@ export default {
             }
         ]
       ],
+      // 男性生殖检查  data   // name 指小项目的名称  unit项目的单位 type项目类型 1num计数器 2 开关 3单选按钮 4下拉框 5 输入框 6 日期
+      reproductiveCheckData: [
+            [
+                {
+                    titleName: '敬业常规分析',
+                    detailList: [
+                        {name: '检查日期', unit: '', type: 6, value: ''},
+                        {name: '待确定', unit: 'X10^12/L', type: 1, value: ''},
+                        {name: '液化时间', unit: '', type: 6, value: ''},
+                        {name: '待确定', unit: '%', type: 5, value: ''},
+                        {name: '量', unit: 'X10^9/L', type: 1, value: ''},
+                        {name: '待确定', unit: 'mm/H', type: 4, value: ''},
+                        {name: 'PH', unit: '', type: 2, value: ''},
+                        {name: '待确定', unit: '/HP', type: 5, value: ''},
+                        {name: '精子总数', unit: 'X10^6', type: 5, value: ''},
+                        {name: '活动率', unit: '%', type: 5, value: ''},
+                        {name: '正常形态率', unit: '%', type: 5, value: ''},
+                        {name: 'PR', unit: '%', type: 5, value: ''},
+                        {name: 'NR', unit: '%', type: 5, value: ''},
+                        {name: 'IM', unit: '%', type: 5, value: ''},
+                        {name: '取精难易度', unit: '%', type: 5, value: ''},
+                        {name: '建议提前冻精', unit: '', type: 3, value: ''},
+                        {name: '凝集', unit: '', type: 3, value: ''},
+                        {name: '精浆', unit: '', type: 3, value: ''},
+                        {name: '血清', unit: '', type: 3, value: ''},
+                        {name: '精子DNA碎片率', unit: '%', type: 5, value: ''},
+                        {name: '精浆锌', unit: '/umol', type: 5, value: ''},
+                        {name: '果糖', unit: '/umol', type: 5, value: ''},
+                        {name: '中性糖苷酶', unit: '/mU', type: 5, value: ''},
+                        {name: '精子DNA碎片率', unit: '/uIU', type: 5, value: ''},
+                    ]
+                },
+
+            ],
+          [
+              {
+                  titleName: '第二特征',
+                  detailList: [
+                      {name: '胡须', unit: '', type: 2, value: ''},
+                      {name: '阴毛', unit: '', type: 2, value: ''},
+                      {name: '喉结', unit: '', type: 2, value: ''},
+                      {name: '乳房', unit: '', type: 2, value: ''}
+                  ]
+              },
+              {
+                  titleName: '生殖系统检查',
+                  detailList: [
+                      {name: '阴茎长度', unit: '', type: 1, value: ''},
+                      {name: '', unit: '', type: 0, value: ''},
+                      {name: '左睾丸体积', unit: '', type: 1, value: ''},
+                      {name: '质地', unit: '', type: 1, value: ''},
+                      {name: '右睾丸体积', unit: '', type: 1, value: ''},
+                      {name: '质地', unit: '', type: 1, value: ''},
+                      {name: '左附睾', unit: '', type: 1, value: ''},
+                      {name: '左输精管', unit: '', type: 1, value: ''},
+                      {name: '右附睾', unit: '', type: 1, value: ''},
+                      {name: '右输精管', unit: '', type: 1, value: ''},
+                      {name: '左精索静脉', unit: '', type: 1, value: ''},
+                      {name: '前列腺', unit: '', type: 1, value: ''},
+                      {name: '右精索静脉', unit: '', type: 1, value: ''},
+                  ]
+              }
+          ]
+      ],
       //  血型下拉框
       bloodOptions: [
         {value: 0, label: 'A型'},
@@ -384,7 +509,9 @@ export default {
         number1: 0,
         anomaly1: false,
         type1: 1, // 0阴性 1阳性
-        blood1: 0 //  0 A型  1 B型 2 AB型 3 O型
+        blood1: 0, //  0 A型  1 B型 2 AB型 3 O型
+        text: '',
+        date: ''
       },
       newAddPerson: false, //   是否为新增患者
       warpHeight: 500,
@@ -535,6 +662,7 @@ export default {
     //  列表选择事件
     changeList (item) {
       console.log(item, '++++++')
+      this.newAddPerson = false
       this.personDetail.topTitle = item;
     },
     //  选项卡切换  个人基本信息 基本病要  生殖检查  常规检查
@@ -572,6 +700,11 @@ export default {
       display: flex;
       .swiper-container-horizontal > .swiper-pagination-bullets{
           bottom: 0px;
+          .swiper-pagination-bullet{
+              background-color:$medical-bgCol_tran;
+              border:1px solid $medical-borCol_blue;
+              opacity: 0.8;
+          }
           .swiper-pagination-bullet-active{
               background:$medical-bgCol_blue;
           }
@@ -601,6 +734,9 @@ export default {
               .el-button+.el-button{
                   margin-left:40px;
               }
+          }
+          .el-form-item__content .form-tran{
+              min-height:29px;
           }
           /*计数器 样式修改*/
           .el-input-number--mini{
@@ -649,6 +785,15 @@ export default {
           .el-switch.is-checked .el-switch__core{
               border-color: $medical-borCol_orange;
               background-color: $medical-bgCol_orange;
+          }
+          /*输入框*/
+          .el-input--mini{
+              width:110px;
+          }
+          .el-input--mini.el-date-editor{
+              .el-input__inner{
+                  padding-right:5px;
+              }
           }
       }
   }

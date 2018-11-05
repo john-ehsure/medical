@@ -4,34 +4,35 @@
     text-align: left;
     height:100%;
     overflow-y: auto;
+    .personList-title_picture{
+          width:140px;
+          margin:0px 15px;
+          text-align: center;
+          & .el-upload--text > span{
+              display: inline-block;
+              width:100px;
+              height:100px;
+              line-height: 100px;
+              color:$medical-col_999;
+              border-radius:100%;
+              background-color:$medical-bgCol_ddd;
+              border:3px solid $medical-borCol_white;
+              box-shadow: 0px 0px 10px $medical-shadow_grey;
+          }
+          & > img{
+              width:100px;
+              height:100px;
+              border-radius:100%;
+              border:3px solid $medical-borCol_white;
+              box-shadow: 0px 0px 10px $medical-shadow_grey;
+          }
+      }
     .personList-title{
       display: flex;
       justify-items: center;
       align-items: center;
       padding:20px 5px 20px 20px;
-      .personList-title_picture{
-        width:140px;
-        margin:0px 15px;
-        text-align: center;
-        & .el-upload--text > span{
-          display: inline-block;
-          width:100px;
-          height:100px;
-          line-height: 100px;
-          color:$medical-col_999;
-          border-radius:100%;
-          background-color:$medical-bgCol_ddd;
-          border:3px solid $medical-borCol_white;
-          box-shadow: 0px 0px 10px $medical-shadow_grey;
-        }
-        & > img{
-          width:100px;
-          height:100px;
-          border-radius:100%;
-          border:3px solid $medical-borCol_white;
-          box-shadow: 0px 0px 10px $medical-shadow_grey;
-        }
-      }
+
       .personList-title_personMes{
         color:$medical-col_999;
         & > p{
@@ -83,11 +84,11 @@
           color:$medical-col_blue;
           &:first-child:after{
             position: absolute;
-            right: -1px;
-            bottom:0px;
+            right: -3px;
+            top:0px;
             content: '';
             width:1px;
-            height:100%;
+            height:80%;
             background-color:$medical-bgCol_blue;
           }
           & > p{
@@ -164,8 +165,8 @@
     }
     /*个人基本信息 修改*/
     .personList-editDetail{
-      padding:20px;
-      margin:0px 20px 35px;
+      padding:20px 35px;
+      margin:35px 20px 35px;
       border-radius:10px;
       background-color:#fff;
       position: relative;
@@ -181,9 +182,25 @@
         bottom:-15px;
         text-align: center;
       }
+      .el-col.el-col-12{
+          .el-form-item{
+              width:80%;
+          }
+      }
+        .personList-title_picture {
+            text-align: left;
+            margin:0px 0px 20px;
+            .el-upload--text > span{
+                width:60px;
+                height:60px;
+                line-height: 60px;
+                font-size:12px;
+            }
+        }
+
     }
       /*基本病要表单提交*/
-    .personList-basicCheck{
+    .personList-basicCheck,.personList-reproductiveCheck{
        /* width:500px;*/
         position: relative;
         box-sizing: border-box;

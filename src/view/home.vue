@@ -90,6 +90,7 @@ export default {
           {icon: 'hui-icon-ziyuan16', title: '职称', value: '', field: 'title'}
         ]
       },
+      practitionersEditId: null,
       formPractitioner: {
         user: null,
         id_no: '300111222333000222',
@@ -119,7 +120,7 @@ export default {
   methods: {
     //  编辑提交个人信息
       infoSubmit () {
-          APIDATA.practitionersEdit(this.formPractitioner).then((res) => {
+          APIDATA.practitionersEdit(this.practitionersEditId, this.formPractitioner).then((res) => {
               console.log(res)
               this.isFrist =  !this.isFrist
               this.isFristLogin = false
@@ -128,6 +129,7 @@ export default {
     //  获取个人信息
     practitionersDetail () {
       APIDATA.practitionersDetail().then((res) => {
+        this.practitionersEditId = res[0].id
         this.formPractitioner.user = res[0].user
         this.formPractitioner.id_no = res[0].id_no
         this.formPractitioner.telecom = res[0].telecom
