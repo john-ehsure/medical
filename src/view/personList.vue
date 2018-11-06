@@ -13,11 +13,19 @@
                         <span>上传图片</span>
                     </el-upload>
                 </div>
-                <el-form ref="newAddPersonForm" :model="newAddPersonForm" label-width="80px" size="mini">
+                <el-form ref="newAddPersonForm" :rules="newAddPersonFormRules" class="personList-formBox" :model="newAddPersonForm" label-width="95px" size="mini">
                     <el-row :gutter="40">
                         <el-col :span="12">
-                            <el-form-item label="姓名">
+                            <el-form-item label="姓名" prop="name">
                                 <el-input v-model="newAddPersonForm.name" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="性别">
+                                <el-radio-group v-model="newAddPersonForm.gender">
+                                    <el-radio label="男">男</el-radio>
+                                    <el-radio label="女">女</el-radio>
+                                </el-radio-group>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
@@ -26,33 +34,8 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="证件类型">
-                                <el-input v-model="newAddPersonForm.id_type" placeholder="请填写"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item label="证件号码">
-                                <el-input v-model="newAddPersonForm.id_no" placeholder="请填写"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
                             <el-form-item label="电话号码">
-                                <el-input v-model="newAddPersonForm.telecom" placeholder="请填写"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item label="性别">
-                                <el-input v-model="newAddPersonForm.gender" placeholder="请填写"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item label="身份证地址">
-                                <el-input v-model="newAddPersonForm.id_address" placeholder="请填写"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item label="通讯地址">
-                                <el-input v-model="newAddPersonForm.address" placeholder="请填写"></el-input>
+                                <el-input v-model="newAddPersonForm.telecom" type="number" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
@@ -60,29 +43,45 @@
                                 <el-input v-model="newAddPersonForm.nation" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="13">
+                        <el-col :span="12">
                             <el-form-item label="民族">
                                 <el-input v-model="newAddPersonForm.ethic" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="13">
+                        <el-col :span="12">
+                            <el-form-item label="学历">
+                                <el-input v-model="newAddPersonForm.education" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
                             <el-form-item label="婚姻状况">
                                 <el-input v-model="newAddPersonForm.marriage" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
+
+                        <el-col :span="12">
+                            <el-form-item label="证件类型">
+                                <el-input v-model="newAddPersonForm.id_type" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="13">
+                            <el-form-item label="证件号码">
+                                <el-input v-model="newAddPersonForm.id_no" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="13">
+                            <el-form-item label="身份证地址">
+                                <el-input v-model="newAddPersonForm.id_address" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="13">
+                            <el-form-item label="通讯地址">
+                                <el-input v-model="newAddPersonForm.address" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
                         <el-col :span="13">
                             <el-form-item label="出生年月">
-                                <el-date-picker type="date" placeholder="选择日期" :editable="false" v-model="newAddPersonForm.birth_date" style="width:100%"></el-date-picker>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="13">
-                            <el-form-item label="教育状况">
-                                <el-input v-model="newAddPersonForm.education" placeholder="请填写"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="13">
-                            <el-form-item label="职业">
-                                <el-input v-model="newAddPersonForm.occupation" placeholder="请填写"></el-input>
+                                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期" :editable="false" v-model="newAddPersonForm.birth_date" style="width:100%"></el-date-picker>
                             </el-form-item>
                         </el-col>
                         <el-col :span="13">
@@ -97,14 +96,13 @@
                         </el-col>
                         <el-col :span="13">
                             <el-form-item label="联系人电话">
-                                <el-input v-model="newAddPersonForm.contact_telecom" placeholder="请填写"></el-input>
+                                <el-input v-model="newAddPersonForm.contact_telecom" type="number" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
-
                 </el-form>
                 <span class="personList-editDetail_btnGroud">
-                  <el-button type="primary" @click="onSubmit">确定</el-button>
+                  <el-button type="primary" @click="onSubmit('newAddPersonForm')">确定</el-button>
                 </span>
                 <!--信息编辑 end-->
             </div>
@@ -546,13 +544,19 @@ export default {
         number: '',
         phone: ''
       },
-      newAddPersonForm: {
+      newAddPersonFormRules: {
+        name: [
+          { required: true, message: '请输入姓名', trigger: 'blur' },
+          { min: 2, max: 4, message: '长度在 2 到 4 个字符', trigger: 'blur' }
+        ]
+      },
+      newAddPersonForm: { // 新增患者列表 form表单信息
         name: '',
           education: '',
           id_type: '',
           id_no: '',
           telecom: '',
-          gender: '',
+          gender: '男',
           spouse: '',
           birth_date: '',
           id_address: '',
@@ -756,13 +760,16 @@ export default {
       this.isEditDetail = true
     },
     //  表单提交
-    onSubmit () {
-      console.log('submit!')
-        APIDATE.createPatients(this.newAddPersonForm).then((res) => {
-            console.log(res)
-            this.newAddPerson = false
-        })
-
+    onSubmit (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+            console.log('submit!')
+            APIDATE.createPatients(this.newAddPersonForm).then((res) => {
+                console.log(res)
+                this.newAddPerson = false
+            })
+        }
+      })
     },
 
   }

@@ -252,6 +252,9 @@
     &.el-loading-parent--relative{
         position: absolute !important;
     }
+    .el-form-item.is-success .el-input__inner{
+        border-color:#dcdfe6;
+    }
   input, textarea, select, button{
     font-family: fontHYQiHei !important;
   }

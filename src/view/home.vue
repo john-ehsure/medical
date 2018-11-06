@@ -140,7 +140,7 @@ export default {
     practitionersDetail () {
       APIDATA.practitionersDetail().then((res) => {
         this.practitionersEditId = res[0].id
-        // this.formPractitioner.id = res[0].id
+        // this.formPractitioner.Practitioner = 4
         this.formPractitioner.user = res[0].user
         this.formPractitioner.id_no = res[0].id_no
         this.formPractitioner.telecom = res[0].telecom

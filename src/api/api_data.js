@@ -4,7 +4,7 @@ import qs from 'qs'
 export default {
   // 填写并提交个⼈人信息表单
   practitionersEdit: (id, params) => {
-    return API.PUTID('/data_api/practitioners', id, qs.stringify(params))
+    return API.PATCHID('/data_api/practitioners', id, qs.stringify(params))
   },
   //  获取个人信息
   practitionersDetail: params => {

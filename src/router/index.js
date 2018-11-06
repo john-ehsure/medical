@@ -7,6 +7,7 @@ const personList = () => import(/* webpackChunkName: "group-home" */  '@/view/pe
 const historyMes = () => import(/* webpackChunkName: "group-home" */  '@/view/historyMes')
 const diagnoseUp = () => import(/* webpackChunkName: "group-home" */  '@/view/diagnoseUp')
 const chart = () => import(/* webpackChunkName: "group-home" */  '@/view/chart')
+const ceshi = () => import(/* webpackChunkName: "group-home" */  '@/view/ceshi')
 Vue.use(Router)
 
 export default new Router({
@@ -61,6 +62,14 @@ export default new Router({
                     miniTitle: '历史',
                     iconType: 'hui-icon-ziyuan30',
                     component: historyMes
+                },
+                {
+                    name: 'ceshi',
+                    path: '/ceshi',
+                    title: '测试',
+                    miniTitle: '测试',
+                    iconType: 'hui-icon-ziyuan30',
+                    component: ceshi
                 }
             ]
         }

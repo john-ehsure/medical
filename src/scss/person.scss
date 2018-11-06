@@ -182,11 +182,27 @@
         bottom:-15px;
         text-align: center;
       }
-      .el-col.el-col-12{
-          .el-form-item{
-              width:80%;
+      .personList-formBox{
+          .el-col.el-col-12{
+              .el-form-item{
+                  .el-form-item__content{
+                      min-height:29px;
+                  }
+                  .el-input--mini{
+                      width:110px;
+                  }
+                  .el-radio-group{
+                      width:100%;
+                  }
+              }
+          }
+          .el-col.el-col-13{
+              .el-input--mini{
+                  width:100%;
+              }
           }
       }
+
         .personList-title_picture {
             text-align: left;
             margin:0px 0px 20px;
