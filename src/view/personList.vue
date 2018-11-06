@@ -13,72 +13,71 @@
                         <span>上传图片</span>
                     </el-upload>
                 </div>
-                <el-form ref="form" :model="sizeForm" label-width="80px" size="mini">
+                <el-form ref="newAddPersonForm" :model="newAddPersonForm" label-width="80px" size="mini">
                     <el-row :gutter="40">
                         <el-col :span="12">
                             <el-form-item label="姓名">
-                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                                <el-input v-model="newAddPersonForm.name" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="职业">
-                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
-
+                                <el-input v-model="newAddPersonForm.id_type" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="序列号">
-                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                                <el-input v-model="newAddPersonForm.id_no" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="学历">
-                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                                <el-input v-model="newAddPersonForm.telecom" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="年龄">
-                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                                <el-input v-model="newAddPersonForm.gender" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="通讯地址">
-                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                                <el-input v-model="newAddPersonForm.id_address" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="民族">
-                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                                <el-input v-model="newAddPersonForm.name" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="电话">
-                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                                <el-input v-model="newAddPersonForm.name" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="13">
                             <el-form-item label="身份证">
-                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                                <el-input v-model="newAddPersonForm.name" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="13">
                             <el-form-item label="户口地址">
-                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                                <el-input v-model="newAddPersonForm.address" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="13">
                             <el-form-item label="出生年月">
-                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                                <el-date-picker type="date" placeholder="选择日期" :editable="false" v-model="newAddPersonForm.birth_date" style="width:100%"></el-date-picker>
                             </el-form-item>
                         </el-col>
                         <el-col :span="13">
                             <el-form-item label="婚姻状况">
-                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                                <el-input v-model="newAddPersonForm.name" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="13">
                             <el-form-item label="国籍">
-                                <el-input v-model="sizeForm.name" placeholder="请填写"></el-input>
+                                <el-input v-model="newAddPersonForm.id_address" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -107,13 +106,13 @@
                     <!--<P class="col_orange fontSize_12"><i class="hui-icon-ziyuan2 fontSize_14"></i> 向上转诊</P>-->
                 </div>
                 <div class="personList-title_info">
-                    <div class="personList-title_infoNum">
+                    <div class="personList-title_infoNum" @click="sexType = true">
                         <p class="fontFamily-regular" :class= "[ newAddPerson ?'col_d3':'col_orange']">{{newAddPerson?0:personDetail.topTitle.finish}}</p>
-                        <el-button type="tranBlue" size="mini" round>男性</el-button>
+                        <el-button :type="!sexType? 'tranBlue' : 'lineBlue'" size="mini" round>男性</el-button>
                     </div>
-                    <div class="personList-title_infoNum">
+                    <div class="personList-title_infoNum" @click="sexType = false">
                         <p class="fontFamily-regular" :class ="[newAddPerson?'col_d3':'col_cyan']">{{newAddPerson?0:personDetail.topTitle.unfinish}}</p>
-                        <el-button type="lineBlue" size="mini" round>女性</el-button>
+                        <el-button :type="sexType? 'tranBlue' : 'lineBlue'" size="mini" round>女性</el-button>
                     </div>
                 </div>
             </div>
@@ -345,6 +344,7 @@
 <script>
 import slideTab from '../components/slideTab/index.vue'
 import iSwitch from '../components/switch/index.vue'
+import APIDATE from '@/api/api_data.js'
 export default {
   name: 'personList',
   components: {
@@ -362,6 +362,7 @@ export default {
         cancelable: false,
         autoplayDisableOnInteraction: false,
         loop: false,
+        autoHeight: true,
         coverflow: {
           rotate: 30,
           stretch: 10,
@@ -437,7 +438,7 @@ export default {
       reproductiveCheckData: [
             [
                 {
-                    titleName: '敬业常规分析',
+                    titleName: '精液常规分析',
                     detailList: [
                         {name: '检查日期', unit: '', type: 6, value: ''},
                         {name: '待确定', unit: 'X10^12/L', type: 1, value: ''},
@@ -513,6 +514,7 @@ export default {
         text: '',
         date: ''
       },
+      sexType: true, //   男性 女性进行切换  true为男性  false 为女性
       newAddPerson: false, //   是否为新增患者
       warpHeight: 500,
       buttonActive: 1, //    判断显示信息  1 个人基本信息 2基本病要 3 生殖检查  4 常规检查
@@ -524,8 +526,25 @@ export default {
         number: '',
         phone: ''
       },
-      sizeForm: {
-        name: ''
+      newAddPersonForm: {
+        name: '',
+          id_type: '',
+          id_no: '',
+          telecom: '',
+          gender: '',
+          spouse: '',
+          birth_date: '',
+          id_address: '',
+          address: '',
+          nation: '',
+          ethic: '',
+          marriage: '',
+          eduction: '',
+          occupation: '',
+          photo: '',
+          contact_relationship: '',
+          contact_name: '',
+          contact_telecom: ''
       },
       tablistData: [
         {img: require("./../assets/logo.png"), personName: '刘奇', personAge: 22, personPhone: '188-1111-2222', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 3, unfinish: 4},
@@ -607,6 +626,7 @@ export default {
   },
   created () {
     this.personDetail.topTitle = this.tablistData[0]
+    this.patientsList() //  获取患者列表
   },
   mounted () {
   },
@@ -614,6 +634,13 @@ export default {
     //  添加新患者
     addTabPerson () {
       this.newAddPerson = true
+    },
+    //  获取患者列表
+    patientsList () {
+      APIDATE.patients().then((res) => {
+            console.log(res)
+
+      })
     },
     //  上传头像
     handlePictureCardPreview (file) {
@@ -684,7 +711,11 @@ export default {
     //  表单提交
     onSubmit () {
       console.log('submit!')
-      this.isEditDetail = false
+        APIDATE.createPatients(this.newAddPersonForm).then((res) => {
+            console.log(res)
+            this.newAddPerson = false
+        })
+
     },
 
   }

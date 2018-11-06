@@ -92,6 +92,7 @@ export default {
       },
       practitionersEditId: null,
       formPractitioner: {
+        id: null,
         user: null,
         id_no: '300111222333000222',
         telecom: '13611112222',
@@ -119,17 +120,18 @@ export default {
   },
   methods: {
     //  编辑提交个人信息
-      infoSubmit () {
-          APIDATA.practitionersEdit(this.practitionersEditId, this.formPractitioner).then((res) => {
-              console.log(res)
-              this.isFrist =  !this.isFrist
-              this.isFristLogin = false
-          })
-      },
+    infoSubmit () {
+      APIDATA.practitionersEdit(this.formPractitioner).then((res) => {
+        console.log(res)
+        this.isFrist = !this.isFrist
+        this.isFristLogin = false
+      })
+    },
     //  获取个人信息
     practitionersDetail () {
       APIDATA.practitionersDetail().then((res) => {
-        this.practitionersEditId = res[0].id
+        // this.practitionersEditId = res[0].id
+        this.formPractitioner.id = res[0].id
         this.formPractitioner.user = res[0].user
         this.formPractitioner.id_no = res[0].id_no
         this.formPractitioner.telecom = res[0].telecom

@@ -54,10 +54,6 @@ export const GETID = (url, id, params) => {
   return axios.get(`${base}${url}/${id}/`, {params: params}).then(res => res.data)
 }
 
-// export const GET = (url, params) => {
-//   return axios.get(`${base}${url}/${params}`).then(res => res.data)
-// }
-
 export const PUT = (url, params) => {
   return axios.put(`${base}${url}/`, params).then(res => res.data)
 }
@@ -67,7 +63,7 @@ export const PUTID = (url, id, params) => {
 }
 
 export const DELETE = (url, params) => {
-  return axios.delete(`${base}${url}/${params}`).then(res => res.data)
+  return axios.delete(`${base}${url}/${params}/`).then(res => res.data)
 }
 
 export const PATCH = (url, params) => {
