@@ -22,47 +22,52 @@
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="职业">
+                                <el-input v-model="newAddPersonForm.occupation" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="证件类型">
                                 <el-input v-model="newAddPersonForm.id_type" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="序列号">
+                            <el-form-item label="证件号码">
                                 <el-input v-model="newAddPersonForm.id_no" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="学历">
+                            <el-form-item label="电话号码">
                                 <el-input v-model="newAddPersonForm.telecom" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="年龄">
+                            <el-form-item label="性别">
                                 <el-input v-model="newAddPersonForm.gender" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="通讯地址">
+                            <el-form-item label="身份证地址">
                                 <el-input v-model="newAddPersonForm.id_address" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="民族">
-                                <el-input v-model="newAddPersonForm.name" placeholder="请填写"></el-input>
+                            <el-form-item label="通讯地址">
+                                <el-input v-model="newAddPersonForm.address" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="电话">
-                                <el-input v-model="newAddPersonForm.name" placeholder="请填写"></el-input>
+                            <el-form-item label="国籍">
+                                <el-input v-model="newAddPersonForm.nation" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="13">
-                            <el-form-item label="身份证">
-                                <el-input v-model="newAddPersonForm.name" placeholder="请填写"></el-input>
+                            <el-form-item label="民族">
+                                <el-input v-model="newAddPersonForm.ethic" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="13">
-                            <el-form-item label="户口地址">
-                                <el-input v-model="newAddPersonForm.address" placeholder="请填写"></el-input>
+                            <el-form-item label="婚姻状况">
+                                <el-input v-model="newAddPersonForm.marriage" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="13">
@@ -71,13 +76,28 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="13">
-                            <el-form-item label="婚姻状况">
-                                <el-input v-model="newAddPersonForm.name" placeholder="请填写"></el-input>
+                            <el-form-item label="教育状况">
+                                <el-input v-model="newAddPersonForm.education" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="13">
-                            <el-form-item label="国籍">
-                                <el-input v-model="newAddPersonForm.id_address" placeholder="请填写"></el-input>
+                            <el-form-item label="职业">
+                                <el-input v-model="newAddPersonForm.occupation" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="13">
+                            <el-form-item label="联系人关系">
+                                <el-input v-model="newAddPersonForm.contact_relationship" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="13">
+                            <el-form-item label="联系人姓名">
+                                <el-input v-model="newAddPersonForm.contact_name" placeholder="请填写"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="13">
+                            <el-form-item label="联系人电话">
+                                <el-input v-model="newAddPersonForm.contact_telecom" placeholder="请填写"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -528,6 +548,7 @@ export default {
       },
       newAddPersonForm: {
         name: '',
+          education: '',
           id_type: '',
           id_no: '',
           telecom: '',
