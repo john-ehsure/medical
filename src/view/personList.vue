@@ -324,7 +324,7 @@
                                         <el-button type="primary" @click.native="openAlert(item.finishType,'确定要进行再次检查吗？',index ,false)">再次检查</el-button>
                                     </span>
                                     <span class="medical-state_btnGroud" v-else>
-                                        <el-button type="primary" @click.native="openAlert(item.finishType,'确定要保存当前信息吗？',index)">确认</el-button>
+                                        <el-button  type="primary" size="mini" icon="el-icon-check" @click.native="openAlert(item.finishType,'修改成功',index)"></el-button>
                                     </span>
                                 </div>
                                 <!--项目详情查看 end-->
@@ -665,26 +665,52 @@ export default {
     },
     //  弹窗事件
     openAlert (val, title, index, type) { // val 当前的状态 title 弹窗显示的信息  index list条数的序号  type 可选 重新填写 true  再次检查 false
-      this.$alert(title, '', {
-        confirmButtonText: '确定',
-        center: true,
-        customClass: 'medical-alert',
-        callback: action => {
-          if (action == 'confirm') {
-            if (val == '3') {
-              this.tableList[index].finishType = 1
-            } else if (val == '2') {
-              this.tableList[index].finishType = 3
-            } else {
-              if (type) {
-                this.tableList[index].finishType = 3
-              } else {
-                this.tableList[index].finishType = 2
-              }
-            }
-          }
+      // this.$alert(title, '', {
+      //   confirmButtonText: '确定',
+      //   center: true,
+      //   customClass: 'medical-alert',
+      //   callback: action => {
+      //     if (action == 'confirm') {
+      //       if (val == '3') {
+      //         this.tableList[index].finishType = 1
+      //       } else if (val == '2') {
+      //         this.tableList[index].finishType = 3
+      //       } else {
+      //         if (type) {
+      //           this.tableList[index].finishType = 3
+      //         } else {
+      //           this.tableList[index].finishType = 2
+      //         }
+      //       }
+      //     }
+      //   }
+      // })
+      let self = this
+      if (val == '3') {
+        //  调用接口 提交信息
+        let loadingInstance = this.$loading({
+          text: title,
+          background: 'rgba(255,255,255,0.1)',
+          customClass: 'newHint'
+        })
+        setTimeout(function () {
+          loadingInstance.close()
+          self.tableList[index].finishType = 1
+        }, 2000);
+      } else if (val == '2') {
+        this.tableList[index].finishType = 3
+      } else {
+        if (type) {
+          this.tableList[index].finishType = 3
+        } else {
+          this.tableList[index].finishType = 2
         }
-      })
+      }
+        // this.$loading({
+        //     text:title,
+        //     background: 'rgba(255,255,255,0.1)',
+        //     customClass: 'newHint'
+        // })
     },
     //  列表选择事件
     changeList (item) {

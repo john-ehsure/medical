@@ -243,6 +243,15 @@
 
 .medical-app{
   font-family: 'fontHYQiHei' !important;
+  margin:0px;
+  padding:0px;
+    width:100%;
+    height:100%;
+    left: 0px;
+    top:0px;
+    &.el-loading-parent--relative{
+        position: absolute !important;
+    }
   input, textarea, select, button{
     font-family: fontHYQiHei !important;
   }
@@ -284,6 +293,24 @@
       }
     }
   }
+
+  /*提示弹窗*/
+    .el-loading-mask.newHint{
+        text-align: center;
+        .el-loading-spinner{
+            display: inline-block;
+            width:auto;
+            padding:40px 30px;
+            border-radius:8px;
+            background-color:rgba(0,0,0,0.6);
+            .circular{
+                display: none;
+            }
+            .el-loading-text{
+                color:#fff;
+            }
+        }
+    }
 }
 
 .medical-page_view{
@@ -617,6 +644,10 @@
           /*margin-top:15px;*/
           bottom: -15px;
           left: 0px;
+            .el-button .el-icon-check{
+                font-size:20px;
+                margin:0px 15px;
+            }
         }
         .medical-putAway{
           display:inline-block;

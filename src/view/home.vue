@@ -23,9 +23,10 @@
                               <p class="medical-col_detail" v-if="!isFrist">{{item.field == ''?item.value: infoTitle(item.field) }}</p>
                               <p class="medical-col_detail" v-else-if="item.field == ''">{{item.value}}</p>
                               <el-select v-model="formPractitioner[item.field]" placeholder="请选择" size="mini" v-else-if="item.field == 'title'">
-                                  <el-option key="A" label="知名专家" value="A"></el-option>
-                                  <el-option key="B" label="主任医师" value="B"></el-option>
-                                  <el-option key="C" label="副主任医师" value="C"></el-option>
+                                  <el-option v-for="title in titleOptions" :key="title.value" :label="title.label" :value="title.value"></el-option>
+                              </el-select>
+                              <el-select v-model="formPractitioner[item.field]" placeholder="请选择" size="mini" v-else-if="item.field == 'hospital'">
+                                  <el-option v-for="hospital in hospitalOptions" :key="hospital.value" :label="hospital.label" :value="hospital.value"></el-option>
                               </el-select>
                               <el-input v-model="formPractitioner[item.field]" v-else placeholder="请输入内容" size="mini"></el-input>
                           </div>
@@ -73,6 +74,14 @@ export default {
       guideone: true, //    是否显示引导页的第一页
       isFrist: false, //    是否填写主页的个人信息
       collapse: false, //   默认是不收起  true为收起
+      titleOptions: [ //    职称类型
+        {label: "知名专家", value: 'A'},
+        {label: "主任医师", value: 'B'},
+        {label: "副主任医师", value: 'C'}
+      ],
+      hospitalOptions: [ //   医院名称
+        {label: "滨医附院", value: 1}
+      ],
       routesOptions: [], // 菜单导航
       person: { //  个人信息详情
         photo: require("./../assets/logo.png"),
@@ -188,7 +197,16 @@ export default {
             titleStr = '副主任医师'
             break
         }
-      } else {
+      } else if(val == 'hospital'){
+        switch (this.formPractitioner[val]) {
+          case 1:
+              titleStr = '滨医附院'
+              break
+          case 'C':
+              titleStr = '副主任医师'
+              break
+        }
+      }else {
         titleStr = this.formPractitioner[val]
       }
       return titleStr
