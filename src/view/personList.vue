@@ -23,8 +23,8 @@
                         <el-col :span="12">
                             <el-form-item label="性别">
                                 <el-radio-group v-model="newAddPersonForm.gender">
-                                    <el-radio label="男">男</el-radio>
-                                    <el-radio label="女">女</el-radio>
+                                    <el-radio label="M">男</el-radio>
+                                    <el-radio label="F">女</el-radio>
                                 </el-radio-group>
                             </el-form-item>
                         </el-col>
@@ -61,7 +61,14 @@
 
                         <el-col :span="12">
                             <el-form-item label="证件类型">
-                                <el-input v-model="newAddPersonForm.id_type" placeholder="请填写"></el-input>
+                                <el-select v-model="newAddPersonForm.id_type" placeholder="请选择">
+                                    <el-option
+                                        v-for="item in patientsIdType"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
                             </el-form-item>
                         </el-col>
                         <el-col :span="13">
@@ -114,22 +121,28 @@
                     <img src="./../assets/logo.png"/>
                 </div>
                 <div class="personList-title_personMes">
-                    <p><span class="col_blue fontSize_26 fontFamily-BigHYQiHei">{{personDetail.topTitle.personName}}</span> <i class="marginLeft_15" :class="personDetail.topTitle.personSex?'hui-icon-ziyuan18 col_orange':'hui-icon-ziyuan19 col_green'"></i></p>
+                    <p><span class="col_blue fontSize_26 fontFamily-BigHYQiHei">{{personDetail.topTitle.name}}</span> <i class="marginLeft_15" :class="personDetail.topTitle.gender != 'M'?'hui-icon-ziyuan18 col_orange':'hui-icon-ziyuan19 col_green'"></i></p>
                     <P class="fontSize_12">
-                        <i class="hui-icon-ziyuan6 fontSize_14 col_d3"></i>
-                        <span>{{personDetail.topTitle.personAge}} 岁</span>
+                        <i class="hui-icon-ziyuan33 fontSize_14 col_blue"></i>
+                        <span>{{personDetail.topTitle.contact_name ? personDetail.topTitle.contact_name : '暂无信息'}}</span>
                     </P>
-                    <P class="fontSize_12"><i class="hui-icon-ziyuan13 fontSize_14 col_d3"></i> {{personDetail.topTitle.personNumber}}</P>
-                    <P class="fontSize_12"><i class="hui-icon-ziyuan8 fontSize_14 col_d3"></i> {{personDetail.topTitle.personPhone}}</P>
+                    <P class="fontSize_12"><i class="hui-icon-ziyuan49 fontSize_14 col_blue"></i> {{personDetail.topTitle.telecom ? personDetail.topTitle.telecom : '暂无信息'}}</P>
+                    <P class="fontSize_12"><i class="hui-icon-ziyuan61 fontSize_14 col_blue"></i> {{personDetail.topTitle.id_no ? personDetail.topTitle.id_no : '暂无信息'}}</P>
                     <!--<P class="col_orange fontSize_12"><i class="hui-icon-ziyuan2 fontSize_14"></i> 向上转诊</P>-->
                 </div>
                 <div class="personList-title_info">
                     <div class="personList-title_infoNum" @click="sexType = true">
-                        <p class="fontFamily-regular" :class= "[ newAddPerson ?'col_d3':'col_orange']">{{newAddPerson?0:personDetail.topTitle.finish}}</p>
+                        <!--<p class="fontFamily-regular" :class= "[ newAddPerson ?'col_d3':'col_orange']">{{newAddPerson?0:personDetail.topTitle.finish}}</p>-->
+                        <p>
+                            <i class="hui-icon-ziyuan65 col_cyan"></i>
+                        </p>
                         <el-button :type="!sexType? 'tranBlue' : 'lineBlue'" size="mini" round>男性</el-button>
                     </div>
                     <div class="personList-title_infoNum" @click="sexType = false">
-                        <p class="fontFamily-regular" :class ="[newAddPerson?'col_d3':'col_cyan']">{{newAddPerson?0:personDetail.topTitle.unfinish}}</p>
+                        <!--<p class="fontFamily-regular" :class ="[newAddPerson?'col_d3':'col_cyan']">{{newAddPerson?0:personDetail.topTitle.unfinish}}</p>-->
+                        <p>
+                            <i class="hui-icon-ziyuan67 col_orange"></i>
+                        </p>
                         <el-button :type="sexType? 'tranBlue' : 'lineBlue'" size="mini" round>女性</el-button>
                     </div>
                 </div>
@@ -145,7 +158,7 @@
             <div class="personList-detail" v-if="buttonActive == 1 && !isEditDetail">
                 <!--信息展示 start-->
                 <ul>
-                    <li v-for="item in personDetail.personInfor">{{item.title}}<span>{{item.value}}</span></li>
+                    <li v-for="item in personDetail.personInfor">{{item.title}}<span>{{item.value ? item.value : '暂无信息'}}</span></li>
                 </ul>
                 <!--信息展示 end-->
                 <!--<span class="personList-detail_btnGroud"><el-button type="primary" @click="editDetail">修改</el-button></span>-->
@@ -544,19 +557,20 @@ export default {
         number: '',
         phone: ''
       },
-      newAddPersonFormRules: {
+      newAddPersonFormRules: { // 新增患者表单验证
         name: [
           { required: true, message: '请输入姓名', trigger: 'blur' },
           { min: 2, max: 4, message: '长度在 2 到 4 个字符', trigger: 'blur' }
         ]
       },
+      isFirstAddType: true, // 是否为单独的患者和配偶中的第一人
       newAddPersonForm: { // 新增患者列表 form表单信息
         name: '',
           education: '',
           id_type: '',
           id_no: '',
           telecom: '',
-          gender: '男',
+          gender: 'M',
           spouse: '',
           birth_date: '',
           id_address: '',
@@ -564,16 +578,21 @@ export default {
           nation: '',
           ethic: '',
           marriage: '',
-          eduction: '',
           occupation: '',
           photo: '',
           contact_relationship: '',
           contact_name: '',
           contact_telecom: ''
       },
+      //  患者证件类型
+      patientsIdType: [
+        {label: '身份证', value: 0},
+        {label: '军官证', value: 1},
+        {label: '护照', value: 2},
+        {label: '港澳通行证', value: 3},
+        {label: '台胞证', value: 4}
+      ],
       tablistData: [
-        {img: require("./../assets/logo.png"), personName: '刘奇', personAge: 22, personPhone: '188-1111-2222', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 3, unfinish: 4},
-        {img: require("./../assets/logo.png"), personName: '刘1', personAge: 23, personPhone: '188-1111-3333', personSex: 1, personNumber: '00010220', mesNum: 2, finish: 0, unfinish: 2},
         {img: require("./../assets/logo.png"), personName: '刘2', personAge: 24, personPhone: '188-1111-4444', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 1, unfinish: 4},
         {img: require("./../assets/logo.png"), personName: '刘3', personAge: 25, personPhone: '188-1111-5555', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 3, unfinish: 4},
         {img: require("./../assets/logo.png"), personName: '刘4', personAge: 26, personPhone: '188-1111-6666', personSex: 1, personNumber: '00010220', mesNum: 2, finish: 1, unfinish: 4},
@@ -582,16 +601,15 @@ export default {
       ],
       personDetail: {
         topTitle: {}, //    头部信息
-        personInfor: [ //    个人病情资料
-          {title: '身份证', value: '无特殊'},
-          {title: '职业', value: '学生'},
-          {title: '学历', value: '本科'},
-          {title: '婚姻状况', value: '未婚'},
-          {title: '国籍', value: '中国'},
-          {title: '身份证', value: '211222199011112233'},
-          {title: '电话', value: '19922221111'},
-          {title: '通讯地址', value: '北京市西直门'}
-        ]
+        personInfor: { //    个人病情资料
+          occupation: {title: '职业', value: '学生'},
+          education: {title: '学历', value: '本科'},
+          marriage: {title: '婚姻状况', value: '未婚'},
+          nation: {title: '国籍', value: '中国'},
+          id_no: {title: '身份证号', value: '211222199011112233'},
+          telecom: {title: '电话', value: '19922221111'},
+          address: {title: '通讯地址', value: '北京市西直门'}
+        }
       },
       tableList: [
         {
@@ -659,12 +677,18 @@ export default {
     //  添加新患者
     addTabPerson () {
       this.newAddPerson = true
+      this.isFirstAddType = true
+      this.clearNewPerson()
+      this.newAddPersonForm.spouse = ''
     },
     //  获取患者列表
     patientsList () {
       APIDATE.patients().then((res) => {
-            console.log(res)
-
+          res.forEach((v,i)=>{
+              v.img =  require("./../assets/logo.png")
+          })
+        this.tablistData = res
+        this.personDetail.topTitle = this.tablistData[0]
       })
     },
     //  上传头像
@@ -740,8 +764,22 @@ export default {
     //  列表选择事件
     changeList (item) {
       console.log(item, '++++++')
+      APIDATE.medicalRecord({pk: item.id}).then((res) => {
+            console.log(res)
+      })
+      this.buttonActive = 1
       this.newAddPerson = false
-      this.personDetail.topTitle = item;
+      // 头部信息
+      this.personDetail.topTitle = item
+      //    个人基本信息
+      this.personDetail.personInfor.occupation.value = item.occupation
+      this.personDetail.personInfor.education.value = item.education
+      this.personDetail.personInfor.marriage.value = item.marriage
+      this.personDetail.personInfor.nation.value = item.nation
+      this.personDetail.personInfor.id_no.value = item.id_no
+      this.personDetail.personInfor.telecom.value = item.telecom
+      this.personDetail.personInfor.address.value = item.address
+
     },
     //  选项卡切换  个人基本信息 基本病要  生殖检查  常规检查
     handleDeatil (val) {
@@ -759,19 +797,63 @@ export default {
     editDetail () {
       this.isEditDetail = true
     },
+    // 清空新增患者表单
+    clearNewPerson () {
+      this.newAddPersonForm.name = ''
+      this.newAddPersonForm.education = ''
+      this.newAddPersonForm.id_type = ''
+      this.newAddPersonForm.id_no = ''
+      this.newAddPersonForm.telecom = ''
+      this.newAddPersonForm.gender = 'M'
+      this.newAddPersonForm.birth_date = ''
+      this.newAddPersonForm.id_address = ''
+      this.newAddPersonForm.address = ''
+      this.newAddPersonForm.nation = ''
+      this.newAddPersonForm.ethic = ''
+      this.newAddPersonForm.marriage = ''
+      this.newAddPersonForm.occupation = ''
+      this.newAddPersonForm.photo = ''
+      this.newAddPersonForm.contact_relationship = ''
+      this.newAddPersonForm.contact_name = ''
+      this.newAddPersonForm.contact_telecom = ''
+    },
     //  表单提交
     onSubmit (formName) {
-      this.$refs[formName].validate((valid) => {
+      let self = this
+      self.$refs[formName].validate((valid) => {
         if (valid) {
-            console.log('submit!')
-            APIDATE.createPatients(this.newAddPersonForm).then((res) => {
+          APIDATE.createPatients(this.newAddPersonForm).then((res) => {
                 console.log(res)
-                this.newAddPerson = false
-            })
+            if (self.isFirstAddType) {
+              self.$confirm('是否添加配偶信息', '', {
+                confirmButtonText: '添加',
+                cancelButtonText: '不添加',
+                cancelButtonClass: 'el-button--info',
+                center: true,
+                closeOnClickModal: false,
+                closeOnPressEscape: false,
+                customClass: 'medical-alert'
+              }).then(() => {
+                self.newAddPersonForm.spouse = res.id
+                self.newAddPerson = true
+                self.isFirstAddType = false
+              }).catch(() => {
+                self.newAddPersonForm.spouse = ''
+                self.newAddPerson = false
+                self.isFirstAddType = true
+              });
+            } else {
+              self.newAddPersonForm.spouse = ''
+              self.newAddPerson = false
+              self.isFirstAddType = true
+            }
+            self.clearNewPerson()
+            self.$refs.newAddPersonForm.resetFields()
+            self.patientsList() //  获取患者列表信息
+          })
         }
       })
     },
-
   }
 }
 </script>

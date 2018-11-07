@@ -2,7 +2,7 @@
   <div class="medical-page">
     <div class="medical-page_silde" ref="pageSilde" :class="{'silde-collapse':collapse}" :style="{'z-index': isFristLogin?'auto':''}">
         <span class="medical-head_flexIcon">
-          <i class="hui-icon-ziyuan5" @click="toggleSilde"></i>
+          <i class="hui-icon-ziyuan60" @click="toggleSilde"></i>
         </span>
       <div class="medical-page_head">
           <!--个人资料弹窗部分-->
@@ -88,15 +88,15 @@ export default {
         name: '刘奇',
         number: 2,
         personMes:[
-          {icon: 'hui-icon-ziyuan6', title: '证件类型', value: '身份证', field: ''},
-          {icon: 'hui-icon-ziyuan10', title: '执业证书编号', value: '', field: 'qualification_id'},
+          {icon: 'hui-icon-ziyuan43', title: '证件类型', value: '身份证', field: ''},
+          {icon: 'hui-icon-ziyuan44', title: '执业证书编号', value: '', field: 'qualification_id'},
           // {icon: 'hui-icon-ziyuan15', title: '医院等级', value: '三甲医院', field: ''},
-          {icon: 'hui-icon-ziyuan7', title: '证件号码', value: '', field: 'id_no'},
-          {icon: 'hui-icon-ziyuan11', title: '发证机构', value: '', field: 'qualification_issuer'},
-          {icon: 'hui-icon-ziyuan14', title: '医生执照有效期', value: '', field: 'qualification_period'},
-          {icon: 'hui-icon-ziyuan8', title: '联系方式', value: '', field: 'telecom'},
-          {icon: 'hui-icon-ziyuan12', title: '医院名称', value: '', field: 'hospital'},
-          {icon: 'hui-icon-ziyuan16', title: '职称', value: '', field: 'title'}
+          {icon: 'hui-icon-ziyuan46', title: '证件号码', value: '', field: 'id_no'},
+          {icon: 'hui-icon-ziyuan47', title: '发证机构', value: '', field: 'qualification_issuer'},
+          {icon: 'hui-icon-ziyuan48', title: '医生执照有效期', value: '', field: 'qualification_period'},
+          {icon: 'hui-icon-ziyuan49', title: '联系方式', value: '', field: 'telecom'},
+          {icon: 'hui-icon-ziyuan50', title: '医院名称', value: '', field: 'hospital'},
+          {icon: 'hui-icon-ziyuan51', title: '职称', value: '', field: 'title'}
         ]
       },
       practitionersEditId: null,

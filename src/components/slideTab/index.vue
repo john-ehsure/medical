@@ -7,12 +7,12 @@
     <ul class="slideTab-list" :style="{height:slideListHeight+'px'}">
       <li @click="handleSlideLi(item,index)" v-for="(item,index) in listData" :class="{'active': index == activeIndex}">
         <div class="slideTab-list_img">
-          <span class="slideTab-list_mesNum" v-if="item.mesNum">{{item.mesNum}}</span>
+          <!--<span class="slideTab-list_mesNum" v-if="item.mesNum">{{item.mesNum}}</span>-->
           <img :src="item.img"/>
         </div>
         <div class="slideTab-list_content">
-          <p>{{item.personName}} {{item.personSex===0 ? '男' : '女'}}</p>
-          <p>编号 {{item.personNumber}}</p>
+          <p>{{item.name}} {{item.gender==='M' ? '男' : '女'}}</p>
+          <p>编号 {{item.id}}</p>
         </div>
       </li>
     </ul>

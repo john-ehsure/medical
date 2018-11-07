@@ -17,6 +17,14 @@ export default {
   //  获取患者列表接口
   patients: params => {
     return API.GET('/data_api/patients', params)
+  },
+  //  患者对应的详细信息
+  patientsDetail: (id, params) => {
+    return API.GETID('/data_api/patients', id, params)
+  },
+  //  患者基本病要信息
+  medicalRecord: params => {
+    return API.GET('/data_api/medical_record', params)
   }
   // 查询用户是否注册 第二步
   // reg_second: params => {
