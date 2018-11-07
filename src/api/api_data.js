@@ -25,7 +25,11 @@ export default {
   //  患者基本病要信息
   medicalRecord: params => {
     return API.GET('/data_api/medical_record', params)
-  }
+  },
+  //  基本病要下的表单
+  firstindex: params => {
+    return API.POST('/data_api/firstindex', qs.stringify(params))
+  },
   // 查询用户是否注册 第二步
   // reg_second: params => {
   //   return API.POST('/auth_api/reg_second/', qs.stringify(params))

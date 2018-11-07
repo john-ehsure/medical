@@ -172,10 +172,10 @@
                         <swiper-slide v-for="items in basicCheckData">
                             <div class="personList-formBox" v-for="fBox in items">
                                 <p class="personList-formBox_title">{{fBox.titleName}}</p>
-                                <el-form label-position="left" label-width="90px" :model="swiperForm" size="mini">
+                                <el-form label-position="left" :model="swiperForm" size="mini">
                                     <el-row :gutter="10">
-                                        <el-col :span="12" v-for="box in fBox.detailList">
-                                            <el-form-item :label="box.name">
+                                        <el-col :span="box.type == 7 ? 24 : 12" v-for="box in fBox.detailList">
+                                            <el-form-item :label="box.type == 7 ? '' : box.name" :label-width="box.type == 7 ? '0px':fBox.labelWidth">
                                                 <p v-if="box.type == 0" class="form-tran"></p>
                                                 <el-input-number v-if="box.type == 1" v-model="swiperForm.number1" :min="0" :max="10"></el-input-number>
                                                 <i-switch v-if="box.type == 2" size ="large" v-model="swiperForm.anomaly1">
@@ -196,6 +196,7 @@
                                                 </el-select>
                                                 <el-input v-if="box.type == 5" v-model="swiperForm.text" placeholder="请填写"></el-input>
                                                 <el-date-picker v-if="box.type == 6" :editable="false" :clearable="false" v-model="swiperForm.date" type="date" placeholder="选择日期"></el-date-picker>
+                                                <el-input v-if="box.type == 7" type="textarea" v-model="swiperForm.date"></el-input>
                                                 <span class="el-form_unit">{{box.unit}}</span>
                                             </el-form-item>
                                         </el-col>
@@ -220,10 +221,10 @@
                     <swiper-slide v-for="items in reproductiveCheckData">
                         <div class="personList-formBox" v-for="fBox in items">
                             <p class="personList-formBox_title">{{fBox.titleName}}</p>
-                            <el-form label-position="left" label-width="90px" :model="swiperForm" size="mini">
+                            <el-form label-position="left" :model="swiperForm" size="mini">
                                 <el-row :gutter="10">
-                                    <el-col :span="12" v-for="box in fBox.detailList">
-                                        <el-form-item :label="box.name">
+                                    <el-col :span="box.type == 7 ? 24 : 12" v-for="box in fBox.detailList">
+                                        <el-form-item :label="box.type == 7 ?'':box.name"  :label-width="box.type == 7 ? '0px':fBox.labelWidth">
                                             <p v-if="box.type == 0" class="form-tran"></p>
                                             <el-input-number v-if="box.type == 1" v-model="swiperForm.number1" :min="0" :max="10"></el-input-number>
                                             <i-switch v-if="box.type == 2" size ="large" v-model="swiperForm.anomaly1">
@@ -244,6 +245,7 @@
                                             </el-select>
                                             <el-input v-if="box.type == 5" v-model="swiperForm.text" placeholder="请填写"></el-input>
                                             <el-date-picker v-if="box.type == 6" :editable="false" :clearable="false" v-model="swiperForm.date" type="date" placeholder="选择日期"></el-date-picker>
+                                            <el-input v-if="box.type == 7" type="textarea" v-model="swiperForm.date"></el-input>
                                             <span class="el-form_unit">{{box.unit}}</span>
                                         </el-form-item>
                                     </el-col>
@@ -403,54 +405,35 @@ export default {
         }
       },
       //  基本病要 data数据
-      basicCheckData: [ // name 指小项目的名称  unit项目的单位 type项目类型 1num计数器 2 开关 3单选按钮 4下拉框
+      basicCheckData: [ // name 指小项目的名称  unit项目的单位 type项目类型 1num计数器 2 开关 3单选按钮 4下拉框  5 输入框 6 日期 7 textarea多行文本
         [
             {
-                titleName: '血常规',
+                titleName: '诊疗计划',
+                labelWidth: '90px',
                 detailList: [
-                    {name: '血红蛋白', unit: '', type: 1, value: ''},
-                    {name: '红细胞计数', unit: 'X10^12/L', type: 1, value: ''},
-                    {name: '白细胞计数', unit: 'X10^12/L', type: 1, value: ''},
-                    {name: '红细胞体积', unit: '%', type: 1, value: ''},
-                    {name: '血小板', unit: 'X10^9/L', type: 1, value: ''},
-                    {name: '血沉', unit: 'mm/H', type: 1, value: ''},
-                    {name: '尿常规', unit: '', type: 2, value: ''},
-                    {name: '血型', unit: '', type: 4, value: ''},
-                    {name: 'Rh因子', unit: '', type: 3, value: ''}
+                    {name: '方案', unit: '', type: 7, value: ''}
                 ]
             },
             {
-                titleName: '血常规',
+                titleName: '诊断',
+                labelWidth: '90px',
                 detailList: [
-                    {name: '血红蛋白', unit: '', type: 1, value: ''},
-                    {name: '红细胞计数', unit: 'X10^12/L', type: 1, value: ''},
-                    {name: '白细胞计数', unit: 'X10^12/L', type: 1, value: ''},
-                    {name: '红细胞体积', unit: '%', type: 1, value: ''},
-                    {name: '血小板', unit: 'X10^9/L', type: 1, value: ''},
-                    {name: '血沉', unit: 'mm/H', type: 1, value: ''},
-                    {name: '尿常规', unit: '', type: 2, value: ''},
-                    {name: '血型', unit: '', type: 4, value: ''},
-                    {name: 'Rh因子', unit: '', type: 3, value: ''}
+                    {name: '方案', unit: '', type: 7, value: ''}
+                ]
+            },
+            {
+                titleName: '最终结果',
+                labelWidth: '90px',
+                detailList: [
+                    {name: '周期结果', unit: '', type: 4, value: ''},
+                    {name: '妊娠结果', unit: '', type: 4, value: ''}
                 ]
             }
         ],
         [
             {
                 titleName: '血常规',
-                detailList: [
-                    {name: '血红蛋白', unit: '', type: 1, value: ''},
-                    {name: '红细胞计数', unit: 'X10^12/L', type: 1, value: ''},
-                    {name: '白细胞计数', unit: 'X10^12/L', type: 1, value: ''},
-                    {name: '红细胞体积', unit: '%', type: 1, value: ''},
-                    {name: '血小板', unit: 'X10^9/L', type: 1, value: ''},
-                    {name: '血沉', unit: 'mm/H', type: 1, value: ''},
-                    {name: '尿常规', unit: '', type: 2, value: ''},
-                    {name: '血型', unit: '', type: 4, value: ''},
-                    {name: 'Rh因子', unit: '', type: 3, value: ''}
-                ]
-            },
-            {
-                titleName: '血常规',
+                labelWidth: '90px',
                 detailList: [
                     {name: '血红蛋白', unit: '', type: 1, value: ''},
                     {name: '红细胞计数', unit: 'X10^12/L', type: 1, value: ''},
@@ -470,6 +453,7 @@ export default {
             [
                 {
                     titleName: '精液常规分析',
+                    labelWidth: '90px',
                     detailList: [
                         {name: '检查日期', unit: '', type: 6, value: ''},
                         {name: '待确定', unit: 'X10^12/L', type: 1, value: ''},
@@ -502,6 +486,7 @@ export default {
           [
               {
                   titleName: '第二特征',
+                  labelWidth: '90px',
                   detailList: [
                       {name: '胡须', unit: '', type: 2, value: ''},
                       {name: '阴毛', unit: '', type: 2, value: ''},
@@ -511,6 +496,7 @@ export default {
               },
               {
                   titleName: '生殖系统检查',
+                  labelWidth: '90px',
                   detailList: [
                       {name: '阴茎长度', unit: '', type: 1, value: ''},
                       {name: '', unit: '', type: 0, value: ''},
@@ -689,6 +675,7 @@ export default {
           })
         this.tablistData = res
         this.personDetail.topTitle = this.tablistData[0]
+        this.sexType = (this.personDetail.topTitle.gender == "M"?true:false)
       })
     },
     //  上传头像
@@ -771,6 +758,7 @@ export default {
       this.newAddPerson = false
       // 头部信息
       this.personDetail.topTitle = item
+      this.sexType = (item.gender == "M"?true:false)
       //    个人基本信息
       this.personDetail.personInfor.occupation.value = item.occupation
       this.personDetail.personInfor.education.value = item.education
@@ -956,6 +944,14 @@ export default {
           /*输入框*/
           .el-input--mini{
               width:110px;
+          }
+          .el-input--mini.el-textarea{
+              width:100%;
+              padding:0px 30px;
+              box-sizing: border-box;
+              .el-textarea__inner{
+                  height:80px;
+              }
           }
           .el-input--mini.el-date-editor{
               .el-input__inner{
