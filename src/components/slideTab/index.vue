@@ -4,7 +4,7 @@
       <el-input size="medium" placeholder="请输入内容" prefix-icon="el-icon-search"  v-model="searchInput">
       </el-input>
     </div>
-    <ul class="slideTab-list" :style="{height:slideListHeight+'px'}">
+    <ul class="slideTab-list" v-if="listData.length > 0" :style="{height:slideListHeight+'px'}">
       <li @click="handleSlideLi(item,index)" v-for="(item,index) in listData" :class="{'active': index == activeIndex}">
         <div class="slideTab-list_img">
           <!--<span class="slideTab-list_mesNum" v-if="item.mesNum">{{item.mesNum}}</span>-->
@@ -15,6 +15,9 @@
           <p>编号 {{item.id}}</p>
         </div>
       </li>
+    </ul>
+    <ul class="slideTab-list" v-else :style="{height:slideListHeight+'px'}">
+          <li>暂无患者</li>
     </ul>
     <div class="slideTab-add" v-if="hasAdd" ref="slideTabAdd">
         <el-button type="text" @click.native="addTab" icon="el-icon-plus">新增患者</el-button>

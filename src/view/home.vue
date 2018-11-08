@@ -50,7 +50,7 @@
     </div>
     <div class="medical-page_view">
       <transition name="fade">
-        <router-view :contentWidth="contentWidth"/>
+        <router-view :contentWidth="contentWidth" :practitionerId = "practitionersEditId"/>
       </transition>
     </div>
      <div class="medical-guide" v-if="isFristLogin">
@@ -99,7 +99,7 @@ export default {
           {icon: 'hui-icon-ziyuan51', title: '职称', value: '', field: 'title'}
         ]
       },
-      practitionersEditId: null,
+      practitionersEditId: null, // 医生用户的id
       formPractitioner: {
         // id: null,
         user: null,

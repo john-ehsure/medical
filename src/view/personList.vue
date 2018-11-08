@@ -170,11 +170,11 @@
                 <!--<div class="personList-swiper">-->
                     <swiper :options="swiperOption">
                         <swiper-slide v-for="items in basicCheckData">
-                            <div class="personList-formBox" v-for="fBox in items">
+                            <div class="personList-formBox" v-for="(fBox, fBoxNum) in items">
                                 <p class="personList-formBox_title">{{fBox.titleName}}</p>
-                                <el-form label-position="left" :model="swiperForm" size="mini">
+                                <el-form label-position="left" :ref="fBox.formName" :model="swiperForm" size="mini">
                                     <el-row :gutter="10">
-                                        <el-col :span="box.type == 7 ? 24 : 12" v-for="box in fBox.detailList">
+                                        <el-col :span="box.type == 7 ? 24 : 12" v-for="(box, boxNum) in fBox.detailList">
                                             <el-form-item :label="box.type == 7 ? '' : box.name" :label-width="box.type == 7 ? '0px':fBox.labelWidth">
                                                 <p v-if="box.type == 0" class="form-tran"></p>
                                                 <el-input-number v-if="box.type == 1" v-model="swiperForm.number1" :min="0" :max="10"></el-input-number>
@@ -202,7 +202,7 @@
                                         </el-col>
                                         <el-col :span="24">
                                             <div class="personList-formBox_btn">
-                                                <el-button type="primary" size="mini" icon="el-icon-check"></el-button>
+                                                <el-button type="primary" size="mini" icon="el-icon-check" @click="submitBasicCheck(fBox.formName, fBoxNum, boxNum)"></el-button>
                                                 <el-button size="mini" icon="el-icon-view"></el-button>
                                             </div>
                                         </el-col>
@@ -410,6 +410,7 @@ export default {
             {
                 titleName: '诊疗计划',
                 labelWidth: '90px',
+                formName: 'formName01',
                 detailList: [
                     {name: '方案', unit: '', type: 7, value: ''}
                 ]
@@ -417,6 +418,7 @@ export default {
             {
                 titleName: '诊断',
                 labelWidth: '90px',
+                formName: 'formName02',
                 detailList: [
                     {name: '方案', unit: '', type: 7, value: ''}
                 ]
@@ -424,6 +426,7 @@ export default {
             {
                 titleName: '最终结果',
                 labelWidth: '90px',
+                formName: 'formName03',
                 detailList: [
                     {name: '周期结果', unit: '', type: 4, value: ''},
                     {name: '妊娠结果', unit: '', type: 4, value: ''}
@@ -434,6 +437,7 @@ export default {
             {
                 titleName: '血常规',
                 labelWidth: '90px',
+                formName: 'formName04',
                 detailList: [
                     {name: '血红蛋白', unit: '', type: 1, value: ''},
                     {name: '红细胞计数', unit: 'X10^12/L', type: 1, value: ''},
@@ -534,7 +538,7 @@ export default {
       sexType: true, //   男性 女性进行切换  true为男性  false 为女性
       newAddPerson: false, //   是否为新增患者
       warpHeight: 500,
-      buttonActive: 1, //    判断显示信息  1 个人基本信息 2基本病要 3 生殖检查  4 常规检查
+      buttonActive: 1, //    tab判断显示信息  1 个人基本信息 2基本病要 3 生殖检查  4 常规检查
       isEditDetail: false, //   false 显示资料展示  true 显示资料编辑
       newForm: {
         name: '',
@@ -579,11 +583,11 @@ export default {
         {label: '台胞证', value: 4}
       ],
       tablistData: [
-        {img: require("./../assets/logo.png"), personName: '刘2', personAge: 24, personPhone: '188-1111-4444', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 1, unfinish: 4},
-        {img: require("./../assets/logo.png"), personName: '刘3', personAge: 25, personPhone: '188-1111-5555', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 3, unfinish: 4},
-        {img: require("./../assets/logo.png"), personName: '刘4', personAge: 26, personPhone: '188-1111-6666', personSex: 1, personNumber: '00010220', mesNum: 2, finish: 1, unfinish: 4},
-        {img: require("./../assets/logo.png"), personName: '刘5', personAge: 27, personPhone: '188-1111-7777', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 2, unfinish: 4},
-        {img: require("./../assets/logo.png"), personName: '刘5', personAge: 28, personPhone: '188-1111-8888', personSex: 1, personNumber: '00010220', mesNum: 6, finish: 3, unfinish: 2}
+        {img: require("./../assets/logo.png"), name: '刘2', personAge: 24, personPhone: '188-1111-4444', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 1, unfinish: 4},
+        {img: require("./../assets/logo.png"), name: '刘3', personAge: 25, personPhone: '188-1111-5555', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 3, unfinish: 4},
+        {img: require("./../assets/logo.png"), name: '刘4', personAge: 26, personPhone: '188-1111-6666', personSex: 1, personNumber: '00010220', mesNum: 2, finish: 1, unfinish: 4},
+        {img: require("./../assets/logo.png"), name: '刘5', personAge: 27, personPhone: '188-1111-7777', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 2, unfinish: 4},
+        {img: require("./../assets/logo.png"), name: '刘5', personAge: 28, personPhone: '188-1111-8888', personSex: 1, personNumber: '00010220', mesNum: 6, finish: 3, unfinish: 2}
       ],
       personDetail: {
         topTitle: {}, //    头部信息
@@ -651,6 +655,10 @@ export default {
     contentWidth: {//  swiper容器的宽带
       type: Number,
       default: 500
+    },
+    practitionerId: {//  主治医生用户的id
+      type: Number,
+      default: null
     }
   },
   created () {
@@ -670,12 +678,15 @@ export default {
     //  获取患者列表
     patientsList () {
       APIDATE.patients().then((res) => {
-          res.forEach((v,i)=>{
-              v.img =  require("./../assets/logo.png")
-          })
-        this.tablistData = res
-        this.personDetail.topTitle = this.tablistData[0]
-        this.sexType = (this.personDetail.topTitle.gender == "M"?true:false)
+          this.tablistData = res
+          if(res.length > 0){
+              res.forEach((v,i)=>{
+                  v.img =  require("./../assets/logo.png")
+              })
+              this.personDetail.topTitle = this.tablistData[0]
+              this.sexType = (this.personDetail.topTitle.gender == "M"?true:false)
+          }
+          console.log(this.tablistData )
       })
     },
     //  上传头像
@@ -751,9 +762,18 @@ export default {
     //  列表选择事件
     changeList (item) {
       console.log(item, '++++++')
-      APIDATE.medicalRecord({pk: item.id}).then((res) => {
-            console.log(res)
-      })
+      //  生成患者电子病历的id
+        let recordId = {
+            patient: item.id,
+            prescribe_practitioner: this.practitionerId
+        }
+        APIDATE.medicalRecordId(recordId).then((res) => {
+            console.log(res,'生成电子病历id')
+        })
+      //  获取患者相应的电子病历
+      // APIDATE.medicalRecord({pk: item.id}).then((res) => {
+      //       console.log(res)
+      // })
       this.buttonActive = 1
       this.newAddPerson = false
       // 头部信息
@@ -805,7 +825,7 @@ export default {
       this.newAddPersonForm.contact_name = ''
       this.newAddPersonForm.contact_telecom = ''
     },
-    //  表单提交
+    //  新建患者表单提交
     onSubmit (formName) {
       let self = this
       self.$refs[formName].validate((valid) => {
@@ -842,6 +862,15 @@ export default {
         }
       })
     },
+    //    基础病要表单提交
+    submitBasicCheck (formName, fBoxNum,boxNum) { // formName  单个表单对应的ref的name值  fBoxNum 页码  boxNum 单页的form序号
+        let self = this
+        self.$refs[formName].validate((valid) => {
+            if (valid) {
+
+            }
+        })
+    }
   }
 }
 </script>

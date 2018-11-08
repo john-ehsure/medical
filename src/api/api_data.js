@@ -26,6 +26,10 @@ export default {
   medicalRecord: params => {
     return API.GET('/data_api/medical_record', params)
   },
+  //  生成电子病历主键
+  medicalRecordId: params => {
+    return API.POST('/data_api/medical_record', params)
+  },
   //  基本病要下的表单
   firstindex: params => {
     return API.POST('/data_api/firstindex', qs.stringify(params))
