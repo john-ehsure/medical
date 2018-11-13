@@ -169,24 +169,24 @@
             <div class="personList-basicCheck" :style="{width:(contentWidth-255)+'px'}" v-if="buttonActive == 2">
                 <!--<div class="personList-swiper">-->
                     <swiper :options="swiperOption">
-                        <swiper-slide v-for="items in basicCheckData">
+                        <swiper-slide v-for="(items,itemNum) in basicCheckData">
                             <div class="personList-formBox" v-for="(fBox, fBoxNum) in items">
                                 <p class="personList-formBox_title">{{fBox.titleName}}</p>
-                                <el-form label-position="left" :ref="fBox.formName" :model="swiperForm" size="mini">
+                                <el-form label-position="left" :ref="fBox.formName" size="mini">
                                     <el-row :gutter="10">
-                                        <el-col :span="box.type == 7 ? 24 : 12" v-for="(box, boxNum) in fBox.detailList">
+                                        <el-col :span="box.type == 7 ? 24 : 12" v-for="box in fBox.detailList">
                                             <el-form-item :label="box.type == 7 ? '' : box.name" :label-width="box.type == 7 ? '0px':fBox.labelWidth">
                                                 <p v-if="box.type == 0" class="form-tran"></p>
-                                                <el-input-number v-if="box.type == 1" v-model="swiperForm.number1" :min="0" :max="10"></el-input-number>
-                                                <i-switch v-if="box.type == 2" size ="large" v-model="swiperForm.anomaly1">
+                                                <el-input-number v-if="box.type == 1" v-model="box.value" :min="0" :max="10"></el-input-number>
+                                                <i-switch v-if="box.type == 2" size ="large" v-model="box.value">
                                                     <span slot="open">异常</span>
                                                     <span slot="close">正常</span>
                                                 </i-switch>
-                                                <el-radio-group v-if="box.type == 3" v-model="swiperForm.type1">
+                                                <el-radio-group v-if="box.type == 3" v-model="box.value">
                                                     <el-radio :label="0">阴性</el-radio>
                                                     <el-radio :label="1">阳性</el-radio>
                                                 </el-radio-group>
-                                                <el-select v-if="box.type == 4" v-model="swiperForm.blood1" placeholder="请选择">
+                                                <el-select v-if="box.type == 4" v-model="box.value" placeholder="请选择">
                                                     <el-option
                                                         v-for="bl in bloodOptions"
                                                         :key="bl.value"
@@ -194,15 +194,15 @@
                                                         :value="bl.value">
                                                     </el-option>
                                                 </el-select>
-                                                <el-input v-if="box.type == 5" v-model="swiperForm.text" placeholder="请填写"></el-input>
-                                                <el-date-picker v-if="box.type == 6" :editable="false" :clearable="false" v-model="swiperForm.date" type="date" placeholder="选择日期"></el-date-picker>
-                                                <el-input v-if="box.type == 7" type="textarea" v-model="swiperForm.date"></el-input>
+                                                <el-input v-if="box.type == 5" v-model="box.value" placeholder="请填写"></el-input>
+                                                <el-date-picker v-if="box.type == 6" :editable="false" :clearable="false" v-model="box.value" type="date" placeholder="选择日期"></el-date-picker>
+                                                <el-input v-if="box.type == 7" type="textarea" v-model="box.value"></el-input>
                                                 <span class="el-form_unit">{{box.unit}}</span>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="24">
                                             <div class="personList-formBox_btn">
-                                                <el-button type="primary" size="mini" icon="el-icon-check" @click="submitBasicCheck(fBox.formName, fBoxNum, boxNum)"></el-button>
+                                                <el-button type="primary" size="mini" icon="el-icon-check" @click="submitBasicCheck(fBox.formName, itemNum, fBoxNum)"></el-button>
                                                 <el-button size="mini" icon="el-icon-view"></el-button>
                                             </div>
                                         </el-col>
@@ -404,11 +404,16 @@ export default {
           slideShadows : true
         }
       },
+      //  病例主键
+      caseId: null,
+      //  患者主键
+      patientId: null,
       //  基本病要 data数据
       basicCheckData: [ // name 指小项目的名称  unit项目的单位 type项目类型 1num计数器 2 开关 3单选按钮 4下拉框  5 输入框 6 日期 7 textarea多行文本
         [
             {
                 titleName: '诊疗计划',
+                serial_no: '001',
                 labelWidth: '90px',
                 formName: 'formName01',
                 detailList: [
@@ -417,6 +422,7 @@ export default {
             },
             {
                 titleName: '诊断',
+                serial_no: '002',
                 labelWidth: '90px',
                 formName: 'formName02',
                 detailList: [
@@ -425,6 +431,7 @@ export default {
             },
             {
                 titleName: '最终结果',
+                serial_no: '003',
                 labelWidth: '90px',
                 formName: 'formName03',
                 detailList: [
@@ -436,6 +443,7 @@ export default {
         [
             {
                 titleName: '血常规',
+                serial_no: '004',
                 labelWidth: '90px',
                 formName: 'formName04',
                 detailList: [
@@ -712,26 +720,6 @@ export default {
     },
     //  弹窗事件
     openAlert (val, title, index, type) { // val 当前的状态 title 弹窗显示的信息  index list条数的序号  type 可选 重新填写 true  再次检查 false
-      // this.$alert(title, '', {
-      //   confirmButtonText: '确定',
-      //   center: true,
-      //   customClass: 'medical-alert',
-      //   callback: action => {
-      //     if (action == 'confirm') {
-      //       if (val == '3') {
-      //         this.tableList[index].finishType = 1
-      //       } else if (val == '2') {
-      //         this.tableList[index].finishType = 3
-      //       } else {
-      //         if (type) {
-      //           this.tableList[index].finishType = 3
-      //         } else {
-      //           this.tableList[index].finishType = 2
-      //         }
-      //       }
-      //     }
-      //   }
-      // })
       let self = this
       if (val == '3') {
         //  调用接口 提交信息
@@ -753,21 +741,18 @@ export default {
           this.tableList[index].finishType = 2
         }
       }
-        // this.$loading({
-        //     text:title,
-        //     background: 'rgba(255,255,255,0.1)',
-        //     customClass: 'newHint'
-        // })
     },
     //  列表选择事件
     changeList (item) {
       console.log(item, '++++++')
       //  生成患者电子病历的id
+        this.patientId = item.id
         let recordId = {
-            patient: item.id,
+            patient: this.patientId,
             prescribe_practitioner: this.practitionerId
         }
         APIDATE.medicalRecordId(recordId).then((res) => {
+            this.caseId = res.id
             console.log(res,'生成电子病历id')
         })
       //  获取患者相应的电子病历
@@ -787,7 +772,6 @@ export default {
       this.personDetail.personInfor.id_no.value = item.id_no
       this.personDetail.personInfor.telecom.value = item.telecom
       this.personDetail.personInfor.address.value = item.address
-
     },
     //  选项卡切换  个人基本信息 基本病要  生殖检查  常规检查
     handleDeatil (val) {
@@ -831,7 +815,7 @@ export default {
       self.$refs[formName].validate((valid) => {
         if (valid) {
           APIDATE.createPatients(this.newAddPersonForm).then((res) => {
-                console.log(res)
+                // console.log(res)
             if (self.isFirstAddType) {
               self.$confirm('是否添加配偶信息', '', {
                 confirmButtonText: '添加',
@@ -863,12 +847,46 @@ export default {
       })
     },
     //    基础病要表单提交
-    submitBasicCheck (formName, fBoxNum,boxNum) { // formName  单个表单对应的ref的name值  fBoxNum 页码  boxNum 单页的form序号
-        let self = this
-        self.$refs[formName].validate((valid) => {
-            if (valid) {
+    submitBasicCheck (formName, itemNum,fBoxNum) { // formName  单个表单对应的ref的name值  itemNum 页码  fBoxNum 单页的form序号
+      let self = this
+      let planitem = []
+      for(let i = 0; i < self.basicCheckData[itemNum][fBoxNum].detailList.length; i++) {
+        let newJsonPlanitem = {
+          name: self.basicCheckData[itemNum][fBoxNum].detailList[i].name,
+          result: self.basicCheckData[itemNum][fBoxNum].detailList[i].value
+        }
+        planitem.push(newJsonPlanitem)
+      }
+      let basicCheckParams = {
+        serial_no: self.basicCheckData[itemNum][fBoxNum].serial_no, // #序列列号
+        name: self.basicCheckData[itemNum][fBoxNum].titleName, // #项⽬目名称
+        medical_record: self.caseId, // #电⼦子病历主键
+        patient: self.patientId, // #患者主键
+        planitem: JSON.stringify(planitem)
+      }
+      console.log(basicCheckParams)
+      //  创建诊疗计划
+      if (formName == 'formName01') {
+        APIDATE.medicalplan(basicCheckParams).then((res) => {
+          console.log(res,'创建诊疗计划')
+        })
+      }
+      //  创建诊断
+      if (formName == 'formName02') {
 
-            }
+      }
+      //  最终结果
+      if (formName == 'formName03') {
+
+      }
+    },
+    //    创建诊疗计划
+    creatMedicalplan () {
+        let medicalplan = {
+
+        }
+        APIDATE.medicalplan(medicalplan).then((res) => {
+            console.log(res,'创建诊疗计划')
         })
     }
   }

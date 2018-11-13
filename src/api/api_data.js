@@ -30,6 +30,12 @@ export default {
   medicalRecordId: params => {
     return API.POST('/data_api/medical_record', qs.stringify(params))
   },
+  //  创建诊疗计划
+  medicalplan: params => {
+    return API.POST('/data_api/medicalplan', qs.stringify(params))
+  },
+
+
   //  基本病要下的表单
   firstindex: params => {
     return API.POST('/data_api/firstindex', qs.stringify(params))
