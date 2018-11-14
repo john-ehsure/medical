@@ -745,20 +745,12 @@ export default {
     //  列表选择事件
     changeList (item) {
       console.log(item, '++++++')
-      //  生成患者电子病历的id
-        this.patientId = item.id
-        let recordId = {
-            patient: this.patientId,
-            prescribe_practitioner: this.practitionerId
-        }
-        APIDATE.medicalRecordId(recordId).then((res) => {
-            this.caseId = res.id
-            console.log(res,'生成电子病历id')
-        })
+      this.patientId = item.id
       //  获取患者相应的电子病历
-      // APIDATE.medicalRecord({pk: item.id}).then((res) => {
-      //       console.log(res)
-      // })
+      APIDATE.medicalRecord({pk: item.id}).then((res) => {
+            // console.log(res)
+          this.caseId = res[0].id
+      })
       this.buttonActive = 1
       this.newAddPerson = false
       // 头部信息
@@ -815,7 +807,7 @@ export default {
       self.$refs[formName].validate((valid) => {
         if (valid) {
           APIDATE.createPatients(this.newAddPersonForm).then((res) => {
-                // console.log(res)
+                console.log(res)
             if (self.isFirstAddType) {
               self.$confirm('是否添加配偶信息', '', {
                 confirmButtonText: '添加',
@@ -841,10 +833,23 @@ export default {
             }
             self.clearNewPerson()
             self.$refs.newAddPersonForm.resetFields()
+              self.patientId = res.id
+              self.createMedicalRecordId() //新增患者生成电子病例id
             self.patientsList() //  获取患者列表信息
           })
         }
       })
+    },
+    //  新增患者生成电子病例id
+    createMedicalRecordId() {
+          let recordId = {
+              patient: this.patientId,
+              prescribe_practitioner: this.practitionerId
+          }
+          APIDATE.medicalRecordId(recordId).then((res) => {
+              this.caseId = res.id
+              console.log(res,'生成电子病历id')
+          })
     },
     //    基础病要表单提交
     submitBasicCheck (formName, itemNum,fBoxNum) { // formName  单个表单对应的ref的name值  itemNum 页码  fBoxNum 单页的form序号

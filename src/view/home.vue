@@ -125,7 +125,7 @@ export default {
     this.contentWidth = document.documentElement.clientWidth - this.$refs.pageSilde.offsetWidth
 
     this.userProfile();
-    this.practitionersDetail();
+    // this.practitionersDetail();
   },
   methods: {
     //  编辑提交个人信息
@@ -137,8 +137,8 @@ export default {
       })
     },
     //  获取个人信息
-    practitionersDetail () {
-      APIDATA.practitionersDetail().then((res) => {
+    practitionersDetail (id) {
+      APIDATA.practitionersDetail({user:id}).then((res) => {
         this.practitionersEditId = res[0].id
         // this.formPractitioner.Practitioner = 4
         this.formPractitioner.user = res[0].user
@@ -159,6 +159,7 @@ export default {
         let data = res[0];
         this.isFristLogin = data.is_FirstLogin
         this.person.name = data.username
+        this.practitionersDetail(data.id);
       })
     },
     //  导航切换
