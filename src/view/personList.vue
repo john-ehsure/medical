@@ -178,15 +178,34 @@
                                             <el-form-item :label="box.type == 7 ? '' : box.name" :label-width="box.type == 7 ? '0px':fBox.labelWidth">
                                                 <p v-if="box.type == 0" class="form-tran"></p>
                                                 <el-input-number v-if="box.type == 1" v-model="box.value" :min="0" :max="10"></el-input-number>
-                                                <i-switch v-if="box.type == 2" size ="large" v-model="box.value">
-                                                    <span slot="open">异常</span>
-                                                    <span slot="close">正常</span>
+                                                <i-switch v-if="box.type == 2" v-model="box.value">
+                                                    <span slot="open">有</span>
+                                                    <span slot="close">无</span>
                                                 </i-switch>
                                                 <el-radio-group v-if="box.type == 3" v-model="box.value">
                                                     <el-radio :label="0">阴性</el-radio>
                                                     <el-radio :label="1">阳性</el-radio>
                                                 </el-radio-group>
-                                                <el-select v-if="box.type == 4" v-model="box.value" placeholder="请选择">
+                                                <!--周期结果 下拉框-->
+                                                <el-select v-if="box.type == 4 && box.selectNum==0" v-model="box.value" placeholder="请选择">
+                                                    <el-option
+                                                        v-for="bl in cycleResultsOptions"
+                                                        :key="bl.value"
+                                                        :label="bl.label"
+                                                        :value="bl.value">
+                                                    </el-option>
+                                                </el-select>
+                                                <!--妊娠结果 下拉框-->
+                                                <el-select v-if="box.type == 4 && box.selectNum==1" v-model="box.value" placeholder="请选择">
+                                                    <el-option
+                                                        v-for="bl in gravidityResultsOptions"
+                                                        :key="bl.value"
+                                                        :label="bl.label"
+                                                        :value="bl.value">
+                                                    </el-option>
+                                                </el-select>
+                                                <!--血型 下拉框-->
+                                                <el-select v-if="box.type == 4 && box.selectNum==2" v-model="box.value" placeholder="请选择">
                                                     <el-option
                                                         v-for="bl in bloodOptions"
                                                         :key="bl.value"
@@ -218,24 +237,43 @@
             <!--生殖检查部分 start-->
             <div class="personList-reproductiveCheck" :style="{width:(contentWidth-255)+'px'}" v-if="buttonActive == 3">
                 <swiper :options="swiperOption">
-                    <swiper-slide v-for="items in reproductiveCheckData">
-                        <div class="personList-formBox" v-for="fBox in items">
+                    <swiper-slide v-for="(items,itemNum) in reproductiveCheckData">
+                        <div class="personList-formBox" v-for="(fBox,fBoxNum) in items">
                             <p class="personList-formBox_title">{{fBox.titleName}}</p>
                             <el-form label-position="left" :model="swiperForm" size="mini">
                                 <el-row :gutter="10">
                                     <el-col :span="box.type == 7 ? 24 : 12" v-for="box in fBox.detailList">
-                                        <el-form-item :label="box.type == 7 ?'':box.name"  :label-width="box.type == 7 ? '0px':fBox.labelWidth">
+                                        <el-form-item :label="box.type == 7 ?'':box.name"  :label-width="box.value == 7 ? '0px':fBox.labelWidth">
                                             <p v-if="box.type == 0" class="form-tran"></p>
-                                            <el-input-number v-if="box.type == 1" v-model="swiperForm.number1" :min="0" :max="10"></el-input-number>
-                                            <i-switch v-if="box.type == 2" size ="large" v-model="swiperForm.anomaly1">
+                                            <el-input-number v-if="box.type == 1" v-model="box.value" :min="0" :max="10"></el-input-number>
+                                            <i-switch v-if="box.type == 2" size ="large" v-model="box.value">
                                                 <span slot="open">异常</span>
                                                 <span slot="close">正常</span>
                                             </i-switch>
-                                            <el-radio-group v-if="box.type == 3" v-model="swiperForm.type1">
+                                            <el-radio-group v-if="box.type == 3" v-model="box.value">
                                                 <el-radio :label="0">阴性</el-radio>
                                                 <el-radio :label="1">阳性</el-radio>
                                             </el-radio-group>
-                                            <el-select v-if="box.type == 4" v-model="swiperForm.blood1" placeholder="请选择">
+                                            <!--周期结果 下拉框-->
+                                            <el-select v-if="box.type == 4 && box.selectNum==0" v-model="box.value" placeholder="请选择">
+                                                <el-option
+                                                    v-for="bl in cycleResultsOptions"
+                                                    :key="bl.value"
+                                                    :label="bl.label"
+                                                    :value="bl.value">
+                                                </el-option>
+                                            </el-select>
+                                            <!--妊娠结果 下拉框-->
+                                            <el-select v-if="box.type == 4 && box.selectNum==1" v-model="box.value" placeholder="请选择">
+                                                <el-option
+                                                    v-for="bl in gravidityResultsOptions"
+                                                    :key="bl.value"
+                                                    :label="bl.label"
+                                                    :value="bl.value">
+                                                </el-option>
+                                            </el-select>
+                                            <!--血型 下拉框-->
+                                            <el-select v-if="box.type == 4 && box.selectNum==2" v-model="box.value" placeholder="请选择">
                                                 <el-option
                                                     v-for="bl in bloodOptions"
                                                     :key="bl.value"
@@ -243,15 +281,15 @@
                                                     :value="bl.value">
                                                 </el-option>
                                             </el-select>
-                                            <el-input v-if="box.type == 5" v-model="swiperForm.text" placeholder="请填写"></el-input>
-                                            <el-date-picker v-if="box.type == 6" :editable="false" :clearable="false" v-model="swiperForm.date" type="date" placeholder="选择日期"></el-date-picker>
-                                            <el-input v-if="box.type == 7" type="textarea" v-model="swiperForm.date"></el-input>
+                                            <el-input v-if="box.type == 5" v-model="box.value" placeholder="请填写"></el-input>
+                                            <el-date-picker v-if="box.type == 6" :editable="false" :clearable="false" v-model="box.value" type="date" placeholder="选择日期"></el-date-picker>
+                                            <el-input v-if="box.type == 7" type="textarea" v-model="box.value"></el-input>
                                             <span class="el-form_unit">{{box.unit}}</span>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="24">
                                         <div class="personList-formBox_btn">
-                                            <el-button type="primary" size="mini" icon="el-icon-check"></el-button>
+                                            <el-button type="primary" size="mini" icon="el-icon-check" @click="submitBasicCheck(fBox.formName, itemNum, fBoxNum)"></el-button>
                                             <el-button size="mini" icon="el-icon-view"></el-button>
                                         </div>
                                     </el-col>
@@ -404,6 +442,8 @@ export default {
           slideShadows : true
         }
       },
+      //  是否为首次进入当亲患者列表页
+      firstEnter: true,
       //  病例主键
       caseId: null,
       //  患者主键
@@ -435,27 +475,51 @@ export default {
                 labelWidth: '90px',
                 formName: 'formName03',
                 detailList: [
-                    {name: '周期结果', unit: '', type: 4, value: ''},
-                    {name: '妊娠结果', unit: '', type: 4, value: ''}
+                    {name: '周期结果', unit: '', type: 4, selectNum: 0, value: ''},//selectNum 是在type为4 下拉框的时候  进行selectNum判断  0 为周期结果  1为妊娠结果 2为血型
+                    {name: '妊娠结果', unit: '', type: 4, selectNum: 1, value: ''}
                 ]
             }
         ],
         [
             {
-                titleName: '血常规',
+                titleName: '既往病史',
                 serial_no: '004',
-                labelWidth: '90px',
+                labelWidth: '110px',
                 formName: 'formName04',
                 detailList: [
-                    {name: '血红蛋白', unit: '', type: 1, value: ''},
-                    {name: '红细胞计数', unit: 'X10^12/L', type: 1, value: ''},
-                    {name: '白细胞计数', unit: 'X10^12/L', type: 1, value: ''},
-                    {name: '红细胞体积', unit: '%', type: 1, value: ''},
-                    {name: '血小板', unit: 'X10^9/L', type: 1, value: ''},
-                    {name: '血沉', unit: 'mm/H', type: 1, value: ''},
-                    {name: '尿常规', unit: '', type: 2, value: ''},
-                    {name: '血型', unit: '', type: 4, value: ''},
-                    {name: 'Rh因子', unit: '', type: 3, value: ''}
+                    {name: '肝炎', unit: '', type: 2, value: false},
+                    {name: '泌尿系统感染', unit: '', type: 2, value: false},
+                    {name: '心血管疾病', unit: '', type: 2, value: false},
+                    {name: '手术史', unit: '', type: 2, value: false},
+                    {name: '性传播疾病', unit: '', type: 2, value: false},
+                    {name: '结核', unit: '', type: 2, value: false}
+                ]
+            },
+            {
+                titleName: '个人史',
+                serial_no: '005',
+                labelWidth: '110px',
+                formName: 'formName05',
+                detailList: [
+                    {name: '吸烟', unit: '', type: 2, value: false},
+                    {name: '酗酒', unit: '', type: 2, value: false},
+                    {name: '吸毒', unit: '', type: 2, value: false},
+                    {name: '习惯用药', unit: '', type: 2, value: false},
+                    {name: '药物过敏', unit: '', type: 2, value: false},
+                    {name: '重大精神刺激', unit: '', type: 2, value: false},
+                    {name: '近六个月发热史', unit: '', type: 2, value: false},
+                    {name: '出生缺陷', unit: '', type: 2, value: false}
+                ]
+            },
+            {
+                titleName: '婚育史',
+                serial_no: '006',
+                labelWidth: '110px',
+                formName: 'formName06',
+                detailList: [
+                    {name: '近亲结婚', unit: '', type: 2, value: false},
+                    {name: '再婚', unit: '', type: 2, value: false},
+                    {name: '备注', unit: '', type: 2, value: false}
                 ]
             }
         ]
@@ -465,14 +529,16 @@ export default {
             [
                 {
                     titleName: '精液常规分析',
-                    labelWidth: '90px',
+                    serial_no: '101',//第一个1 代表男 0代表女  后俩位代表模块序号
+                    labelWidth: '103px',
+                    formName: 'formName101',
                     detailList: [
                         {name: '检查日期', unit: '', type: 6, value: ''},
                         {name: '待确定', unit: 'X10^12/L', type: 1, value: ''},
                         {name: '液化时间', unit: '', type: 6, value: ''},
                         {name: '待确定', unit: '%', type: 5, value: ''},
                         {name: '量', unit: 'X10^9/L', type: 1, value: ''},
-                        {name: '待确定', unit: 'mm/H', type: 4, value: ''},
+                        {name: '待确定', unit: 'mm/H', type: 4, selectNum: 2, value: ''},
                         {name: 'PH', unit: '', type: 2, value: ''},
                         {name: '待确定', unit: '/HP', type: 5, value: ''},
                         {name: '精子总数', unit: 'X10^6', type: 5, value: ''},
@@ -499,6 +565,8 @@ export default {
               {
                   titleName: '第二特征',
                   labelWidth: '90px',
+                  serial_no: '102',//第一个1 代表男 0代表女  后俩位代表模块序号
+                  formName: 'formName102',
                   detailList: [
                       {name: '胡须', unit: '', type: 2, value: ''},
                       {name: '阴毛', unit: '', type: 2, value: ''},
@@ -509,6 +577,8 @@ export default {
               {
                   titleName: '生殖系统检查',
                   labelWidth: '90px',
+                  serial_no: '103',//第一个1 代表男 0代表女  后俩位代表模块序号
+                  formName: 'formName103',
                   detailList: [
                       {name: '阴茎长度', unit: '', type: 1, value: ''},
                       {name: '', unit: '', type: 0, value: ''},
@@ -533,6 +603,25 @@ export default {
         {value: 1, label: 'B型'},
         {value: 2, label: 'AB型'},
         {value: 3, label: 'O型'}
+      ],
+      //  周期结果 下拉框
+      cycleResultsOptions: [
+        {value: '未妊娠', label: '未妊娠'},
+        {value: '生化妊娠', label: '生化妊娠'},
+        {value: '临床妊娠', label: '临床妊娠'},
+        {value: '着床胚胎数', label: '着床胚胎数'},
+        {value: '异位妊娠', label: '异位妊娠'},
+        {value: '流产', label: '流产'},
+        {value: '取消取卵', label: '取消取卵'},
+        {value: '取消移植', label: '取消移植'}
+      ],
+      //  妊娠结果 下拉框
+      gravidityResultsOptions: [
+        {value: '早产', label: '早产'},
+        {value: '足月产', label: '足月产'},
+        {value: '单胎', label: '单胎'},
+        {value: '双胎', label: '双胎'},
+        {value: '三胎', label: '三胎'}
       ],
       //  血常规 form
       swiperForm: {
@@ -670,7 +759,6 @@ export default {
     }
   },
   created () {
-    this.personDetail.topTitle = this.tablistData[0]
     this.patientsList() //  获取患者列表
   },
   mounted () {
@@ -694,7 +782,11 @@ export default {
               this.personDetail.topTitle = this.tablistData[0]
               this.sexType = (this.personDetail.topTitle.gender == "M"?true:false)
           }
-          console.log(this.tablistData )
+          // console.log(this.tablistData )
+          if(this.firstEnter){//判断是否是第一次进入患者列表
+              this.changeList(this.personDetail.topTitle) // 获取患者列表相关信息
+          }
+          this.firstEnter = false
       })
     },
     //  上传头像
@@ -807,7 +899,7 @@ export default {
       self.$refs[formName].validate((valid) => {
         if (valid) {
           APIDATE.createPatients(this.newAddPersonForm).then((res) => {
-                console.log(res)
+                // console.log(res)
             if (self.isFirstAddType) {
               self.$confirm('是否添加配偶信息', '', {
                 confirmButtonText: '添加',
@@ -833,8 +925,8 @@ export default {
             }
             self.clearNewPerson()
             self.$refs.newAddPersonForm.resetFields()
-              self.patientId = res.id
-              self.createMedicalRecordId() //新增患者生成电子病例id
+            self.patientId = res.id
+            self.createMedicalRecordId() //新增患者生成电子病例id
             self.patientsList() //  获取患者列表信息
           })
         }
@@ -867,7 +959,7 @@ export default {
         name: self.basicCheckData[itemNum][fBoxNum].titleName, // #项⽬目名称
         medical_record: self.caseId, // #电⼦子病历主键
         patient: self.patientId, // #患者主键
-        planitem: JSON.stringify(planitem)
+        planitem: planitem
       }
       console.log(basicCheckParams)
       //  创建诊疗计划
@@ -876,24 +968,26 @@ export default {
           console.log(res,'创建诊疗计划')
         })
       }
-      //  创建诊断
+      //  创建诊断 comment
       if (formName == 'formName02') {
-
+        APIDATE.comment(basicCheckParams).then((res) => {
+          console.log(res,'创建诊断')
+        })
       }
       //  最终结果
       if (formName == 'formName03') {
-
+        APIDATE.diagresult(basicCheckParams).then((res) => {
+          console.log(res,'最终结果')
+        })
+      }
+      //  既往病史  个人史 婚育史 提交 接口是一个  根据name名称不同进行区分
+      if (formName == 'formName04' || formName == 'formName05' || formName == 'formName06') {
+        APIDATE.history(basicCheckParams).then((res) => {
+          console.log(res,'既往病史  个人史 婚育史')
+        })
       }
     },
-    //    创建诊疗计划
-    creatMedicalplan () {
-        let medicalplan = {
 
-        }
-        APIDATE.medicalplan(medicalplan).then((res) => {
-            console.log(res,'创建诊疗计划')
-        })
-    }
   }
 }
 </script>
@@ -927,10 +1021,12 @@ export default {
           }
           .el-form-item__label{
               color:$medical-col_999;
+              padding-right:0px;
           }
           .el-form_unit{
               font-size: $medical-font_12;
               color:$medical-col_999;
+              letter-spacing: -1px;
           }
           .personList-formBox_btn{
               padding:0px 0px 10px;

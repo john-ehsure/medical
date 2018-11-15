@@ -32,9 +32,20 @@ export default {
   },
   //  创建诊疗计划
   medicalplan: params => {
-    return API.POST('/data_api/medicalplan', qs.stringify(params))
+    return API.POST('/data_api/medicalplan', params)
   },
-
+  //  创建诊断
+  comment: params => {
+    return API.POST('/data_api/comment', params)
+  },
+  //  诊疗结果的创建
+  diagresult: params => {
+    return API.POST('/data_api/diagresult', params)
+  },
+  //  既往病史  个人史  婚育史  的创建
+  history: params => {
+    return API.POST('/data_api/history', params)
+  },
 
   //  基本病要下的表单
   firstindex: params => {

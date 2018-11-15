@@ -24,8 +24,8 @@
     line-height: 20px;
     border-radius: 22px;
     vertical-align: middle;
-    border: 1px solid #4cdfd5;
-    background-color: #4cdfd5;
+    border: 1px solid #ccc;
+    background-color: #ccc;
     position: relative;
     cursor: pointer;
     user-select: none;
