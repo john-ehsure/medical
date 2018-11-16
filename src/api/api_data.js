@@ -34,33 +34,37 @@ export default {
   medicalplan: params => {
     return API.POST('/data_api/medicalplan', params)
   },
+  //  修改诊疗计划
+  medicalplanPatch: params => {
+    return API.PATCH('/data_api/medicalplan', params)
+  },
   //  创建诊断
   comment: params => {
     return API.POST('/data_api/comment', params)
+  },
+  //  修改诊断
+  commentPatch: params => {
+    return API.PATCH('/data_api/comment', params)
   },
   //  诊疗结果的创建
   diagresult: params => {
     return API.POST('/data_api/diagresult', params)
   },
-  //  既往病史  个人史  婚育史  的创建
+  //  诊疗结果的修改
+  diagresultPatch: params => {
+    return API.PATCH('/data_api/diagresult', params)
+  },
+  //  既往病史  个人史  婚育史 男女生殖检查 的创建
   history: params => {
     return API.POST('/data_api/history', params)
   },
-
+  //  既往病史  个人史  婚育史 男女生殖检查 的修改
+  historyPatch: params => {
+    return API.PATCH('/data_api/history', params)
+  },
   //  基本病要下的表单
   firstindex: params => {
     return API.POST('/data_api/firstindex', qs.stringify(params))
   },
-  // 查询用户是否注册 第二步
-  // reg_second: params => {
-  //   return API.POST('/auth_api/reg_second/', qs.stringify(params))
-  // },
-  // 用户登录
-  // login: params => {
-  //   return API.POST('/auth_api/token/', qs.stringify(params))
-  // },
-  //  获取用户基本信息
-  // userprofile: params => {
-  //   return API.GET('/auth_api/userprofile', params)
-  // },
+
 }
