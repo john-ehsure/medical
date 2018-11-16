@@ -35,32 +35,32 @@ export default {
     return API.POST('/data_api/medicalplan', params)
   },
   //  修改诊疗计划
-  medicalplanPatch: params => {
-    return API.PATCH('/data_api/medicalplan', params)
+  medicalplanPatch: (id, params) => {
+    return API.PATCHID('/data_api/medicalplan', id, params)
   },
   //  创建诊断
   comment: params => {
     return API.POST('/data_api/comment', params)
   },
   //  修改诊断
-  commentPatch: params => {
-    return API.PATCH('/data_api/comment', params)
+  commentPatch: (id, params) => {
+    return API.PATCHID('/data_api/comment', id, params)
   },
   //  诊疗结果的创建
   diagresult: params => {
     return API.POST('/data_api/diagresult', params)
   },
   //  诊疗结果的修改
-  diagresultPatch: params => {
-    return API.PATCH('/data_api/diagresult', params)
+  diagresultPatch: (id, params) => {
+    return API.PATCHID('/data_api/diagresult', id, params)
   },
   //  既往病史  个人史  婚育史 男女生殖检查 的创建
   history: params => {
     return API.POST('/data_api/history', params)
   },
   //  既往病史  个人史  婚育史 男女生殖检查 的修改
-  historyPatch: params => {
-    return API.PATCH('/data_api/history', params)
+  historyPatch: (id, params) => {
+    return API.PATCHID('/data_api/history', id, params)
   },
   //  基本病要下的表单
   firstindex: params => {

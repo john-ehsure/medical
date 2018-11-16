@@ -132,14 +132,12 @@
                 </div>
                 <div class="personList-title_info">
                     <div class="personList-title_infoNum" @click="sexType = true">
-                        <!--<p class="fontFamily-regular" :class= "[ newAddPerson ?'col_d3':'col_orange']">{{newAddPerson?0:personDetail.topTitle.finish}}</p>-->
                         <p>
                             <i class="hui-icon-ziyuan65 col_cyan"></i>
                         </p>
                         <el-button :type="!sexType? 'tranBlue' : 'lineBlue'" size="mini" round>男性</el-button>
                     </div>
                     <div class="personList-title_infoNum" @click="sexType = false">
-                        <!--<p class="fontFamily-regular" :class ="[newAddPerson?'col_d3':'col_cyan']">{{newAddPerson?0:personDetail.topTitle.unfinish}}</p>-->
                         <p>
                             <i class="hui-icon-ziyuan67 col_orange"></i>
                         </p>
@@ -479,7 +477,6 @@ export default {
                 labelWidth: '90px',
                 formName: 'formName01',
                 createdId: null, // 通过id判断是否为第一次创建
-                isCreated: true, // 是否为第一次创建
                 detailList: [
                     {name: '方案', unit: '', type: 7, value: ''}
                 ]
@@ -490,7 +487,6 @@ export default {
                 labelWidth: '90px',
                 formName: 'formName02',
                 createdId: null, // 通过id判断是否为第一次创建
-                isCreated: true,
                 detailList: [
                     {name: '方案', unit: '', type: 7, value: ''}
                 ]
@@ -501,7 +497,6 @@ export default {
                 labelWidth: '90px',
                 formName: 'formName03',
                 createdId: null, // 通过id判断是否为第一次创建
-                isCreated: true,
                 detailList: [
                     {name: '周期结果', unit: '', type: 4, selectNum: 0, value: ''},//selectNum 是在type为4 下拉框的时候  进行selectNum判断  0 为周期结果  1为妊娠结果 2为血型 3为男性精子粘稠度
                     {name: '妊娠结果', unit: '', type: 4, selectNum: 1, value: ''}
@@ -515,7 +510,6 @@ export default {
                 labelWidth: '110px',
                 formName: 'formName04',
                 createdId: null, // 通过id判断是否为第一次创建
-                isCreated: true,
                 detailList: [
                     {name: '肝炎', unit: '', type: 2, value: false},
                     {name: '泌尿系统感染', unit: '', type: 2, value: false},
@@ -531,7 +525,6 @@ export default {
                 labelWidth: '110px',
                 formName: 'formName05',
                 createdId: null, // 通过id判断是否为第一次创建
-                isCreated: true,
                 detailList: [
                     {name: '吸烟', unit: '', type: 2, value: false},
                     {name: '酗酒', unit: '', type: 2, value: false},
@@ -549,7 +542,6 @@ export default {
                 labelWidth: '110px',
                 formName: 'formName06',
                 createdId: null, // 通过id判断是否为第一次创建
-                isCreated: true,
                 detailList: [
                     {name: '近亲结婚', unit: '', type: 2, value: false},
                     {name: '再婚', unit: '', type: 2, value: false},
@@ -567,16 +559,15 @@ export default {
                     labelWidth: '103px',
                     formName: 'formName101',
                     createdId: null, // 通过id判断是否为第一次创建
-                    isCreated: true,
                     detailList: [
                         {name: '检查日期', unit: '', type: 6, value: ''},
-                        {name: '待确定', unit: 'X10^12/L', type: 1, value: 0},
-                        {name: '液化时间', unit: '', type: 6, value: ''},
-                        {name: '待确定', unit: '%', type: 5, value: ''},
-                        {name: '量', unit: 'X10^9/L', type: 1, value: ''},
+                        {name: '禁欲天数', unit: '天', type: 1, value: 0},
+                        {name: '液化时间', unit: 'min', type: 6, value: ''},
+                        {name: '颜色', unit: '', type: 5, value: ''},
+                        {name: '量', unit: 'ml', type: 1, value: ''},
                         {name: '粘稠度', unit: '', type: 4, selectNum: 3, value: null},
                         {name: 'PH', unit: '', type: 2, switchNum: 1, value: false}, // switchNum 开关的时候 0 显示是否 1 显示正常 异常
-                        {name: '待确定', unit: '/HP', type: 5, value: ''},
+                        {name: '圆细胞', unit: '/HP', type: 5, value: ''},
                         {name: '精子总数', unit: 'X10^6', type: 5, value: ''},
                         {name: '活动率', unit: '%', type: 5, value: ''},
                         {name: '正常形态率', unit: '%', type: 5, value: ''},
@@ -592,7 +583,7 @@ export default {
                         {name: '精浆锌', unit: '/umol', type: 5, value: ''},
                         {name: '果糖', unit: '/umol', type: 5, value: ''},
                         {name: '中性糖苷酶', unit: '/mU', type: 5, value: ''},
-                        {name: '精子DNA碎片率', unit: '/uIU', type: 5, value: ''},
+                        {name: '顶体酶', unit: '/uIU', type: 5, value: ''},
                     ]
                 },
 
@@ -604,7 +595,6 @@ export default {
                   serial_no: '102',//第一个1 代表男 0代表女  后俩位代表模块序号
                   formName: 'formName102',
                   createdId: null, // 通过id判断是否为第一次创建
-                  isCreated: true,
                   detailList: [
                       {name: '胡须', unit: '', type: 2, switchNum: 1, value: false},
                       {name: '阴毛', unit: '', type: 2, switchNum: 1, value: false},
@@ -618,7 +608,6 @@ export default {
                   serial_no: '103',//第一个1 代表男 0代表女  后俩位代表模块序号
                   formName: 'formName103',
                   createdId: null, // 通过id判断是否为第一次创建
-                  isCreated: true,
                   detailList: [
                       {name: '阴茎长度', unit: '', type: 1, value: ''},
                       {name: '前列腺', unit: '', type: 1, value: ''},
@@ -887,6 +876,9 @@ export default {
       APIDATE.medicalRecord({pk: item.id}).then((res) => {
             // console.log(res)
           this.caseId = res[0].id
+          this.clearCheckData (this.basicCheckData) //基本病要 data数据初始化
+          this.clearCheckData (this.menReproductiveCheckData) //男性生殖检查 data数据初始化
+          // this.clearCheckData (this.womenReproductiveCheckData) //女性生殖检查 data数据初始化
           this.isCreatedCase(res) // 判断是否代配偶 是否含有已经填写过电子病例
       })
       this.buttonActive = 1
@@ -913,7 +905,6 @@ export default {
           // this.caseId = v.id //  患者相应的电子病历
           //    判断是否已经含有电子病例
           if(v.medicalplan_set.length > 0) { //  判断创建诊疗计划
-            // this.basicCheckData[0][0].isCreated = false
             this.basicCheckData[0][0].createdId = v.medicalplan_set[0].id
             v.medicalplan_set[0].planitem_set.forEach((set,j)=>{
               this.basicCheckData[0][0].detailList[j].name = set.name
@@ -923,7 +914,6 @@ export default {
           //    判断是否已经含有电子病例
           if(v.comment_set.length > 0) { //  判断创建诊断
             this.basicCheckData[0][1].createdId = v.comment_set[0].id
-            // this.basicCheckData[0][1].isCreated = false
             v.comment_set[0].commentitem_set.forEach((set,j)=>{
               this.basicCheckData[0][1].detailList[j].name = set.name
               this.basicCheckData[0][1].detailList[j].value = set.result
@@ -931,7 +921,6 @@ export default {
           }
           //    判断是否已经含有电子病例
           if(v.diagresult_set.length > 0) { //  判断最终结果
-            // this.basicCheckData[0][2].isCreated = false
             this.basicCheckData[0][2].createdId = v.diagresult_set[0].id
             v.diagresult_set[0].resultitem_set.forEach((set,j)=>{
               this.basicCheckData[0][2].detailList[j].name = set.name
@@ -956,21 +945,15 @@ export default {
           }
         }
       })
-      console.log(this.basicCheckData)
+      // console.log(this.basicCheckData)
     },
     //  筛选默认值
     filterList (formData, getData) { // formData 指页面form表单  getData 通过接口取得默认值
       getData.filter(set => {
         if(set.name == formData.titleName){
           formData.createdId = set.id
-          // console.log(formData)
           formData.detailList.forEach((detail,deNum) =>{
-            detail.titleName = set.historyitem_set[deNum].name
-            // if(set.historyitem_set[deNum].result == "True"){
-            //   set.historyitem_set[deNum].result = true
-            // }else if(set.historyitem_set[deNum].result == "False"){
-            //   set.historyitem_set[deNum].result = false
-            // }
+            detail.name = set.historyitem_set[deNum].name
             detail.value = set.historyitem_set[deNum].result
           })
         }
@@ -987,10 +970,27 @@ export default {
           this.warpHeight = document.documentElement.clientHeight - this.$refs.titleHei.offsetHeight - this.$refs.table_title.offsetHeight -35 -50 - 10;
         })
       }
-      console.log(this.buttonActive)
     },
     editDetail () {
       this.isEditDetail = true
+    },
+    //  清空基本病要 男性生殖检查  女性生殖检查
+    clearCheckData (data) {
+      data.forEach((page,i)=>{
+        page.forEach((form,j)=>{
+          form.detailList.forEach((list,q)=>{
+            if (list.type == 1) {
+              list.value = 0
+            } else if (list.type == 2) {
+              list.value = false
+            } else if (list.type == 4) {
+              list.value = ''
+            } else {
+              list.value = ''
+            }
+          })
+        })
+      })
     },
     // 清空新增患者表单
     clearNewPerson () {
@@ -1090,7 +1090,7 @@ export default {
             console.log(res,'创建诊疗计划')
           })
         }else{ // 修改
-          APIDATE.medicalplanPatch(checkParams).then((res) => {
+          APIDATE.medicalplanPatch(fBox.createdId, checkParams).then((res) => {
             console.log(res,'修改诊疗计划')
           })
         }
@@ -1103,7 +1103,7 @@ export default {
             console.log(res,'创建诊断')
           })
         }else{ // 修改
-          APIDATE.commentPatch(checkParams).then((res) => {
+          APIDATE.commentPatch(fBox.createdId, checkParams).then((res) => {
             console.log(res,'修改诊断')
           })
         }
@@ -1116,7 +1116,7 @@ export default {
             console.log(res,'创建最终结果')
           })
         }else{ // 修改
-          APIDATE.diagresultPatch(checkParams).then((res) => {
+          APIDATE.diagresultPatch(fBox.createdId, checkParams).then((res) => {
             console.log(res,'修改最终结果')
           })
         }
@@ -1129,7 +1129,7 @@ export default {
             console.log(res,'创建 既往病史  个人史 婚育史')
           })
         }else{ // 修改
-          APIDATE.historyPatch(checkParams).then((res) => {
+          APIDATE.historyPatch(fBox.createdId, checkParams).then((res) => {
             console.log(res,'修改 既往病史  个人史 婚育史')
           })
         }
