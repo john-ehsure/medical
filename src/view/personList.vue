@@ -175,7 +175,7 @@
                                         <el-col :span="box.type == 7 ? 24 : 12" v-for="box in fBox.detailList">
                                             <el-form-item :label="box.type == 7 ? '' : box.name" :label-width="box.type == 7 ? '0px':fBox.labelWidth">
                                                 <p v-if="box.type == 0" class="form-tran"></p>
-                                                <el-input-number v-if="box.type == 1" v-model="box.value" :min="0" :max="10"></el-input-number>
+                                                <el-input-number v-if="box.type == 1" v-model="box.value" :min="0" :max="100"></el-input-number>
                                                 <i-switch v-if="box.type == 2" v-model="box.value">
                                                     <span slot="open">有</span>
                                                     <span slot="close">无</span>
@@ -250,9 +250,9 @@
                             <el-form label-position="left" :model="swiperForm" size="mini">
                                 <el-row :gutter="10">
                                     <el-col :span="box.type == 7 ? 24 : 12" v-for="box in fBox.detailList">
-                                        <el-form-item :label="box.type == 7 ?'':box.name"  :label-width="box.value == 7 ? '0px':fBox.labelWidth">
+                                        <el-form-item :label="box.type == 7 ?'':box.name"  :label-width="box.type == 7 ? '0px':fBox.labelWidth">
                                             <p v-if="box.type == 0" class="form-tran"></p>
-                                            <el-input-number v-if="box.type == 1" v-model="box.value" :min="0" :max="10"></el-input-number>
+                                            <el-input-number v-if="box.type == 1" v-model="box.value" :min="0" :max="100"></el-input-number>
                                             <i-switch v-if="box.type == 2 && box.switchNum == 1" size ="large" v-model="box.value">
                                                 <span slot="open">异常</span>
                                                 <span slot="close">正常</span>
