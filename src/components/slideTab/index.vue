@@ -4,7 +4,7 @@
       <el-input size="medium" placeholder="请输入内容" prefix-icon="el-icon-search"  v-model="searchInput">
       </el-input>
     </div>
-    <ul class="slideTab-list" v-if="listData.length > 0" :style="{height:slideListHeight+'px'}">
+    <ul class="slideTab-list" v-if="listData.length > 0" :style="{height:slideListHeight+'px'}" ref="slideCantion">
       <li @click="handleSlideLi(item,index)" v-for="(item,index) in listData" :class="{'active': index == activeIndex}">
         <div class="slideTab-list_img">
           <!--<span class="slideTab-list_mesNum" v-if="item.mesNum">{{item.mesNum}}</span>-->
@@ -63,7 +63,17 @@ export default {
     // console.log(slideTabAddHei,'=====')
     this.slideListHeight = document.documentElement.clientHeight - this.$refs.slideSearchHei.offsetHeight - slideTabAddHei;
   },
+  watch: {
+    'listData': 'scrollToBottom'
+  },
   methods: {
+    //  跳转到滚动跳底部
+    scrollToBottom () {
+      this.$nextTick(() => {
+        let div = this.$refs.slideCantion;
+        div.scrollTop = div.scrollHeight
+      })
+    },
     handleSlideLi (item, index) {
       if (this.activeIndex == index) {
         return;

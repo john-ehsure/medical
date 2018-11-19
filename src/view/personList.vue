@@ -1606,6 +1606,7 @@ export default {
         }
       })
     },
+
     //  新增患者生成电子病例id
     createMedicalRecordId() {
       let recordId = {
