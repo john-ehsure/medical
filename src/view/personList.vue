@@ -130,18 +130,32 @@
                     <P class="fontSize_12"><i class="hui-icon-ziyuan61 fontSize_14 col_blue"></i> {{personDetail.topTitle.id_no ? personDetail.topTitle.id_no : '暂无信息'}}</P>
                     <!--<P class="col_orange fontSize_12"><i class="hui-icon-ziyuan2 fontSize_14"></i> 向上转诊</P>-->
                 </div>
-                <div class="personList-title_info">
-                    <div class="personList-title_infoNum" @click="sexType = true">
+                <div class="personList-title_info" v-if="isDouble">
+                    <div class="personList-title_infoNum" @click="changeSexType('M')">
                         <p>
                             <i class="hui-icon-ziyuan65 col_cyan"></i>
                         </p>
-                        <el-button :type="!sexType? 'tranBlue' : 'lineBlue'" size="mini" round>男性</el-button>
+                        <el-button :type="sexType != 'M'? 'tranBlue' : 'lineBlue'" size="mini" round>男性</el-button>
                     </div>
-                    <div class="personList-title_infoNum" @click="sexType = false">
+                    <div class="personList-title_infoNum" @click="changeSexType('F')">
                         <p>
                             <i class="hui-icon-ziyuan67 col_orange"></i>
                         </p>
-                        <el-button :type="sexType? 'tranBlue' : 'lineBlue'" size="mini" round>女性</el-button>
+                        <el-button :type="sexType == 'M'? 'tranBlue' : 'lineBlue'" size="mini" round>女性</el-button>
+                    </div>
+                </div>
+                <div class="personList-title_info" v-else>
+                    <div class="personList-title_infoNum" v-if="sexType == 'M'">
+                        <p>
+                            <i class="hui-icon-ziyuan65 col_cyan"></i>
+                        </p>
+                        <el-button :type="sexType != 'M'? 'tranBlue' : 'lineBlue'" size="mini" round>男性</el-button>
+                    </div>
+                    <div class="personList-title_infoNum" v-else>
+                        <p>
+                            <i class="hui-icon-ziyuan67 col_orange"></i>
+                        </p>
+                        <el-button :type="sexType == 'M'? 'tranBlue' : 'lineBlue'" size="mini" round>女性</el-button>
                     </div>
                 </div>
             </div>
@@ -163,11 +177,11 @@
             </div>
 
             <!--个人基本信息部分 end-->
-            <!--基本病要部分 start-->
-            <div class="personList-basicCheck" :style="{width:(contentWidth-255)+'px'}" v-if="buttonActive == 2">
+            <!--男性基本病要部分 start-->
+            <div class="personList-basicCheck" :style="{width:(contentWidth-255)+'px'}" v-if="buttonActive == 2 && sexType=='M'">
                 <!--<div class="personList-swiper">-->
                     <swiper :options="swiperOption">
-                        <swiper-slide v-for="(items,itemNum) in basicCheckData">
+                        <swiper-slide v-for="(items,itemNum) in menbasicCheckData">
                             <div class="personList-formBox" v-for="(fBox, fBoxNum) in items">
                                 <p class="personList-formBox_title">{{fBox.titleName}}</p>
                                 <el-form label-position="left" :ref="fBox.formName" size="mini">
@@ -228,7 +242,7 @@
                                         </el-col>
                                         <el-col :span="24">
                                             <div class="personList-formBox_btn">
-                                                <el-button type="primary" size="mini" icon="el-icon-check" @click="submitBasicCheck('basicCheckData', fBox, itemNum, fBoxNum)"></el-button>
+                                                <el-button type="primary" size="mini" icon="el-icon-check" @click="submitBasicCheck('menbasicCheckData', fBox, itemNum, fBoxNum)"></el-button>
                                                 <el-button size="mini" icon="el-icon-view"></el-button>
                                             </div>
                                         </el-col>
@@ -242,7 +256,7 @@
             </div>
             <!--基本病要部分 end-->
             <!--男性生殖检查部分 start-->
-            <div class="personList-reproductiveCheck" :style="{width:(contentWidth-255)+'px'}" v-if="buttonActive == 3">
+            <div class="personList-reproductiveCheck" :style="{width:(contentWidth-255)+'px'}" v-if="buttonActive == 3 && sexType=='M'">
                 <swiper :options="swiperOption">
                     <swiper-slide v-for="(items,itemNum) in menReproductiveCheckData">
                         <div class="personList-formBox" v-for="(fBox,fBoxNum) in items">
@@ -260,6 +274,10 @@
                                             <i-switch v-if="box.type == 2 && box.switchNum == 0" v-model="box.value">
                                                 <span slot="open">是</span>
                                                 <span slot="close">否</span>
+                                            </i-switch>
+                                            <i-switch v-if="box.type == 2 && box.switchNum == 2" size ="large" v-model="box.value">
+                                                <span slot="open">阳性</span>
+                                                <span slot="close">阴性</span>
                                             </i-switch>
                                             <el-radio-group v-if="box.type == 3" v-model="box.value">
                                                 <el-radio :label="0">阴性</el-radio>
@@ -310,6 +328,168 @@
                                     <el-col :span="24">
                                         <div class="personList-formBox_btn">
                                             <el-button type="primary" size="mini" icon="el-icon-check" @click="submitBasicCheck('menReproductiveCheckData', fBox, itemNum, fBoxNum)"></el-button>
+                                            <el-button size="mini" icon="el-icon-view"></el-button>
+                                        </div>
+                                    </el-col>
+                                </el-row>
+                            </el-form>
+                        </div>
+                    </swiper-slide>
+                    <div class="swiper-pagination" slot="pagination"></div>
+                </swiper>
+            </div>
+            <!--生殖检查部分 end-->
+            <!--女性性基本病要部分 start-->
+            <div class="personList-basicCheck" :style="{width:(contentWidth-255)+'px'}" v-if="buttonActive == 2 && sexType=='F'">
+                <!--<div class="personList-swiper">-->
+                <swiper :options="swiperOption">
+                    <swiper-slide v-for="(items,itemNum) in womenbasicCheckData">
+                        <div class="personList-formBox" v-for="(fBox, fBoxNum) in items">
+                            <p class="personList-formBox_title">{{fBox.titleName}}</p>
+                            <el-form label-position="left" :ref="fBox.formName" size="mini">
+                                <el-row :gutter="10">
+                                    <el-col :span="box.type == 7 ? 24 : 12" v-for="box in fBox.detailList">
+                                        <el-form-item :label="box.type == 7 ? '' : box.name" :label-width="box.type == 7 ? '0px':fBox.labelWidth">
+                                            <p v-if="box.type == 0" class="form-tran"></p>
+                                            <el-input-number v-if="box.type == 1" v-model="box.value" :min="0" :max="100"></el-input-number>
+                                            <i-switch v-if="box.type == 2" v-model="box.value">
+                                                <span slot="open">有</span>
+                                                <span slot="close">无</span>
+                                            </i-switch>
+                                            <el-radio-group v-if="box.type == 3" v-model="box.value">
+                                                <el-radio :label="0">阴性</el-radio>
+                                                <el-radio :label="1">阳性</el-radio>
+                                            </el-radio-group>
+                                            <!--周期结果 下拉框-->
+                                            <el-select v-if="box.type == 4 && box.selectNum==0" v-model="box.value" placeholder="请选择">
+                                                <el-option
+                                                    v-for="bl in cycleResultsOptions"
+                                                    :key="bl.value"
+                                                    :label="bl.label"
+                                                    :value="bl.value">
+                                                </el-option>
+                                            </el-select>
+                                            <!--妊娠结果 下拉框-->
+                                            <el-select v-if="box.type == 4 && box.selectNum==1" v-model="box.value" placeholder="请选择">
+                                                <el-option
+                                                    v-for="bl in gravidityResultsOptions"
+                                                    :key="bl.value"
+                                                    :label="bl.label"
+                                                    :value="bl.value">
+                                                </el-option>
+                                            </el-select>
+                                            <!--血型 下拉框-->
+                                            <el-select v-if="box.type == 4 && box.selectNum==2" v-model="box.value" placeholder="请选择">
+                                                <el-option
+                                                    v-for="bl in bloodOptions"
+                                                    :key="bl.value"
+                                                    :label="bl.label"
+                                                    :value="bl.value">
+                                                </el-option>
+                                            </el-select>
+                                            <!--男性精子粘稠度 下拉框-->
+                                            <el-select v-if="box.type == 4 && box.selectNum==3" v-model="box.value" placeholder="请选择">
+                                                <el-option
+                                                    v-for="bl in spermOptions"
+                                                    :key="bl.value"
+                                                    :label="bl.label"
+                                                    :value="bl.value">
+                                                </el-option>
+                                            </el-select>
+                                            <el-input v-if="box.type == 5" v-model="box.value" placeholder="请填写"></el-input>
+                                            <el-date-picker v-if="box.type == 6" :editable="false" :clearable="false" v-model="box.value" type="date" placeholder="选择日期"></el-date-picker>
+                                            <el-input v-if="box.type == 7" type="textarea" v-model="box.value"></el-input>
+                                            <span class="el-form_unit">{{box.unit}}</span>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="24">
+                                        <div class="personList-formBox_btn">
+                                            <el-button type="primary" size="mini" icon="el-icon-check" @click="submitBasicCheck('womenbasicCheckData', fBox, itemNum, fBoxNum)"></el-button>
+                                            <el-button size="mini" icon="el-icon-view"></el-button>
+                                        </div>
+                                    </el-col>
+                                </el-row>
+                            </el-form>
+                        </div>
+                    </swiper-slide>
+                    <div class="swiper-pagination" slot="pagination"></div>
+                </swiper>
+                <!-- </div>-->
+            </div>
+            <!--基本病要部分 end-->
+            <!--女性性生殖检查部分 start-->
+            <div class="personList-reproductiveCheck" :style="{width:(contentWidth-255)+'px'}" v-if="buttonActive == 3 && sexType=='F'">
+                <swiper :options="swiperOption">
+                    <swiper-slide v-for="(items,itemNum) in womenReproductiveCheckData">
+                        <div class="personList-formBox" v-for="(fBox,fBoxNum) in items">
+                            <p class="personList-formBox_title">{{fBox.titleName}}</p>
+                            <el-form label-position="left" :model="swiperForm" size="mini">
+                                <el-row :gutter="10">
+                                    <el-col :span="box.type == 7 ? 24 : 12" v-for="box in fBox.detailList">
+                                        <el-form-item :label="box.type == 7 ?'':box.name"  :label-width="box.type == 7 ? '0px':fBox.labelWidth">
+                                            <p v-if="box.type == 0" class="form-tran"></p>
+                                            <el-input-number v-if="box.type == 1" v-model="box.value" :min="0" :max="100"></el-input-number>
+                                            <i-switch v-if="box.type == 2 && box.switchNum == 1" size ="large" v-model="box.value">
+                                                <span slot="open">异常</span>
+                                                <span slot="close">正常</span>
+                                            </i-switch>
+                                            <i-switch v-if="box.type == 2 && box.switchNum == 0" v-model="box.value">
+                                                <span slot="open">是</span>
+                                                <span slot="close">否</span>
+                                            </i-switch>
+                                            <i-switch v-if="box.type == 2 && box.switchNum == 2" size ="large" v-model="box.value">
+                                                <span slot="open">阳性</span>
+                                                <span slot="close">阴性</span>
+                                            </i-switch>
+                                            <el-radio-group v-if="box.type == 3" v-model="box.value">
+                                                <el-radio :label="0">阴性</el-radio>
+                                                <el-radio :label="1">阳性</el-radio>
+                                            </el-radio-group>
+                                            <!--周期结果 下拉框-->
+                                            <el-select v-if="box.type == 4 && box.selectNum==0" v-model="box.value" placeholder="请选择">
+                                                <el-option
+                                                    v-for="bl in cycleResultsOptions"
+                                                    :key="bl.value"
+                                                    :label="bl.label"
+                                                    :value="bl.value">
+                                                </el-option>
+                                            </el-select>
+                                            <!--妊娠结果 下拉框-->
+                                            <el-select v-if="box.type == 4 && box.selectNum==1" v-model="box.value" placeholder="请选择">
+                                                <el-option
+                                                    v-for="bl in gravidityResultsOptions"
+                                                    :key="bl.value"
+                                                    :label="bl.label"
+                                                    :value="bl.value">
+                                                </el-option>
+                                            </el-select>
+                                            <!--血型 下拉框-->
+                                            <el-select v-if="box.type == 4 && box.selectNum==2" v-model="box.value" placeholder="请选择">
+                                                <el-option
+                                                    v-for="bl in bloodOptions"
+                                                    :key="bl.value"
+                                                    :label="bl.label"
+                                                    :value="bl.value">
+                                                </el-option>
+                                            </el-select>
+                                            <!--男性精子粘稠度 下拉框-->
+                                            <el-select v-if="box.type == 4 && box.selectNum==3" v-model="box.value" placeholder="请选择">
+                                                <el-option
+                                                    v-for="bl in spermOptions"
+                                                    :key="bl.value"
+                                                    :label="bl.label"
+                                                    :value="bl.value">
+                                                </el-option>
+                                            </el-select>
+                                            <el-input v-if="box.type == 5" v-model="box.value" placeholder="请填写"></el-input>
+                                            <el-date-picker v-if="box.type == 6" :editable="false" :clearable="false" v-model="box.value" type="date" placeholder="选择日期"></el-date-picker>
+                                            <el-input v-if="box.type == 7" type="textarea" v-model="box.value"></el-input>
+                                            <span class="el-form_unit">{{box.unit}}</span>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="24">
+                                        <div class="personList-formBox_btn">
+                                            <el-button type="primary" size="mini" icon="el-icon-check" @click="submitBasicCheck('womenReproductiveCheckData', fBox, itemNum, fBoxNum)"></el-button>
                                             <el-button size="mini" icon="el-icon-view"></el-button>
                                         </div>
                                     </el-col>
@@ -468,8 +648,8 @@ export default {
       caseId: null,
       //  患者主键
       patientId: null,
-      //  基本病要 data数据
-      basicCheckData: [ // name 指小项目的名称  unit项目的单位 type项目类型 1num计数器 2 开关 3单选按钮 4下拉框  5 输入框 6 日期 7 textarea多行文本
+      //  男性基本病要 data数据
+      menbasicCheckData: [ // name 指小项目的名称  unit项目的单位 type项目类型 1num计数器 2 开关 3单选按钮 4下拉框  5 输入框 6 日期 7 textarea多行文本
         [
             {
                 titleName: '诊疗计划',
@@ -547,9 +727,113 @@ export default {
                     {name: '再婚', unit: '', type: 2, value: false},
                     {name: '备注', unit: '', type: 2, value: false}
                 ]
+            },
+            {
+                titleName: '家庭史',
+                serial_no: '007',
+                labelWidth: '100px',
+                formName: 'formName07',
+                createdId: null, // 通过id判断是否为第一次创建
+                detailList: [
+                    {name: '遗传病史', unit: '', type: 2, value: false},
+                    {name: '不孕不育史', unit: '', type: 2, value: false}
+                ]
             }
         ]
       ],
+      //  女性基本病要 data数据
+      womenbasicCheckData: [ // name 指小项目的名称  unit项目的单位 type项目类型 1num计数器 2 开关 3单选按钮 4下拉框  5 输入框 6 日期 7 textarea多行文本
+            [
+                {
+                    titleName: '诊疗计划',
+                    serial_no: '001',
+                    labelWidth: '90px',
+                    formName: 'formName01',
+                    createdId: null, // 通过id判断是否为第一次创建
+                    detailList: [
+                        {name: '方案', unit: '', type: 7, value: ''}
+                    ]
+                },
+                {
+                    titleName: '诊断',
+                    serial_no: '002',
+                    labelWidth: '90px',
+                    formName: 'formName02',
+                    createdId: null, // 通过id判断是否为第一次创建
+                    detailList: [
+                        {name: '方案', unit: '', type: 7, value: ''}
+                    ]
+                },
+                {
+                    titleName: '最终结果',
+                    serial_no: '003',
+                    labelWidth: '90px',
+                    formName: 'formName03',
+                    createdId: null, // 通过id判断是否为第一次创建
+                    detailList: [
+                        {name: '周期结果', unit: '', type: 4, selectNum: 0, value: ''},//selectNum 是在type为4 下拉框的时候  进行selectNum判断  0 为周期结果  1为妊娠结果 2为血型 3为男性精子粘稠度
+                        {name: '妊娠结果', unit: '', type: 4, selectNum: 1, value: ''}
+                    ]
+                }
+            ],
+            [
+                {
+                    titleName: '既往病史',
+                    serial_no: '004',
+                    labelWidth: '110px',
+                    formName: 'formName04',
+                    createdId: null, // 通过id判断是否为第一次创建
+                    detailList: [
+                        {name: '肝炎', unit: '', type: 2, value: false},
+                        {name: '泌尿系统感染', unit: '', type: 2, value: false},
+                        {name: '心血管疾病', unit: '', type: 2, value: false},
+                        {name: '手术史', unit: '', type: 2, value: false},
+                        {name: '性传播疾病', unit: '', type: 2, value: false},
+                        {name: '结核', unit: '', type: 2, value: false}
+                    ]
+                },
+                {
+                    titleName: '个人史',
+                    serial_no: '005',
+                    labelWidth: '110px',
+                    formName: 'formName05',
+                    createdId: null, // 通过id判断是否为第一次创建
+                    detailList: [
+                        {name: '吸烟', unit: '', type: 2, value: false},
+                        {name: '酗酒', unit: '', type: 2, value: false},
+                        {name: '吸毒', unit: '', type: 2, value: false},
+                        {name: '习惯用药', unit: '', type: 2, value: false},
+                        {name: '药物过敏', unit: '', type: 2, value: false},
+                        {name: '重大精神刺激', unit: '', type: 2, value: false},
+                        {name: '近六个月发热史', unit: '', type: 2, value: false},
+                        {name: '出生缺陷', unit: '', type: 2, value: false}
+                    ]
+                },
+                {
+                    titleName: '婚育史',
+                    serial_no: '006',
+                    labelWidth: '110px',
+                    formName: 'formName06',
+                    createdId: null, // 通过id判断是否为第一次创建
+                    detailList: [
+                        {name: '近亲结婚', unit: '', type: 2, value: false},
+                        {name: '再婚', unit: '', type: 2, value: false},
+                        {name: '备注', unit: '', type: 2, value: false}
+                    ]
+                },
+                {
+                    titleName: '家庭史',
+                    serial_no: '007',
+                    labelWidth: '100px',
+                    formName: 'formName07',
+                    createdId: null, // 通过id判断是否为第一次创建
+                    detailList: [
+                        {name: '遗传病史', unit: '', type: 2, value: false},
+                        {name: '不孕不育史', unit: '', type: 2, value: false}
+                    ]
+                }
+            ]
+        ],
       // 男性生殖检查  data   // name 指小项目的名称  unit项目的单位 type项目类型 1num计数器 2 开关 3单选按钮 4下拉框 5 输入框 6 日期
       menReproductiveCheckData: [
             [
@@ -626,6 +910,201 @@ export default {
               }
           ]
       ],
+      // 女性生殖检查  data   // name 指小项目的名称  unit项目的单位 type项目类型 1num计数器 2 开关 3单选按钮 4下拉框 5 输入框 6 日期
+      womenReproductiveCheckData: [
+        [
+            {
+                titleName: '体格检查',
+                serial_no: '201',//第一个1 代表男 2代表女 0代表基本病要  后俩位代表模块序号
+                labelWidth: '90px',
+                formName: 'formName201',
+                createdId: null, // 通过id判断是否为第一次创建
+                detailList: [
+                    {name: 'T', unit: 'C', type: 1, value: 0},
+                    {name: 'P', unit: '次/分', type: 1, value: 0},
+                    {name: 'R', unit: '次/分', type: 1, value: 0},
+                    {name: 'BP', unit: 'mmHg', type: 1, value: 0},
+                    {name: '身高', unit: 'cm', type: 1, value: 0},
+                    {name: '体重', unit: 'kg', type: 1, value: 0},
+                    {name: '体重指数', unit: 'kg/m^2', type: 1, value: 0}, // switchNum 开关的时候 0 显示是否 1 显示正常 异常
+                    {name: '营养', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '发育', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '淋巴结', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '精神', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '心', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '毛发', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '肺', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '皮肤粘膜', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '肝', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '脾', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '肾', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '脊柱四肢', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '其他', unit: '', type: 5, value: ''}
+                ]
+            },
+            {
+                titleName: '妇科检查',
+                labelWidth: '100px',
+                serial_no: '202',//第一个1 代表男 0代表女  后俩位代表模块序号
+                formName: 'formName202',
+                createdId: null, // 通过id判断是否为第一次创建
+                detailList: [
+                    {name: '外阴', unit: '', type: 5, value: ''},
+                    {name: '阴道', unit: '', type: 1, value: 0},
+                    {name: '宫颈', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '钠氏囊肿', unit: 'mm', type: 1, value: 0},
+                    {name: '肥大', unit: 'mm', type: 1, value: 0},
+                    {name: '大小', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '盆腔', unit: '', type: 1, value: 0},
+                    {name: '质地', unit: '', type: 3, value: ''},
+                    {name: '活动度', unit: '', type: 5, value: ''},
+                    {name: '压痛', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '右侧卵巢大小', unit: 'mm', type: 1, value: 0},
+                    {name: '卵泡', unit: '', type: 1, value: 0},
+                    {name: '附件：左侧', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '附件：右侧', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '其他异常', unit: '', type: 5, value: ''}
+                ]
+            }
+        ],
+        [
+            {
+                titleName: '肝功',
+                labelWidth: '110px',
+                serial_no: '203',//第一个1 代表男 0代表女  后俩位代表模块序号
+                formName: 'formName203',
+                createdId: null, // 通过id判断是否为第一次创建
+                detailList: [
+                    {name: 'ALT', unit: 'u/l', type: 1, value: 0},
+                    {name: 'AST', unit: 'u/l', type: 1, value: 0}
+                ]
+            },
+            {
+                titleName: '肾功',
+                labelWidth: '110px',
+                serial_no: '204',//第一个1 代表男 0代表女  后俩位代表模块序号
+                formName: 'formName204',
+                createdId: null, // 通过id判断是否为第一次创建
+                detailList: [
+                    {name: 'Bun', unit: 'mlU/L', type: 1, value: 0},
+                    {name: 'Cr', unit: 'μmol/L', type: 1, value: 0},
+                    {name: '染色体', unit: '', type: 5, value: ''},
+                    {name: '宫腔镜', unit: '', type: 5, value: ''},
+                    {name: '宫颈防癌检查', unit: '', type: 5, value: ''},
+                    {name: '腹腔镜', unit: '', type: 5, value: ''},
+                    {name: '子宫内膜活检', unit: '', type: 5, value: ''},
+                    {name: '子宫输卵管检查', unit: '', type: 5, value: ''},
+                    {name: '心电图', unit: '', type: 5, value: ''},
+                    {name: '其他化验检查', unit: '', type: 5, value: ''}
+                ]
+            },
+            {
+                titleName: '妇科B超',
+                labelWidth: '110px',
+                serial_no: '205',//第一个1 代表男 0代表女  后俩位代表模块序号
+                formName: 'formName205',
+                createdId: null, // 通过id判断是否为第一次创建
+                detailList: [
+                    {name: '检查日期', unit: '', type: 6, value: ''},
+                    {name: '月经周期', unit: '', type: 4, selectNum: 2, value: ''},
+                    {name: '卵巢功能评估', unit: '', type: 2, switchNum: 1, value: false},
+                    {name: '子宫大小', unit: 'mm', type: 1, value: 0},
+                    {name: '子宫内膜厚度', unit: '', type: 5, value: ''},
+                    {name: '形态', unit: '', type: 5, value: ''},
+                    {name: '右侧卵巢大小', unit: 'mm', type: 1, value: 0},
+                    {name: '卵泡', unit: '个', type: 5, value: ''},
+                    {name: '备注', unit: '', type: 5, value: ''},
+                    {name: '左侧卵巢大小', unit: 'mm', type: 1, value: 0},
+                    {name: '卵泡', unit: '个', type: 1, value: ''},
+                    {name: '备注', unit: '', type: 5, value: ''},
+                    {name: '其他异常', unit: '', type: 5, value: ''}
+                ]
+            },
+        ],
+        [
+          {
+              titleName: '血常规',
+              labelWidth: '100px',
+              serial_no: '206',//第一个1 代表男 0代表女  后俩位代表模块序号
+              formName: 'formName206',
+              createdId: null, // 通过id判断是否为第一次创建
+              detailList: [
+                  {name: '血红蛋白', unit: '', type: 1, value: 0},
+                  {name: '红细胞计数', unit: '×10^12/L', type: 1, value: 0},
+                  {name: '白细胞计数', unit: '×10^12/L', type: 1, value: 0},
+                  {name: '红细胞体积', unit: '%', type: 1, value: 0},
+                  {name: '血小板', unit: '×10^9/L', type: 1, value: 0},
+                  {name: '血沉', unit: 'mm/H', type: 1, value: 0},
+                  {name: '尿常规', unit: '', type: 2, switchNum: 1, value: false},
+                  {name: '血型', unit: '', type: 4, selectNum: 0, value: ''},
+                  {name: 'Rh因子', unit: '', type: 2, switchNum: 2, value: false},
+                  {name: '血凝功能PT', unit: '', type: 1, value: 0},
+                  {name: 'APTT', unit: '秒', type: 1, value: 0}
+              ]
+          },
+          {
+            titleName: '基础内分泌',
+            labelWidth: '90px',
+            serial_no: '207',//第一个1 代表男 0代表女  后俩位代表模块序号
+            formName: 'formName207',
+            createdId: null, // 通过id判断是否为第一次创建
+            detailList: [
+                {name: 'FSH', unit: 'IU/L', type: 1, value: 0},
+                {name: 'LH', unit: 'IU/L', type: 1, value: 0},
+                {name: 'PRL', unit: 'mIU/L', type: 1, value: 0},
+                {name: 'T', unit: 'nmol/L', type: 1, value: 0},
+                {name: 'TSH', unit: 'mIU/L', type: 1, value: 0},
+                {name: 'AMH', unit: 'pmol/L', type: 1, value: 0},
+                {name: 'E2', unit: 'pmol/L', type: 1, value: 0},
+                {name: 'P', unit: 'nmol/L', type: 1, value: 0}
+            ]
+          },
+        ],
+        [
+          {
+              titleName: 'TORCH',
+              labelWidth: '100px',
+              serial_no: '208',//第一个1 代表男 0代表女  后俩位代表模块序号
+              formName: 'formName208',
+              createdId: null, // 通过id判断是否为第一次创建
+              detailList: [
+                  {name: '弓形虫', unit: '', type: 2, switchNum: 2, value: false},
+                  {name: '巨细胞病毒', unit: '', type: 2, switchNum: 2, value: false},
+                  {name: '风疹病毒', unit: '', type: 2, switchNum: 2, value: false},
+                  {name: '单纯孢疹病毒', unit: '', type: 2, switchNum: 2, value: false}
+              ]
+          },
+            {
+                titleName: '乙肝六项',
+                labelWidth: '100px',
+                serial_no: '209',//第一个1 代表男 0代表女  后俩位代表模块序号
+                formName: 'formName209',
+                createdId: null, // 通过id判断是否为第一次创建
+                detailList: [
+                    {name: 'HBsAg', unit: '', type: 2, switchNum: 2, value: false},
+                    {name: 'HBsAb', unit: '', type: 2, switchNum: 2, value: false},
+                    {name: 'HBeAg', unit: '', type: 2, switchNum: 2, value: false},
+                    {name: 'HBeAb', unit: '', type: 2, switchNum: 2, value: false},
+                    {name: 'HBcAb', unit: '', type: 2, switchNum: 2, value: false},
+                    {name: 'HBVpreSIAg', unit: '', type: 2, switchNum: 2, value: false}
+                ]
+            },
+            {
+                titleName: '梅毒抗体',
+                labelWidth: '110px',
+                serial_no: '210',//第一个1 代表男 0代表女  后俩位代表模块序号
+                formName: 'formName210',
+                createdId: null, // 通过id判断是否为第一次创建
+                detailList: [
+                    {name: '梅毒抗体', unit: '', type: 2, switchNum: 2, value: false},
+                    {name: 'HIVAb', unit: '', type: 2, switchNum: 2, value: false},
+                    {name: '衣原体', unit: '', type: 2, switchNum: 2, value: false},
+                    {name: '血清精子抗体', unit: '', type: 2, switchNum: 2, value: false},
+                    {name: '淋球菌', unit: '', type: 2, switchNum: 2, value: false}
+                ]
+            },
+        ]
+      ],
       //  血型下拉框
       bloodOptions: [
         {value: 0, label: 'A型'},
@@ -666,7 +1145,9 @@ export default {
         text: '',
         date: ''
       },
-      sexType: true, //   男性 女性进行切换  true为男性  false 为女性
+      pkDetailData: [], //  用来存放患者的详细信息
+      sexType: 'M', //   男性 女性进行切换  M为男性  F 为女性
+      isDouble: true, // 是否为2人  默认为2人  false为1人
       newAddPerson: false, //   是否为新增患者
       warpHeight: 500,
       buttonActive: 1, //    tab判断显示信息  1 个人基本信息 2基本病要 3 生殖检查  4 常规检查
@@ -814,7 +1295,7 @@ export default {
                   v.img =  require("./../assets/logo.png")
               })
               this.personDetail.topTitle = this.tablistData[0]
-              this.sexType = (this.personDetail.topTitle.gender == "M"?true:false)
+              this.sexType = this.personDetail.topTitle.gender
           }
           // console.log(this.tablistData )
           if(this.firstEnter){//判断是否是第一次进入患者列表
@@ -844,6 +1325,17 @@ export default {
       }
       item.finishDetail.splice(index, 1)
     },
+    //  弹窗 加载中... 修改成功
+    showloadingTitle (title) {
+      let loadingInstance = this.$loading({
+          text: title,
+          background: 'rgba(255,255,255,0.1)',
+          customClass: 'newHint'
+      })
+      setTimeout(function () {
+          loadingInstance.close()
+      }, 2000);
+    },
     //  弹窗事件
     openAlert (val, title, index, type) { // val 当前的状态 title 弹窗显示的信息  index list条数的序号  type 可选 重新填写 true  再次检查 false
       let self = this
@@ -868,6 +1360,37 @@ export default {
         }
       }
     },
+    //  切换男女角色
+    changeSexType (type) {
+      if (this.sexType == type) {
+        return
+      }
+      this.pkDetailData.forEach((pk)=>{
+          if(pk.patientinfo.gender == type){
+              this.patientId = pk.patient
+              this.caseId = pk.id
+              this.personDetail.topTitle = pk.patientinfo
+              //    个人基本信息
+              this.personDetail.personInfor.occupation.value = pk.patientinfo.occupation
+              this.personDetail.personInfor.education.value = pk.patientinfo.education
+              this.personDetail.personInfor.marriage.value = pk.patientinfo.marriage
+              this.personDetail.personInfor.nation.value = pk.patientinfo.nation
+              this.personDetail.personInfor.id_no.value = pk.patientinfo.id_no
+              this.personDetail.personInfor.telecom.value = pk.patientinfo.telecom
+              this.personDetail.personInfor.address.value = pk.patientinfo.address
+              // 重新获取相关数据
+              APIDATE.medicalRecord({pk: this.patientId}).then((res) => {
+                  this.pkDetailData = res
+              })
+          }
+      })
+      this.sexType = type
+      this.clearCheckData(this.menbasicCheckData) // 男性基本病要 data数据初始化
+      this.clearCheckData(this.menReproductiveCheckData) // 男性生殖检查 data数据初始化
+      this.clearCheckData(this.womenbasicCheckData) // 女性基本病要 data数据初始化
+      this.clearCheckData(this.womenReproductiveCheckData) // 女性生殖检查 data数据初始化
+      this.isCreatedCase(this.pkDetailData) // 判断是否代配偶 是否含有已经填写过电子病例
+    },
     //  列表选择事件
     changeList (item) {
       console.log(item, '++++++')
@@ -875,17 +1398,29 @@ export default {
       //  获取患者相应的电子病历
       APIDATE.medicalRecord({pk: item.id}).then((res) => {
             // console.log(res)
-          this.caseId = res[0].id
-          this.clearCheckData (this.basicCheckData) //基本病要 data数据初始化
-          this.clearCheckData (this.menReproductiveCheckData) //男性生殖检查 data数据初始化
-          // this.clearCheckData (this.womenReproductiveCheckData) //女性生殖检查 data数据初始化
-          this.isCreatedCase(res) // 判断是否代配偶 是否含有已经填写过电子病例
+          this.pkDetailData = res
+          if (this.pkDetailData.length > 1) { // 判断是否有配偶相关信息
+              this.isDouble = true
+              this.pkDetailData.forEach((v)=>{
+                  if(v.patient == this.patientId){
+                      this.caseId = v.id
+                  }
+              })
+          } else {
+              this.isDouble = false
+              this.caseId = this.pkDetailData[0].id
+          }
+          this.clearCheckData(this.menbasicCheckData) //   男性基本病要 data数据初始化
+          this.clearCheckData(this.menReproductiveCheckData) //    男性生殖检查 data数据初始化
+          this.clearCheckData(this.womenbasicCheckData) // 女性基本病要 data数据初始化
+          this.clearCheckData(this.womenReproductiveCheckData) //  女性生殖检查 data数据初始化
+          this.isCreatedCase(this.pkDetailData) // 判断是否代配偶 是否含有已经填写过电子病例
       })
       this.buttonActive = 1
       this.newAddPerson = false
       // 头部信息
       this.personDetail.topTitle = item
-      this.sexType = (item.gender == "M"?true:false)
+      this.sexType = item.gender
       //    个人基本信息
       this.personDetail.personInfor.occupation.value = item.occupation
       this.personDetail.personInfor.education.value = item.education
@@ -902,34 +1437,40 @@ export default {
       }
       data.forEach((v,i) => {
         if (v.patient == this.patientId) {
+            let menOrwomenBasic = 'menbasicCheckData'
+            if(this.sexType == 'M'){
+                menOrwomenBasic = 'menbasicCheckData'
+            }else{
+                menOrwomenBasic = 'womenbasicCheckData'
+            }
           // this.caseId = v.id //  患者相应的电子病历
-          //    判断是否已经含有电子病例
+          //    判断是否已经含有电子病例  男性基本并要部分
           if(v.medicalplan_set.length > 0) { //  判断创建诊疗计划
-            this.basicCheckData[0][0].createdId = v.medicalplan_set[0].id
+            this[menOrwomenBasic][0][0].createdId = v.medicalplan_set[0].id
             v.medicalplan_set[0].planitem_set.forEach((set,j)=>{
-              this.basicCheckData[0][0].detailList[j].name = set.name
-              this.basicCheckData[0][0].detailList[j].value = set.result
+              this[menOrwomenBasic][0][0].detailList[j].name = set.name
+              this[menOrwomenBasic][0][0].detailList[j].value = set.result
             })
           }
           //    判断是否已经含有电子病例
           if(v.comment_set.length > 0) { //  判断创建诊断
-            this.basicCheckData[0][1].createdId = v.comment_set[0].id
+            this[menOrwomenBasic][0][1].createdId = v.comment_set[0].id
             v.comment_set[0].commentitem_set.forEach((set,j)=>{
-              this.basicCheckData[0][1].detailList[j].name = set.name
-              this.basicCheckData[0][1].detailList[j].value = set.result
+              this[menOrwomenBasic][0][1].detailList[j].name = set.name
+              this[menOrwomenBasic][0][1].detailList[j].value = set.result
             })
           }
           //    判断是否已经含有电子病例
           if(v.diagresult_set.length > 0) { //  判断最终结果
-            this.basicCheckData[0][2].createdId = v.diagresult_set[0].id
+            this[menOrwomenBasic][0][2].createdId = v.diagresult_set[0].id
             v.diagresult_set[0].resultitem_set.forEach((set,j)=>{
-              this.basicCheckData[0][2].detailList[j].name = set.name
-              this.basicCheckData[0][2].detailList[j].value = set.result
+              this[menOrwomenBasic][0][2].detailList[j].name = set.name
+              this[menOrwomenBasic][0][2].detailList[j].value = set.result
             })
           }
           //    判断是否已经含有电子病例
           if(v.history_set.length > 0) { //  判断既往病史 个人史 婚育史 男女生殖检查
-            this.basicCheckData[1].forEach((basic,b)=>{ // 往病史 个人史 婚育史 取默认值
+            this[menOrwomenBasic][1].forEach((basic,b)=>{ // 往病史 个人史 婚育史 取默认值
               this.filterList(basic, v.history_set)
             })
             this.menReproductiveCheckData.forEach((menRep,b)=> { // 男性生殖检查 取默认值
@@ -937,11 +1478,11 @@ export default {
                 this.filterList(req, v.history_set)
               })
             })
-            // this.womenReproductiveCheckData.forEach((womenRep,b)=> { // 女性生殖检查 取默认值
-          //     womenRep.forEach((req,r) =>{
-          //         this.filterList(req, v.history_set)
-          //     })
-            // })
+            this.womenReproductiveCheckData.forEach((womenRep,b)=> { // 女性生殖检查 取默认值
+              womenRep.forEach((req,r) =>{
+                this.filterList(req, v.history_set)
+              })
+            })
           }
         }
       })
@@ -1082,16 +1623,19 @@ export default {
         planitem: planitem
       }
       console.log(checkParams)
+        // return
       //  创建诊疗计划
       if (formName == 'formName01') {
         if(fBox.createdId == null) { // 创建
           APIDATE.medicalplan(checkParams).then((res) => {
             fBox.createdId = res.id
             console.log(res,'创建诊疗计划')
+            self.showloadingTitle('创建成功')
           })
         }else{ // 修改
           APIDATE.medicalplanPatch(fBox.createdId, checkParams).then((res) => {
             console.log(res,'修改诊疗计划')
+            self.showloadingTitle('修改成功')
           })
         }
       }
@@ -1101,10 +1645,12 @@ export default {
           APIDATE.comment(checkParams).then((res) => {
             fBox.createdId = res.id
             console.log(res,'创建诊断')
+            self.showloadingTitle('创建成功')
           })
         }else{ // 修改
           APIDATE.commentPatch(fBox.createdId, checkParams).then((res) => {
             console.log(res,'修改诊断')
+            self.showloadingTitle('修改成功')
           })
         }
       }
@@ -1114,10 +1660,12 @@ export default {
           APIDATE.diagresult(checkParams).then((res) => {
             fBox.createdId = res.id
             console.log(res,'创建最终结果')
+            self.showloadingTitle('创建成功')
           })
         }else{ // 修改
           APIDATE.diagresultPatch(fBox.createdId, checkParams).then((res) => {
             console.log(res,'修改最终结果')
+            self.showloadingTitle('修改成功')
           })
         }
       }
@@ -1127,10 +1675,12 @@ export default {
           APIDATE.history(checkParams).then((res) => {
             fBox.createdId = res.id
             console.log(res,'创建 既往病史  个人史 婚育史')
+            self.showloadingTitle('创建成功')
           })
         }else{ // 修改
           APIDATE.historyPatch(fBox.createdId, checkParams).then((res) => {
             console.log(res,'修改 既往病史  个人史 婚育史')
+            self.showloadingTitle('修改成功')
           })
         }
       }
