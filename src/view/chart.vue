@@ -122,6 +122,16 @@
     import slideTab from '../components/slideTab/index.vue'
     export default {
         name: 'chart',
+        props: {
+            userID: {//  userID
+                type: String,
+                default: ''
+            },
+            usersig: {//  usersig 音视频所需
+                type: String,
+                default: ''
+            },
+        },
         components: {
             slideTab
         },

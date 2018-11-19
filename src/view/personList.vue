@@ -1,6 +1,6 @@
 <template>
     <div class="personList-page">
-        <slideTab class="personList-slide" @changeTabList="changeList" @addTab="addTabPerson" :listData="tablistData"></slideTab>
+        <slideTab class="personList-slide" @changeTabList="changeList" @addTab="addTabPerson" :activeIndex="tabNum" :listData="tablistData"></slideTab>
         <!--新建患者页面 start-->
         <div class="personList-content"  v-if="newAddPerson">
             <div class="personList-editDetail">
@@ -1273,6 +1273,18 @@ export default {
       default: null
     }
   },
+  computed: {
+      tabNum: function () {
+          let number = 0
+          this.tablistData.forEach((v,i)=>{
+              if(v.id == this.patientId){
+                  number = i
+              }
+          })
+          // this.patientId
+        return number
+    }
+  },
   created () {
     this.patientsList() //  获取患者列表
   },
@@ -1299,7 +1311,7 @@ export default {
           }
           // console.log(this.tablistData )
           if(this.firstEnter){//判断是否是第一次进入患者列表
-              this.changeList(this.personDetail.topTitle) // 获取患者列表相关信息
+              this.changeList(this.personDetail.topTitle ,0) // 获取患者列表相关信息
           }
           this.firstEnter = false
       })
@@ -1392,8 +1404,8 @@ export default {
       this.isCreatedCase(this.pkDetailData) // 判断是否代配偶 是否含有已经填写过电子病例
     },
     //  列表选择事件
-    changeList (item) {
-      console.log(item, '++++++')
+    changeList (item ,index) {
+      console.log(item, '++++++',index)
       this.patientId = item.id
       //  获取患者相应的电子病历
       APIDATE.medicalRecord({pk: item.id}).then((res) => {

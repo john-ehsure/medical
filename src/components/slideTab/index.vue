@@ -30,7 +30,7 @@ export default {
   name: 'slideTab',
   data () {
     return {
-      activeIndex: 0,
+      // activeIndex: 0,
       slideListHeight: 500,
       searchInput: ''
     }
@@ -40,6 +40,10 @@ export default {
     //   type: String,
     //   default: ''
     // },
+    activeIndex: {
+        type: Number,
+        default: 0
+    },
     hasAdd: {
       type: Boolean,
       default: true
@@ -64,8 +68,8 @@ export default {
       if (this.activeIndex == index) {
         return;
       }
-      this.activeIndex = index;
-      this.$emit('changeTabList', item);
+      // this.activeIndex = index;
+      this.$emit('changeTabList', item , index);
     },
     addTab () {
       this.activeIndex = null
