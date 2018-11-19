@@ -1,6 +1,6 @@
 <template>
     <div class="personList-page">
-        <slideTab class="personList-slide" @changeTabList="changeList" @addTab="addTabPerson" :activeIndex="tabNum" :listData="tablistData"></slideTab>
+        <slideTab class="personList-slide" @changeTabList="changeList" @addTab="addTabPerson" :activeIndex="tabNum" :isfirst="firstEnter" :listData="tablistData"></slideTab>
         <!--新建患者页面 start-->
         <div class="personList-content"  v-if="newAddPerson">
             <div class="personList-editDetail">
@@ -1315,7 +1315,7 @@ export default {
           }else{
               this.changeList(this.tablistData[this.tabNum] ,this.tabNum)
           }
-          this.firstEnter = false
+          // this.firstEnter = false
       })
     },
     //  上传头像
@@ -1382,28 +1382,29 @@ export default {
       this.pkDetailData.forEach((pk)=>{
           if(pk.patientinfo.gender == type){
               this.patientId = pk.patient
-              this.caseId = pk.id
-              this.personDetail.topTitle = pk.patientinfo
-              //    个人基本信息
-              this.personDetail.personInfor.occupation.value = pk.patientinfo.occupation
-              this.personDetail.personInfor.education.value = pk.patientinfo.education
-              this.personDetail.personInfor.marriage.value = pk.patientinfo.marriage
-              this.personDetail.personInfor.nation.value = pk.patientinfo.nation
-              this.personDetail.personInfor.id_no.value = pk.patientinfo.id_no
-              this.personDetail.personInfor.telecom.value = pk.patientinfo.telecom
-              this.personDetail.personInfor.address.value = pk.patientinfo.address
-              // 重新获取相关数据
-              APIDATE.medicalRecord({pk: this.patientId}).then((res) => {
-                  this.pkDetailData = res
-              })
+              // this.caseId = pk.id
+              // this.personDetail.topTitle = pk.patientinfo
+              // //    个人基本信息
+              // this.personDetail.personInfor.occupation.value = pk.patientinfo.occupation
+              // this.personDetail.personInfor.education.value = pk.patientinfo.education
+              // this.personDetail.personInfor.marriage.value = pk.patientinfo.marriage
+              // this.personDetail.personInfor.nation.value = pk.patientinfo.nation
+              // this.personDetail.personInfor.id_no.value = pk.patientinfo.id_no
+              // this.personDetail.personInfor.telecom.value = pk.patientinfo.telecom
+              // this.personDetail.personInfor.address.value = pk.patientinfo.address
+              // // 重新获取相关数据
+              // APIDATE.medicalRecord({pk: this.patientId}).then((res) => {
+              //     this.pkDetailData = res
+              // })
           }
       })
       this.sexType = type
-      this.clearCheckData(this.menbasicCheckData) // 男性基本病要 data数据初始化
-      this.clearCheckData(this.menReproductiveCheckData) // 男性生殖检查 data数据初始化
-      this.clearCheckData(this.womenbasicCheckData) // 女性基本病要 data数据初始化
-      this.clearCheckData(this.womenReproductiveCheckData) // 女性生殖检查 data数据初始化
-      this.isCreatedCase(this.pkDetailData) // 判断是否代配偶 是否含有已经填写过电子病例
+      // this.clearCheckData(this.menbasicCheckData) // 男性基本病要 data数据初始化
+      // this.clearCheckData(this.menReproductiveCheckData) // 男性生殖检查 data数据初始化
+      // this.clearCheckData(this.womenbasicCheckData) // 女性基本病要 data数据初始化
+      // this.clearCheckData(this.womenReproductiveCheckData) // 女性生殖检查 data数据初始化
+      // this.isCreatedCase(this.pkDetailData) // 判断是否代配偶 是否含有已经填写过电子病例
+      this.changeList(this.tablistData[this.tabNum] ,this.tabNum)
     },
     //  列表选择事件
     changeList (item ,index) {
@@ -1600,7 +1601,8 @@ export default {
             self.clearNewPerson()
             self.$refs.newAddPersonForm.resetFields()
             self.patientId = res.id
-            self.createMedicalRecordId() //新增患者生成电子病例id
+            self.firstEnter = false
+            self.createMedicalRecordId() // 新增患者生成电子病例id
             self.patientsList() //  获取患者列表信息
           })
         }
@@ -1614,7 +1616,7 @@ export default {
         prescribe_practitioner: this.practitionerId
       }
       APIDATE.medicalRecordId(recordId).then((res) => {
-        this.caseId = res.id
+        // this.caseId = res.id
         console.log(res,'生成电子病历id')
       })
     },

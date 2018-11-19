@@ -40,9 +40,13 @@ export default {
     //   type: String,
     //   default: ''
     // },
+    isfirst: {
+      type: Boolean,
+      default: true
+    },
     activeIndex: {
-        type: Number,
-        default: 0
+      type: Number,
+      default: 0
     },
     hasAdd: {
       type: Boolean,
@@ -70,6 +74,9 @@ export default {
     //  跳转到滚动跳底部
     scrollToBottom () {
       this.$nextTick(() => {
+        if (this.isfirst) {
+          return
+        }
         let div = this.$refs.slideCantion;
         div.scrollTop = div.scrollHeight
       })
