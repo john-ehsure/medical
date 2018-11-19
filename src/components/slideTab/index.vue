@@ -72,7 +72,7 @@ export default {
       this.$emit('changeTabList', item , index);
     },
     addTab () {
-      this.activeIndex = null
+
       this.$emit('addTab');
     }
   }

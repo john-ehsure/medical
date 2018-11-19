@@ -1312,6 +1312,8 @@ export default {
           // console.log(this.tablistData )
           if(this.firstEnter){//判断是否是第一次进入患者列表
               this.changeList(this.personDetail.topTitle ,0) // 获取患者列表相关信息
+          }else{
+              this.changeList(this.tablistData[this.tabNum] ,this.tabNum)
           }
           this.firstEnter = false
       })
@@ -1340,12 +1342,12 @@ export default {
     //  弹窗 加载中... 修改成功
     showloadingTitle (title) {
       let loadingInstance = this.$loading({
-          text: title,
-          background: 'rgba(255,255,255,0.1)',
-          customClass: 'newHint'
+        text: title,
+        background: 'rgba(255,255,255,0.1)',
+        customClass: 'newHint'
       })
       setTimeout(function () {
-          loadingInstance.close()
+        loadingInstance.close()
       }, 2000);
     },
     //  弹窗事件
@@ -1405,10 +1407,10 @@ export default {
     },
     //  列表选择事件
     changeList (item ,index) {
-      console.log(item, '++++++',index)
+      // console.log(item, '++++++',index)
       this.patientId = item.id
       //  获取患者相应的电子病历
-      APIDATE.medicalRecord({pk: item.id}).then((res) => {
+      APIDATE.medicalRecord({pk: this.patientId}).then((res) => {
             // console.log(res)
           this.pkDetailData = res
           if (this.pkDetailData.length > 1) { // 判断是否有配偶相关信息
