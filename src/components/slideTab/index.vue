@@ -5,16 +5,7 @@
       </el-input>
     </div>
     <ul class="slideTab-list" v-if="listData.length > 0" :style="{height:slideListHeight+'px'}" ref="slideCantion">
-      <li @click="handleSlideLi(item,index)" v-for="(item,index) in listData" :class="{'active': index == activeIndex}">
-        <div class="slideTab-list_img">
-          <!--<span class="slideTab-list_mesNum" v-if="item.mesNum">{{item.mesNum}}</span>-->
-          <img :src="item.img"/>
-        </div>
-        <div class="slideTab-list_content">
-          <p>{{item.name}} {{item.gender==='M' ? '男' : '女'}}</p>
-          <p>编号 {{item.id}}</p>
-        </div>
-      </li>
+        <slot name="slideLi"></slot>
     </ul>
     <ul class="slideTab-list" v-else :style="{height:slideListHeight+'px'}">
           <li>暂无患者</li>
@@ -30,7 +21,6 @@ export default {
   name: 'slideTab',
   data () {
     return {
-      // activeIndex: 0,
       slideListHeight: 500,
       searchInput: ''
     }
@@ -43,10 +33,6 @@ export default {
     isfirst: {
       type: Boolean,
       default: true
-    },
-    activeIndex: {
-      type: Number,
-      default: 0
     },
     hasAdd: {
       type: Boolean,
@@ -64,7 +50,6 @@ export default {
     if (this.hasAdd) {
       slideTabAddHei = this.$refs.slideTabAdd.offsetHeight;
     }
-    // console.log(slideTabAddHei,'=====')
     this.slideListHeight = document.documentElement.clientHeight - this.$refs.slideSearchHei.offsetHeight - slideTabAddHei;
   },
   watch: {
@@ -81,15 +66,7 @@ export default {
         div.scrollTop = div.scrollHeight
       })
     },
-    handleSlideLi (item, index) {
-      if (this.activeIndex == index) {
-        return;
-      }
-      // this.activeIndex = index;
-      this.$emit('changeTabList', item , index);
-    },
     addTab () {
-
       this.$emit('addTab');
     }
   }

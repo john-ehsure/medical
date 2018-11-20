@@ -1,6 +1,17 @@
 <template>
     <div class="personList-page">
-        <slideTab class="personList-slide" @changeTabList="changeList" @addTab="addTabPerson" :activeIndex="tabNum" :isfirst="firstEnter" :listData="tablistData"></slideTab>
+        <slideTab class="personList-slide" @addTab="addTabPerson" :isfirst="firstEnter" :listData="tablistData">
+            <li slot="slideLi" @click="changeList(item,index)" v-for="(item,index) in tablistData" :class="{'active': index == tabNum}">
+                <div class="slideTab-list_img">
+                    <!--<span class="slideTab-list_mesNum" v-if="item.mesNum">{{item.mesNum}}</span>-->
+                    <img :src="item.img"/>
+                </div>
+                <div class="slideTab-list_content">
+                    <p>{{item.name}} {{item.gender==='M' ? '男' : '女'}}</p>
+                    <p>编号 {{item.id}}</p>
+                </div>
+            </li>
+        </slideTab>
         <!--新建患者页面 start-->
         <div class="personList-content"  v-if="newAddPerson">
             <div class="personList-editDetail">
@@ -195,8 +206,7 @@
                                                     <span slot="close">无</span>
                                                 </i-switch>
                                                 <el-radio-group v-if="box.type == 3" v-model="box.value">
-                                                    <el-radio :label="0">阴性</el-radio>
-                                                    <el-radio :label="1">阳性</el-radio>
+                                                    <el-radio :label="rad.value" v-for="rad in yinOrYangOptions">{{rad.label}}</el-radio>
                                                 </el-radio-group>
                                                 <!--周期结果 下拉框-->
                                                 <el-select v-if="box.type == 4 && box.selectNum==0" v-model="box.value" placeholder="请选择">
@@ -280,8 +290,7 @@
                                                 <span slot="close">阴性</span>
                                             </i-switch>
                                             <el-radio-group v-if="box.type == 3" v-model="box.value">
-                                                <el-radio :label="0">阴性</el-radio>
-                                                <el-radio :label="1">阳性</el-radio>
+                                                <el-radio :label="rad.value" v-for="rad in yinOrYangOptions">{{rad.label}}</el-radio>
                                             </el-radio-group>
                                             <!--周期结果 下拉框-->
                                             <el-select v-if="box.type == 4 && box.selectNum==0" v-model="box.value" placeholder="请选择">
@@ -357,8 +366,7 @@
                                                 <span slot="close">无</span>
                                             </i-switch>
                                             <el-radio-group v-if="box.type == 3" v-model="box.value">
-                                                <el-radio :label="0">阴性</el-radio>
-                                                <el-radio :label="1">阳性</el-radio>
+                                                <el-radio :label="rad.value" v-for="rad in yinOrYangOptions">{{rad.label}}</el-radio>
                                             </el-radio-group>
                                             <!--周期结果 下拉框-->
                                             <el-select v-if="box.type == 4 && box.selectNum==0" v-model="box.value" placeholder="请选择">
@@ -442,8 +450,7 @@
                                                 <span slot="close">阴性</span>
                                             </i-switch>
                                             <el-radio-group v-if="box.type == 3" v-model="box.value">
-                                                <el-radio :label="0">阴性</el-radio>
-                                                <el-radio :label="1">阳性</el-radio>
+                                                <el-radio :label="rad.value" v-for="rad in yinOrYangOptions">{{rad.label}}</el-radio>
                                             </el-radio-group>
                                             <!--周期结果 下拉框-->
                                             <el-select v-if="box.type == 4 && box.selectNum==0" v-model="box.value" placeholder="请选择">
@@ -1112,6 +1119,11 @@ export default {
         {value: 2, label: 'AB型'},
         {value: 3, label: 'O型'}
       ],
+      //  阴性阳性 单选按钮
+      yinOrYangOptions: [
+        {value: '0', label: '阴性'},
+        {value: '1', label: '阳性'}
+      ],
       // 粘稠度
       spermOptions: [
         {value: '粘稠', label: '粘稠'},
@@ -1275,7 +1287,7 @@ export default {
   },
   computed: {
       tabNum: function () {
-          let number = 0
+          let number = null
           this.tablistData.forEach((v,i)=>{
               if(v.id == this.patientId){
                   number = i
@@ -1301,21 +1313,21 @@ export default {
     //  获取患者列表
     patientsList () {
       APIDATE.patients().then((res) => {
-          this.tablistData = res
-          if(res.length > 0){
-              res.forEach((v,i)=>{
-                  v.img =  require("./../assets/logo.png")
-              })
-              this.personDetail.topTitle = this.tablistData[0]
-              this.sexType = this.personDetail.topTitle.gender
-          }
-          // console.log(this.tablistData )
-          if(this.firstEnter){//判断是否是第一次进入患者列表
-              this.changeList(this.personDetail.topTitle ,0) // 获取患者列表相关信息
-          }else{
-              this.changeList(this.tablistData[this.tabNum] ,this.tabNum)
-          }
-          // this.firstEnter = false
+        this.tablistData = res
+        if(res.length > 0){
+          res.forEach((v,i)=>{
+            v.img =  require("./../assets/logo.png")
+          })
+          this.personDetail.topTitle = this.tablistData[0]
+          this.sexType = this.personDetail.topTitle.gender
+        }
+        // console.log(this.tablistData )
+        if (this.firstEnter) { //  判断是否是第一次进入患者列表
+          this.changeList(this.personDetail.topTitle, 0) // 获取患者列表相关信息
+        } else {
+          this.changeList(this.tablistData[this.tabNum], this.tabNum)
+        }
+        // this.firstEnter = false
       })
     },
     //  上传头像
@@ -1382,33 +1394,17 @@ export default {
       this.pkDetailData.forEach((pk)=>{
           if(pk.patientinfo.gender == type){
               this.patientId = pk.patient
-              // this.caseId = pk.id
-              // this.personDetail.topTitle = pk.patientinfo
-              // //    个人基本信息
-              // this.personDetail.personInfor.occupation.value = pk.patientinfo.occupation
-              // this.personDetail.personInfor.education.value = pk.patientinfo.education
-              // this.personDetail.personInfor.marriage.value = pk.patientinfo.marriage
-              // this.personDetail.personInfor.nation.value = pk.patientinfo.nation
-              // this.personDetail.personInfor.id_no.value = pk.patientinfo.id_no
-              // this.personDetail.personInfor.telecom.value = pk.patientinfo.telecom
-              // this.personDetail.personInfor.address.value = pk.patientinfo.address
-              // // 重新获取相关数据
-              // APIDATE.medicalRecord({pk: this.patientId}).then((res) => {
-              //     this.pkDetailData = res
-              // })
           }
       })
       this.sexType = type
-      // this.clearCheckData(this.menbasicCheckData) // 男性基本病要 data数据初始化
-      // this.clearCheckData(this.menReproductiveCheckData) // 男性生殖检查 data数据初始化
-      // this.clearCheckData(this.womenbasicCheckData) // 女性基本病要 data数据初始化
-      // this.clearCheckData(this.womenReproductiveCheckData) // 女性生殖检查 data数据初始化
-      // this.isCreatedCase(this.pkDetailData) // 判断是否代配偶 是否含有已经填写过电子病例
-      this.changeList(this.tablistData[this.tabNum] ,this.tabNum)
+      this.changeList(this.tablistData[this.tabNum] ,null)
     },
     //  列表选择事件
     changeList (item ,index) {
-      // console.log(item, '++++++',index)
+      if (this.tabNum == index) {
+        return;
+      }
+      console.log(item, '++++++',index)
       this.patientId = item.id
       //  获取患者相应的电子病历
       APIDATE.medicalRecord({pk: this.patientId}).then((res) => {

@@ -1,6 +1,17 @@
 <template>
     <div class="chart-page">
-        <slideTab @changeTabList="changeList" :hasAdd="false" :listData="personlistData"></slideTab>
+        <slideTab :hasAdd="false" :listData="personlistData">
+            <li slot="slideLi" @click="changeList(item,index)" v-for="(item,index) in personlistData" :class="{'active': index == tabNum}">
+                <div class="slideTab-list_img">
+                    <!--<span class="slideTab-list_mesNum" v-if="item.mesNum">{{item.mesNum}}</span>-->
+                    <img :src="item.img"/>
+                </div>
+                <div class="slideTab-list_content">
+                    <p>{{item.info}} {{item.gender==1 ? '男' : '女'}}</p>
+                    <p>编号 {{item.id}}</p>
+                </div>
+            </li>
+        </slideTab>
         <div class="chart-im">
             <!--im 标题-->
             <div class="chart-imTitle" ref="imTitle">
@@ -118,8 +129,20 @@
 </template>
 
 <script>
-    // import webRTCAPI from '../webRTCAPI/webRTCAPI.min'
+    // WebRTC SDK
+    require('../WebWX/webRTCAPI.min')
+    //<!-- WebIM SDK -->
+    require('../WebWX/webim.min.js')
+    //<!-- 白板SDK -->
+    require('../WebWX/board_sdk.mini.js')
+    //<!-- COS SDK -->
+    // require('../WebWX/cos.mini.js')
+    //<!-- TIC SDK -->
+    require('../WebWX/TICSDK.mini.js')
+
+    require('../WebWX/OSS.min.js')
     import slideTab from '../components/slideTab/index.vue'
+    import APINOTI from '@/api/api_noti.js'
     export default {
         name: 'chart',
         props: {
@@ -138,6 +161,7 @@
         data () {
             return {
                 //人元列表
+                tabNum: 0,
                 personlistData: [
                     {img: require("./../assets/logo.png"), personName: '刘奇', downHospital: '北医三院', downDoctor: '王主任', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 3, unfinish: 4 ,mesType: 1,time: '2018.01.01',isRead: true},
                     {img: require("./../assets/logo.png"), personName: '刘1', downHospital: '北医三院', downDoctor: '刘主任', personSex: 1, personNumber: '00010220', mesNum: 2, finish: 0, unfinish: 2,mesType: 2,time: '2018.01.02',isRead: true},
@@ -180,6 +204,86 @@
                 screenHeight: 500,//屏幕高度
                 RTC: {},//视频流对象信息
                 imSendMes: '',//im部分聊天发送信息
+
+                // 以下为音视频 im 白板部分所需要的字段
+                // step: 'first',
+                // pushModel: 1, // 1  自动推流 0 手动推流
+                // account: localStorage.getItem('IIC_USERID') || TEST_ACCOUNT.users[0]['userId'],
+                // userID: sessionStorage.getItem('IIC_USERNAME'),
+                // sdkAppId: TEST_ACCOUNT.sdkappid,
+                // userSig: '',
+                // nickName: sessionStorage.getItem('IIC_NICKNAME'),
+                // roomInfo: '',
+                // roomID: Math.floor(Math.random() * 1000000000),
+                // isFirstConnected: 1,
+                // enableCamera: true,
+                // enableMic: true,
+                // users: TEST_ACCOUNT.users,
+                // client: null,  //向OSS传输照片的代理
+                // msgs: [],
+                // isPushing: 0, // 是否正在推流
+                // isPushCamera: 0, // 是否推摄像头流
+                // devices: {
+                //     camera: [],
+                //     mic: []
+                // },
+                //
+                // cameraIndex: 0,
+                // micIndex: 0,
+                //
+                // imMsg: {
+                //     common: {},
+                //     custom: {}
+                // },
+                //
+                // boardData: {
+                //     data: {
+                //         current: null,
+                //         list: []
+                //     },
+                //     page: {
+                //         current: 0,
+                //         total: 0
+                //     }
+                // },
+                //
+                // loginConfig: {
+                //     identifier: null,
+                //     identifierNick: null,
+                //     userHeadImg: null,
+                //     userSig: null,
+                //     sdkAppId: null
+                // },
+                //
+                // webrtcConfig: {
+                //     closeLocalMedia: true,
+                //     audio: true,
+                //     video: true,
+                //     role: null
+                // },
+                //
+                // boardConfig: {
+                //     id: null,
+                //     canDraw: null,
+                //     color: null,
+                //     globalBackgroundColor: null
+                // },
+                //
+                // cosConfig: {
+                //     appid: null,
+                //     bucket: null,
+                //     region: null,
+                //     sign: null
+                // },
+                //
+                // ossConfig: {
+                //     accessKeyId: null,
+                //     accessKeySecret: null,
+                //     endpoint: null,
+                //     bucket: null
+                // },
+                // remoteVideos: {}
+
             }
         },
         mounted () {
@@ -188,11 +292,25 @@
             this.personDetail = this.personlistData[0];
             /*im 聊天部分高度设置*/
             this.imDialogueHei = this.screenHeight - this.$refs.imSend.offsetHeight - this.$refs.imTitle.offsetHeight;
+            this.boardroomnum()
         },
         watch: {
             'imDialogue': 'scrollToBottom'
         },
         methods: {
+            /**
+             * 获取左侧医生好友列表
+             */
+            boardroomnum () {
+                APINOTI.boardroomnum().then(res=>{
+                    console.log(res)
+                    res.forEach((v,i)=>{
+                        v.img =  require("./../assets/logo.png")
+                    })
+                    this.personlistData = res
+                    // this.personDetail = this.personlistData[0];
+                })
+            },
             /**
              * 离开
              * @param dropComponent
@@ -243,7 +361,11 @@
                 })
             },
             //点击人员列表回调事件
-            changeList (item) {
+            changeList (item, index) {
+                if (this.tabNum == index) {
+                    return;
+                }
+                this.tabNum = index
                 this.personDetail = item;
             },
             showVideo () {
