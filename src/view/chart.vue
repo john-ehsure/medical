@@ -7,8 +7,8 @@
                     <img :src="item.img"/>
                 </div>
                 <div class="slideTab-list_content">
-                    <p>{{item.info}} {{item.gender==1 ? '男' : '女'}}</p>
-                    <p>编号 {{item.id}}</p>
+                    <p>{{item.pinfo.name}} {{item.gender==1 ? '男' : '女'}}</p>
+                    <p>编号 {{item.pinfo.id_no}}</p>
                 </div>
             </li>
         </slideTab>
@@ -16,8 +16,9 @@
             <!--im 标题-->
             <div class="chart-imTitle" ref="imTitle">
                 <span class="chart-adverse_input">对方正在输入...</span>
-                <span>{{personDetail.personName}}</span>
-                <span class="marginLeft_15">{{personDetail.downHospital}}</span>
+                <span>{{personDetail.pinfo.name}}</span>
+                <span class="marginLeft_15">{{personDetail.pinfo.hospital}}</span>
+                <span class="marginLeft_15">{{personDetail.pinfo.subject}}</span>
                 <div class="chart-imTitle_button">
                     <i class="hui-icon-ziyuan36"></i>
                     <i class="hui-icon-ziyuan32" @click="showVideo"></i>
@@ -35,16 +36,17 @@
                                     <img :src="personDetail.img"/>
                                 </div>
                                 <div class="medical-list_mes">
-                                    {{personDetail.personName}}<br>编号{{personDetail.personNumber}}
+                                    {{personDetail.pinfo.name}}<br>编号{{personDetail.pinfo.id_no}}
                                 </div>
                                 <div class="medical-list_operation">
-                                    <span v-if="personDetail.mesType == '1'">本地新进患者通知</span>
+                                    <span>{{personDetail.pinfo.hospital}}</span>
+                                    <!--<span v-if="personDetail.mesType == '1'">本地新进患者通知</span>
                                     <span v-if="personDetail.mesType == '2'">检查结果通知</span>
                                     <span v-if="personDetail.mesType == '3'">转诊申请通知</span>
-                                    <span v-if="personDetail.mesType == '4'">转诊结果通知</span>
+                                    <span v-if="personDetail.mesType == '4'">转诊结果通知</span>-->
                                 </div>
                                 <div class="medical-list_operation col-green">
-                                    <span>{{personDetail.time}}</span>
+                                    <span>{{personDetail.pinfo.subject}}</span>
                                 </div>
                             </div>
                         </li>
@@ -73,12 +75,12 @@
         </div>
         <!--测试功能使用-->
         <div style="display: none">
-            <el-button @click="closeAudio">关闭声音</el-button>
-            <el-button @click="openAudio">打开声音</el-button>
-            <el-button @click="closeVideo">关闭视频</el-button>
-            <el-button @click="openVideo">打开视频</el-button>
-            <el-button @click="stopWs">断开当前视频</el-button>
-            <el-button @click="showVideo">显示视频</el-button>
+            <!--<el-button @click="closeAudio">关闭声音</el-button>-->
+            <!--<el-button @click="openAudio">打开声音</el-button>-->
+            <!--<el-button @click="closeVideo">关闭视频</el-button>-->
+            <!--<el-button @click="openVideo">打开视频</el-button>-->
+            <!--<el-button @click="stopWs">断开当前视频</el-button>-->
+            <!--<el-button @click="showVideo">显示视频</el-button>-->
         </div>
         <!--打开视频通话部分-->
         <div class="chart-video" :class="[isVideoState?'':'chart-editPhoto']" v-show = "isShowVideo">
@@ -130,15 +132,18 @@
 
 <script>
     // WebRTC SDK
-    require('../WebWX/webRTCAPI.min')
+    // require('../WebWX/webRTCAPI.min')
+    // import webRTCAPI from '../WebWX/webRTCAPI.min'
     //<!-- WebIM SDK -->
-    require('../WebWX/webim.min.js')
+    // require('../WebWX/webim.min.js')
     //<!-- 白板SDK -->
-    require('../WebWX/board_sdk.mini.js')
+    // require('../WebWX/board_sdk.mini.js')
     //<!-- COS SDK -->
     // require('../WebWX/cos.mini.js')
+    // import cosMini from '../WebWX/cos.mini.js'
     //<!-- TIC SDK -->
-    require('../WebWX/TICSDK.mini.js')
+    // require('../WebWX/TICSDK.mini.js')
+    // import TICSDK from '../WebWX/TICSDK.mini.js'
 
     require('../WebWX/OSS.min.js')
     import slideTab from '../components/slideTab/index.vue'
@@ -146,11 +151,11 @@
     export default {
         name: 'chart',
         props: {
-            userID: {//  userID
+            userID: {//  userID 医生端登陆时的用户名
                 type: String,
                 default: ''
             },
-            usersig: {//  usersig 音视频所需
+            userSig: {//  usersig 音视频所需 用户签名
                 type: String,
                 default: ''
             },
@@ -163,19 +168,22 @@
                 //人元列表
                 tabNum: 0,
                 personlistData: [
-                    {img: require("./../assets/logo.png"), personName: '刘奇', downHospital: '北医三院', downDoctor: '王主任', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 3, unfinish: 4 ,mesType: 1,time: '2018.01.01',isRead: true},
-                    {img: require("./../assets/logo.png"), personName: '刘1', downHospital: '北医三院', downDoctor: '刘主任', personSex: 1, personNumber: '00010220', mesNum: 2, finish: 0, unfinish: 2,mesType: 2,time: '2018.01.02',isRead: true},
-                    {img: require("./../assets/logo.png"), personName: '刘2', downHospital: '北医三院', downDoctor: '李主任', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 1, unfinish: 4,mesType: 3,time: '2018.01.02',isRead: true},
-                    {img: require("./../assets/logo.png"), personName: '刘3', downHospital: '北医三院', downDoctor: '赵主任', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 3, unfinish: 4,mesType: 4,time: '2018.01.03',isRead: true},
-                    {img: require("./../assets/logo.png"), personName: '刘4', downHospital: '北医三院', downDoctor: '何主任', personSex: 1, personNumber: '00010220', mesNum: 2, finish: 1, unfinish: 4,mesType: 1,time: '2018.01.04',isRead: true},
-                    {img: require("./../assets/logo.png"), personName: '刘5', downHospital: '北医三院', downDoctor: '左主任', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 2, unfinish: 4,mesType: 1,time: '2018.01.06',isRead: true},
-                    {img: require("./../assets/logo.png"), personName: '刘5', downHospital: '北医三院', downDoctor: '博主任', personSex: 1, personNumber: '00010220', mesNum: 6, finish: 3, unfinish: 2,mesType: 1,time: '2018.01.07',isRead: true}
+                    // {img: require("./../assets/logo.png"), personName: '刘奇', downHospital: '北医三院', downDoctor: '王主任', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 3, unfinish: 4 ,mesType: 1,time: '2018.01.01',isRead: true},
+                    // {img: require("./../assets/logo.png"), personName: '刘1', downHospital: '北医三院', downDoctor: '刘主任', personSex: 1, personNumber: '00010220', mesNum: 2, finish: 0, unfinish: 2,mesType: 2,time: '2018.01.02',isRead: true},
+                    // {img: require("./../assets/logo.png"), personName: '刘2', downHospital: '北医三院', downDoctor: '李主任', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 1, unfinish: 4,mesType: 3,time: '2018.01.02',isRead: true},
+                    // {img: require("./../assets/logo.png"), personName: '刘3', downHospital: '北医三院', downDoctor: '赵主任', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 3, unfinish: 4,mesType: 4,time: '2018.01.03',isRead: true},
+                    // {img: require("./../assets/logo.png"), personName: '刘4', downHospital: '北医三院', downDoctor: '何主任', personSex: 1, personNumber: '00010220', mesNum: 2, finish: 1, unfinish: 4,mesType: 1,time: '2018.01.04',isRead: true},
+                    // {img: require("./../assets/logo.png"), personName: '刘5', downHospital: '北医三院', downDoctor: '左主任', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 2, unfinish: 4,mesType: 1,time: '2018.01.06',isRead: true},
+                    // {img: require("./../assets/logo.png"), personName: '刘5', downHospital: '北医三院', downDoctor: '博主任', personSex: 1, personNumber: '00010220', mesNum: 6, finish: 3, unfinish: 2,mesType: 1,time: '2018.01.07',isRead: true}
                 ],
                 selfDetail:{
                     img: require("./../assets/logo.png"),
                     personName: '刘大夫'
                 },
-                personDetail: {},//人员详情信息
+                personDetail: {
+                    online: true,
+                    pinfo: {}
+                },//人员详情信息
                 imDialogue: [
                     {isSelf:true,title:'这是一个好东西啊'},
                     {isSelf:false,title:'这是一个好东西啊'},
@@ -206,98 +214,451 @@
                 imSendMes: '',//im部分聊天发送信息
 
                 // 以下为音视频 im 白板部分所需要的字段
-                // step: 'first',
-                // pushModel: 1, // 1  自动推流 0 手动推流
-                // account: localStorage.getItem('IIC_USERID') || TEST_ACCOUNT.users[0]['userId'],
-                // userID: sessionStorage.getItem('IIC_USERNAME'),
-                // sdkAppId: TEST_ACCOUNT.sdkappid,
-                // userSig: '',
-                // nickName: sessionStorage.getItem('IIC_NICKNAME'),
-                // roomInfo: '',
-                // roomID: Math.floor(Math.random() * 1000000000),
-                // isFirstConnected: 1,
-                // enableCamera: true,
-                // enableMic: true,
-                // users: TEST_ACCOUNT.users,
-                // client: null,  //向OSS传输照片的代理
-                // msgs: [],
-                // isPushing: 0, // 是否正在推流
-                // isPushCamera: 0, // 是否推摄像头流
-                // devices: {
-                //     camera: [],
-                //     mic: []
-                // },
-                //
-                // cameraIndex: 0,
-                // micIndex: 0,
-                //
-                // imMsg: {
-                //     common: {},
-                //     custom: {}
-                // },
-                //
-                // boardData: {
-                //     data: {
-                //         current: null,
-                //         list: []
-                //     },
-                //     page: {
-                //         current: 0,
-                //         total: 0
-                //     }
-                // },
-                //
-                // loginConfig: {
-                //     identifier: null,
-                //     identifierNick: null,
-                //     userHeadImg: null,
-                //     userSig: null,
-                //     sdkAppId: null
-                // },
-                //
-                // webrtcConfig: {
-                //     closeLocalMedia: true,
-                //     audio: true,
-                //     video: true,
-                //     role: null
-                // },
-                //
-                // boardConfig: {
-                //     id: null,
-                //     canDraw: null,
-                //     color: null,
-                //     globalBackgroundColor: null
-                // },
-                //
-                // cosConfig: {
-                //     appid: null,
-                //     bucket: null,
-                //     region: null,
-                //     sign: null
-                // },
-                //
-                // ossConfig: {
-                //     accessKeyId: null,
-                //     accessKeySecret: null,
-                //     endpoint: null,
-                //     bucket: null
-                // },
-                // remoteVideos: {}
+                step:'first',
+                pushModel: 0, // 1  自动推流 0 手动推流
+                account: localStorage.getItem('IIC_USERID'),
+                // userID: sessionStorage.getItem('IIC_USERNAME'),  //医生端登陆时的用户名
+                sdkAppId: '1400159415',   // 腾讯sdkAppId
+                // userSig: '',    //用户签名
+                nickName: sessionStorage.getItem('IIC_NICKNAME'), //用户名称+userID
+                roomID:'',
+                ticSdk: null,
+                isFirstConnected: 0, //是否是第一次链接
+                enableCamera: true,
+                enableMic: true,
+                client: null,  //向OSS传输照片的代理
+                msgs: [],
+                isPushing: 0, // 是否正在推流
+                isPushCamera: 0, // 是否推摄像头流
+                devices: {
+                    camera: [],
+                    mic: []
+                },
 
+                cameraIndex: 0,
+                micIndex: 0,
+
+                imMsg: {
+                    common: {},
+                    custom: {}
+                },
+
+                boardData: {
+                    data: {
+                        current: null,
+                        list: []
+                    },
+                    page: {
+                        current: 0,
+                        total: 0
+                    }
+                },
+
+                loginConfig: {
+                    identifier: null,
+                    identifierNick: null,
+                    userHeadImg: null,
+                    userSig: null,
+                    sdkAppId: null
+                },
+
+                webrtcConfig: {
+                    closeLocalMedia: true,
+                    audio: true,
+                    video: true,
+                    role: null
+                },
+
+                boardConfig: {
+                    id: null,
+                    canDraw: null,
+                    color: null,
+                    globalBackgroundColor: null
+                },
+
+                cosConfig: {
+                    appid: null,
+                    bucket: null,
+                    region: null,
+                    sign: null
+                },
+
+                ossConfig: {
+                    accessKeyId: null,
+                    accessKeySecret: null,
+                    stsToken: null,
+                    endpoint: null,
+                    bucket: null
+                },
+
+                endpoint: '',
+                bucket: '',
+
+                uploadUrl: '',
+                jwt:'',
+                remoteVideos: {}
             }
         },
         mounted () {
             this.screenHeight = document.documentElement.clientHeight;
             this.screenWidth = document.documentElement.clientWidth;
-            this.personDetail = this.personlistData[0];
             /*im 聊天部分高度设置*/
             this.imDialogueHei = this.screenHeight - this.$refs.imSend.offsetHeight - this.$refs.imTitle.offsetHeight;
             this.boardroomnum()
+            this.getTencentConf()
         },
         watch: {
             'imDialogue': 'scrollToBottom'
         },
         methods: {
+            /**
+             * 设置医生的默认信息
+             */
+            getTencentConf () {
+                this.loginConfig = {
+                    identifier: this.userID,
+                    identifierNick: '用户昵称' + this.userID,
+                    userSig: this.userSig,
+                    sdkAppId: this.sdkAppId,
+                    accountType: 1
+                };
+                console.log(this.loginConfig);
+                this.ticSdk = new TICSDK();
+                this.ticSdk.init();
+                this.initEvent();
+                this.ticSdk.login(this.loginConfig);
+
+                this.step = 'second';
+            },
+            /**
+             * 初始化链接
+             */
+            initEvent() {
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.IM.CONNECTION_EVENT, res => {
+                    switch (res.ErrorCode) {
+                        case webim.CONNECTION_STATUS.ON:
+                            console.log('连接状态正常...');
+                            break;
+                        case webim.CONNECTION_STATUS.OFF:
+                            this.showErrorTip('IM 连接已断开，无法收到新消息，请检查下你的网络是否正常');
+                            console.error('连接已断开，无法收到新消息，请检查下你的网络是否正常');
+                            break;
+                        default:
+                            this.showErrorTip('未知连接状态,status=' + res.ErrorCode);
+                            console.error('未知连接状态,status=' + res.ErrorCode);
+                            break;
+                    }
+                });
+
+
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.IM.LOGIN_ERROR, err => {
+                    this.showErrorTip('IM 登录失败');
+                    console.error('IM 登录失败', err);
+                    this.step = 'first';
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.IM.GROUP_IS_ALREADY_USED_ERROR, err => {
+                    this.showErrorTip('房间已经被使用，请换其他房间');
+                    console.error('房间已经被使用，请换其他房间', err);
+                    this.step = 'first';
+                });
+
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.BOARD.HISTROY_DATA_COMPLETE, () => {
+                    this.showTip('历史数据加载完成');
+                    console.log('TICSDK.CONSTANT.EVENT.BOARD.HISTROY_DATA_COMPLETE');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.TIC.CREATE_CLASS_ROOM_ERROR, res => {
+                    this.showErrorTip('创建课堂失败');
+                    console.log('TICSDK.CONSTANT.EVENT.TIC.CREATE_CLASS_ROOM_ERROR');
+                    this.step = 'first';
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.WEBRTC.INIT_SUCC, res => {
+                    this.showTip('WebRTC初始化成功');
+                    console.log('TICSDK.CONSTANT.EVENT.WEBRTC.INIT_SUCC');
+
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.WEBRTC.INIT_ERROR, err => {
+                    console.log('TICSDK.CONSTANT.EVENT.WEBRTC.INIT_ERROR');
+                    this.step = 'first';
+                    this.showErrorTip('WebRTC初始化失败');
+                });
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.WEBRTC.LOCAL_STREAM_ADD, data => {
+                    document.getElementById('localVideo').srcObject = data.stream;
+                    this.isPushing = 1; // 正在推流
+                    this.showTip('WebRTC接收到本地流');
+                });
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.WEBRTC.REMOTE_STREAM_UPDATE, data => {
+                    this.$set(this.remoteVideos, data.videoId, data);
+                    this.$nextTick(() => {
+                        if (document.getElementById(data.videoId)) {
+                            document.getElementById(data.videoId).srcObject = data.stream;
+                        }
+                    });
+                    this.showTip('WebRTC接收到远端流');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.WEBRTC.REMOTE_STREAM_REMOVE, data => {
+                    this.$delete(this.remoteVideos, data.videoId);
+                    this.showTip('WebRTC 远端流断开');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.WEBRTC.PEER_CONNECTION_ADD, data => {
+                    console.log('WebRTC PEER_CONNECTION_ADD');
+                    this.showTip('WebRTC PEER_CONNECTION_ADD');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.WEBRTC.ERROR_NOTIFY, data => {
+                    console.log('WebRTC ERROR_NOTIFY');
+                    this.showTip('WebRTC ERROR_NOTIFY');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.WEBRTC.WEBSOCKET_NOTIFY, data => {
+                    console.log('WebRTC WEBSOCKET_NOTIFY');
+                    this.showTip('WebRTC WEBSOCKET_NOTIFY');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.WEBRTC.STREAM_NOTIFY, data => {
+                    console.log('WebRTC STREAM_NOTIFY');
+                    this.showTip('WebRTC STREAM_NOTIFY');
+                });
+
+                //
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.TIC.ROOMID_NOT_FOUND, data => {
+                    this.showTip('学生进入房间请输入房间号');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.TIC.JOIN_CLASS_ROOM_SUCC, data => {
+                    this.showTip('加入课堂成功');
+                    // window.IM = app.ticSdk.getIminstance();
+                    window.board = this.ticSdk.getBoardInstance();
+                    window.WebRTC = this.ticSdk.getWebRTCInstance();
+
+                    // 如果是主动推流
+                    if (this.pushModel === 1) {
+                        this.startRTC();
+                    }
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.TIC.JOIN_CLASS_ROOM_ERROR, data => {
+                    this.showErrorTip('加入课堂失败,请确定该课堂是否已经由老师创建');
+                    this.step = 'first';
+                });
+
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.IM.GROUP_SYSTEM_NOTIFYS, imEvent => {
+                    if (imEvent.event_type === 5) { // 群被解散
+                        this.ticSdk.quitClassroom();
+                        this.showTip(`老师解散了课堂`);
+                    } else if (imEvent.event_type === 8) {
+                        this.showTip(`退出了课堂`);
+                    }
+                });
+
+                // 接收到聊天群组消息
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.IM.RECEIVE_CHAT_ROOM_MSG, msgs => {
+                    console.log('TICSDK.CONSTANT.EVENT.IM.RECEIVE_CHAT_ROOM_MSG');
+                    msgs.elems.forEach(msg => {
+                        var content = msg.getContent();
+                        if (msgs.getFromAccount() === '@TIM#SYSTEM') { // 接收到系统消息
+                            var opType = content.getOpType(); // 通知类型
+                            if (opType === webim.GROUP_TIP_TYPE.JOIN) { // 加群通知
+                                this.msgs.push({
+                                    send: '群消息提示：',
+                                    content: content.getOpUserId() + '进群了'
+                                });
+                            } else if (opType === webim.GROUP_TIP_TYPE.QUIT) { // 退群通知
+                                this.msgs.push({
+                                    send: '群消息提示：',
+                                    content: content.getOpUserId() + '退群了'
+                                });
+                            } else if (opType === webim.GROUP_TIP_TYPE.KICK) { // 踢人通知
+
+                            } else if (opType === webim.GROUP_TIP_TYPE.SET_ADMIN) { // 设置管理员通知
+
+                            } else if (opType === webim.GROUP_TIP_TYPE.CANCEL_ADMIN) { // 取消管理员通知
+
+                            } else if (opType === webim.GROUP_TIP_TYPE.MODIFY_GROUP_INFO) { // 群资料变更
+
+                            } else if (opType === webim.GROUP_TIP_TYPE.MODIFY_MEMBER_INFO) { //群成员资料变更
+
+                            }
+                        } else { // 接收到群聊天消息
+                            var type = msg.getType();
+                            if (type === 'TIMTextElem') {
+                                this.msgs.push({
+                                    send: msgs.getFromAccount() + '：',
+                                    content: content.getText()
+                                });
+                            } else if (type === 'TIMCustomElem') {
+                                this.msgs.push({
+                                    send: msgs.getFromAccount() + '：',
+                                    content: `data: ${content.getData()} desc: ${content.getDesc()} ext: ${content.getExt()}`
+                                });
+                            }
+                        }
+                    });
+                });
+
+                // 接收到C2C消息
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.IM.RECEIVE_C2C_MSG, msgs => {
+                    console.log('TICSDK.CONSTANT.EVENT.IM.RECEIVE_C2C_MSG');
+                    msgs.elems.forEach(msg => {
+                        var content = msg.getContent();
+                        var type = msg.getType();
+                        if (type === 'TIMTextElem') {
+                            this.msgs.push({
+                                send: msgs.getFromAccount() + '：',
+                                content: content.getText()
+                            });
+                        } else if (type === 'TIMCustomElem') {
+                            this.msgs.push({
+                                send: msgs.getFromAccount() + '：',
+                                content: `data: ${content.getData()} desc: ${content.getDesc()} ext: ${content.getExt()}`
+                            });
+                        }
+                    });
+                });
+
+                // 接收到普通消息
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.IM.MSG_NOTIFY, msgs => {
+                    console.log('TICSDK.CONSTANT.EVENT.IM.MSG_NOTIFY');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.BOARD.ADD_BOARD, data => {
+                    this.proBoardData(data);
+                    console.log('TICSDK.CONSTANT.EVENT.BOARD.ADD_BOARD', '白板增加一页');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.BOARD.DELETE_BOARD, data => {
+                    this.proBoardData(data);
+                    console.log('TICSDK.CONSTANT.EVENT.BOARD.DELETE_BOARD', '白板删除一页');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.BOARD.SWITCH_BOARD, data => {
+                    this.proBoardData(data);
+                    console.log('TICSDK.CONSTANT.EVENT.BOARD.SWITCH_BOARD', '白板切换');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.BOARD.ADD_GROUP, gid => {
+                    console.log('TICSDK.CONSTANT.EVENT.BOARD.ADD_GROUP', '增加白板组');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.BOARD.DELETE_GROUP, gid => {
+                    console.log('TICSDK.CONSTANT.EVENT.BOARD.DELETE_GROUP', '删除白板组');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.BOARD.SWITCH_GROUP, gid => {
+                    console.log('TICSDK.CONSTANT.EVENT.BOARD.SWITCH_GROUP', '切换白板组');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.BOARD.REAL_TIME_DATA, data => {
+                    console.log('TICSDK.CONSTANT.EVENT.BOARD.REAL_TIME_DATA', '接收到白板实时数据', data);
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.BOARD.ADD_DATA_ERROR, data => {
+                    console.log('TICSDK.CONSTANT.EVENT.BOARD.ADD_DATA_ERROR', '接收到白板其他用户数据有错误');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.BOARD.VERIFY_SDK_SUCC, () => {
+                    console.log('白板SDK鉴权通过');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.BOARD.VERIFY_SDK_ERROR, () => {
+                    console.log('白板SDK鉴权不通过');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.BOARD.IMG_START_LOAD, (data) => {
+                    console.log('TICSDK.CONSTANT.EVENT.BOARD.ADD_DATA_ERROR', '开始加载图片', data);
+                    this.showTip('开始加载图片');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.BOARD.IMG_LOAD, (data) => {
+                    console.log('TICSDK.CONSTANT.EVENT.BOARD.ADD_DATA_ERROR', '图片加载成功', data);
+                    this.showTip('图片加载成功');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.BOARD.IMG_ERROR, (data) => {
+                    console.log('TICSDK.CONSTANT.EVENT.BOARD.ADD_DATA_ERROR', '图片加载失败', data);
+                    this.showTip('图片加载失败');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.BOARD.IMG_ABORT, (data) => {
+                    console.log('TICSDK.CONSTANT.EVENT.BOARD.ADD_DATA_ERROR', '图片中断加载', data);
+                    this.showTip('图片中断加载');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.COS.TASK_READY, data => {
+                    console.log('TICSDK.CONSTANT.EVENT.COS.TASK_READY', '上传任务创建时的回调函数，返回一个 taskId');
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.COS.HASH_PROGRESS, data => {
+                    console.log('TICSDK.CONSTANT.EVENT.COS.HASH_PROGRESS', '计算文件 MD5 值的进度回调函数');
+                });
+
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.COS.PROGRESS, data => {
+                    console.log('TICSDK.CONSTANT.EVENT.COS.PROGRESS', '上传文件的进度回调函数 data.percent:', data);
+                    this.showTip(`上传进度：${Math.floor(data.percent * 100)}%`);
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.COS.GET_SIGN_ERROR, data => {
+                    this.showTip(`获取sigin错误`);
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.COS.GET_SIGN_SUCCESS, data => {
+                    this.showTip(`获取sigin成功`);
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.COS.UPLOAD_SUCCESS, data => {
+                    this.showTip(`上传成功`);
+                    this.showTip(`文件上传完成，正在获取文件总页数~`);
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.COS.UPLOAD_ERROR, data => {
+                    this.showTip(`上传失败`);
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.TIC.QUIT_CLASS_ROOM_SUCC, data => {
+                    this.step = 'first';
+                    this.showTip(`退出课堂成功`);
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.TIC.QUIT_CLASS_ROOM_ERROR, data => {
+                    this.showErrorTip(`退出课堂失败`);
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.TIC.DESTROY_CLASS_ROOM_SUCC, () => {
+                    this.step = 'first';
+                    this.showTip(`销毁课堂成功`);
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.TIC.DESTROY_CLASS_ROOM_ERROR, () => {
+                    this.showErrorTip(`销毁课堂失败`);
+                });
+
+                this.ticSdk.on(TICSDK.CONSTANT.EVENT.IM.KICKED, () => {
+                    alert(`其他地方登录，被T了`);
+                    this.step = 'first';
+                });
+            },
+            /**
+             * 显示错误信息
+             */
+            showErrorTip(title, time) {
+                /*
+                this.$toasted.error(title, {
+                  position: "top-right",
+                  duration: time || 2000
+                });
+                */
+                alert('Error:' + title)
+                console.log('Error:' + title)
+            },
             /**
              * 获取左侧医生好友列表
              */
@@ -308,7 +669,7 @@
                         v.img =  require("./../assets/logo.png")
                     })
                     this.personlistData = res
-                    // this.personDetail = this.personlistData[0];
+                    this.personDetail = this.personlistData[0];
                 })
             },
             /**
@@ -343,6 +704,9 @@
                 itemImg.style.border = '2px dashed #ccc'
                 itemImg.style.opacity = '1'
             },
+            /**
+             * im信息发送
+             */
             sendMes () {
                 // this.imSendMes    imDialogue
                 if(this.imSendMes == ''){
@@ -353,104 +717,135 @@
                 this.imSendMes = '';
                 console.log('11s')
             },
-            //跳转到滚动跳底部
+            /**
+             * 跳转到滚动跳底部
+             */
             scrollToBottom () {
                 this.$nextTick(() => {
                     let div = this.$refs.imDialogueCartion;
                     div.scrollTop = div.scrollHeight
                 })
             },
-            //点击人员列表回调事件
+            /**
+             * 点击人员列表回调事件
+             * @param item  单条列表信息
+             * @param index 列表序号
+             */
             changeList (item, index) {
                 if (this.tabNum == index) {
                     return;
                 }
+                // let params = {
+                //     "to_practitioner" : item.to_practitioner,
+                //     "from_practitioner":item.from_practitioner
+                // }
+                // APINOTI.creatboardroomnum(params).then(res=>{
+                //     console.log(res)
+                // })
+
                 this.tabNum = index
                 this.personDetail = item;
             },
             showVideo () {
                 this.isShowVideo = true
                 this.isVideoState = true
+
+                let params = {
+                    from_practitioner: this.personDetail.from_practitioner,
+                    to_practitioner: this.personDetail.to_practitioner,
+                    content: ''
+                }
+                // 判断好友是否在线
+                if(this.personDetail.online){
+                    params.content = '通话请求'
+                }else{
+                    params.content = '离线消息'
+                }
+
+                APINOTI.noterequest(params).then(res=>{
+                    console.log(res)
+                })
+
                 // document.querySelector("#localVideo").style.width = this.screenWidth +'px'
                 // document.querySelector("#localVideo").style.height = this.screenHeight +'px'
                 // this.videoOnline();
                 this.dropImg = this.videoMes[0].photo;
             },
-            closeAudio () {
-                alert(1)
-                this.RTC.closeAudio();
-            },
-            openAudio (){
-                this.RTC.openAudio();
-            },
-            closeVideo () {
-                this.RTC.closeVideo();
-            },
-            openVideo (){
-                this.RTC.openVideo();
-            },
+            // closeAudio () {
+            //     alert(1)
+            //     this.RTC.closeAudio();
+            // },
+            // openAudio (){
+            //     this.RTC.openAudio();
+            // },
+            // closeVideo () {
+            //     this.RTC.closeVideo();
+            // },
+            // openVideo (){
+            //     this.RTC.openVideo();
+            // },
             stopWs (){
                 // this.RTC.global.websocket.close();
                 this.isShowVideo=false;
             },
-            videoOnline () {
-                var roomid= 900099;
-                var stream;
-                let self = this;
-                this.RTC = new WebRTCAPI({
-                    useCloud: 0,
-                    "userId": 'video_15770908',
-                    "userSig": "eJxNjV1PgzAUhv8L18adtisf3rHBIhGibDqGWdLUUWajg44VNjT*dxuCmZfned73Pd-Wc7y65btd3Vaa6V4J684C62bAshCVlqUUjYGduWqGqOOAB*6Y4ErJgnHNSFP8K56KDzYow9AUAIgDmI5SXJRsBOOlHnYRpRSbyGg70ZxkXRmBAVGECcBVankQQ4V4totcgv-*yb3BSZjPozTwowWZrbv2zZ5myxSSdWbLz4fzF**zkm8nM82jMFiq-WMr0*jdjxVfJIFHafoaH8p8E3R*WxX0Pier7UT23tP5MsfJyzF0s6P18wtG-lpU",
-                    "sdkAppId":  1400037025,
-                    "accountType": 14418
-                });
-                console.log(this.RTC,'sdsadsads')
-                this.RTC.getLocalStream({
-                    video:true,
-                    audio:true,
-                    attributes:{
-                        width:640,
-                        height:480,
-                        frameRate:20
-                    }
-                },function( info ){
-                    // info { stream }
-                    console.log(info,'----------')
-                    stream = info.stream;
-                },function ( error ){
-                    console.error( error )
-                });
-                //初始化完成后调用进房接口
-                this.RTC.enterRoom({
-                    roomid : roomid
-                },function(){
-                    //进房成功，音视频推流
-
-                    self.RTC.startRTC({
-                        role : "user",   //画面设定的配置集名 （见控制台 - 画面设定 )
-                        stream: stream
-                    });
-                },function(){
-
-                });
-
-                //本地流 新增
-                this.RTC.on("onLocalStreamAdd", function(data){
-                    if( data && data.stream){
-                        document.querySelector("#localVideo").srcObject = data.stream;
-                    }
-                });
-                //远端流 新增/更新
-                this.RTC.on("onRemoteStreamUpdate", function(data){
-                    if( data && data.stream){
-                        console.log(data.stream,'////////////////////')
-                        document.querySelector("#remoteVideo").srcObject = data.stream;
-                    }
-                });
-                this.RTC.on( 'onStreamNotify' , function( info ){
-                    console.log(info,'ghjkl')
-                })
-            }
+            // videoOnline () {
+            //     var roomid= 900099;
+            //     var stream;
+            //     let self = this;
+            //     this.RTC = new WebRTCAPI({
+            //         useCloud: 0,
+            //         "userId": 'video_15770908',
+            //         "userSig": "eJxNjV1PgzAUhv8L18adtisf3rHBIhGibDqGWdLUUWajg44VNjT*dxuCmZfned73Pd-Wc7y65btd3Vaa6V4J684C62bAshCVlqUUjYGduWqGqOOAB*6Y4ErJgnHNSFP8K56KDzYow9AUAIgDmI5SXJRsBOOlHnYRpRSbyGg70ZxkXRmBAVGECcBVankQQ4V4totcgv-*yb3BSZjPozTwowWZrbv2zZ5myxSSdWbLz4fzF**zkm8nM82jMFiq-WMr0*jdjxVfJIFHafoaH8p8E3R*WxX0Pier7UT23tP5MsfJyzF0s6P18wtG-lpU",
+            //         "sdkAppId":  1400037025,
+            //         "accountType": 14418
+            //     });
+            //     console.log(this.RTC,'sdsadsads')
+            //     this.RTC.getLocalStream({
+            //         video:true,
+            //         audio:true,
+            //         attributes:{
+            //             width:640,
+            //             height:480,
+            //             frameRate:20
+            //         }
+            //     },function( info ){
+            //         // info { stream }
+            //         console.log(info,'----------')
+            //         stream = info.stream;
+            //     },function ( error ){
+            //         console.error( error )
+            //     });
+            //     //初始化完成后调用进房接口
+            //     this.RTC.enterRoom({
+            //         roomid : roomid
+            //     },function(){
+            //         //进房成功，音视频推流
+            //
+            //         self.RTC.startRTC({
+            //             role : "user",   //画面设定的配置集名 （见控制台 - 画面设定 )
+            //             stream: stream
+            //         });
+            //     },function(){
+            //
+            //     });
+            //
+            //     //本地流 新增
+            //     this.RTC.on("onLocalStreamAdd", function(data){
+            //         if( data && data.stream){
+            //             document.querySelector("#localVideo").srcObject = data.stream;
+            //         }
+            //     });
+            //     //远端流 新增/更新
+            //     this.RTC.on("onRemoteStreamUpdate", function(data){
+            //         if( data && data.stream){
+            //             console.log(data.stream,'////////////////////')
+            //             document.querySelector("#remoteVideo").srcObject = data.stream;
+            //         }
+            //     });
+            //     this.RTC.on( 'onStreamNotify' , function( info ){
+            //         console.log(info,'ghjkl')
+            //     })
+            // }
         },
         filters:{
              formatDateTime(inputTime){

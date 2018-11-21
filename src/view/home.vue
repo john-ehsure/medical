@@ -50,7 +50,7 @@
     </div>
     <div class="medical-page_view">
       <transition name="fade">
-        <router-view :contentWidth="contentWidth" :userID="person.name" :usersig="usersig" :practitionerId = "practitionersEditId"/>
+        <router-view :contentWidth="contentWidth" :userID="person.name" :userSig="userSig" :practitionerId = "practitionersEditId"/>
       </transition>
     </div>
      <div class="medical-guide" v-if="isFristLogin">
@@ -100,7 +100,7 @@ export default {
         ]
       },
       practitionersEditId: null, // 医生用户的id
-      usersig: null, // 音视频所需要的id
+      userSig: null, // 音视频所需要的id
       formPractitioner: {
         // id: null,
         user: null,
