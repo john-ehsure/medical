@@ -198,7 +198,7 @@ export default {
           departmentName: '骨科',
           time: '2018.01.01',
           isRead: true,
-          mesType: 3,//通知列表详情  1、本地新进患者通知 2、检查结果通知 3、转诊申请通知 4、转诊结果通知
+          mesType: 3, // 通知列表详情  1、本地新进患者通知 2、检查结果通知 3、转诊申请通知 4、转诊结果通知
           stateDeatilVisible:false,//患者状态详情 显示隐藏
           transferApply:[//转诊申请通知
             {title: '主治医师', value: '王主任', isBotton: false},

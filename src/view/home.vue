@@ -50,7 +50,7 @@
     </div>
     <div class="medical-page_view">
       <transition name="fade">
-        <router-view :contentWidth="contentWidth" :userID="person.name" :userSig="userSig" :practitionerId = "practitionersEditId"/>
+        <router-view :contentWidth="contentWidth" :userID="person.name" :userSig="userSig" :practitionerId = "formPractitioner.user"/>
       </transition>
     </div>
      <div class="medical-guide" v-if="isFristLogin">
@@ -151,6 +151,7 @@ export default {
         this.formPractitioner.qualification_issuer = res[0].qualification_issuer
         this.formPractitioner.qualification_period = res[0].qualification_period
         this.formPractitioner.photo = res[0].photo
+        this.notification() // 消息推送 websocket
       })
     },
     //  获取用户信息
@@ -174,6 +175,32 @@ export default {
       this.contentWidth = document.documentElement.clientWidth - pageSildeWidth
         // console.log(this.$refs.pageSilde.offsetWidth,this.contentWidth)
     },
+      /**
+       * 消息推送
+       */
+      notification(){
+          let baseUrl = '47.94.6.105:80';
+          alert(this.practitionersEditId)
+          this.chatSocket = new WebSocket(`ws://47.94.6.105:80/ws/notification/${this.formPractitioner.user}/`);
+          this.chatSocket.onopen = this.websocketopen;
+          this.chatSocket.onmessage = this.websocketonmessage;
+          this.chatSocket.onclose = this.websocketclose;
+          this.chatSocket.onerror = this.websocketerror;
+
+      },
+      websocketopen(){//打开
+          console.log("WebSocket连接成功")
+      },
+      websocketonmessage(e){ //数据接收
+          console.log(e)
+          // this.productinfos = JSON.parse(e.data);
+      },
+      websocketclose(){  //关闭
+          console.log("WebSocket关闭");
+      },
+      websocketerror(){  //失败
+          console.log("WebSocket连接失败");
+      },
     //  页面跳转
     linkTo (item) {
       // console.log(item)

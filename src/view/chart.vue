@@ -70,7 +70,7 @@
                         <input type="text" autocomplete="off" v-model="imSendMes" placeholder="请输入内容" class="el-input__inner">
                     </div>
                 <!--</el-form>-->
-                <el-button type="success" class="imSend-botton" @click.native="sendMes">发送</el-button>
+                <el-button type="success" class="imSend-botton" @click.native="sendMsg">发送</el-button>
             </div>
         </div>
         <!--测试功能使用-->
@@ -144,7 +144,6 @@
     //<!-- TIC SDK -->
     // require('../WebWX/TICSDK.mini.js')
     // import TICSDK from '../WebWX/TICSDK.mini.js'
-
     require('../WebWX/OSS.min.js')
     import slideTab from '../components/slideTab/index.vue'
     import APINOTI from '@/api/api_noti.js'
@@ -159,6 +158,14 @@
                 type: String,
                 default: ''
             },
+            contentWidth: {
+                type: Number,
+                default: 200
+            },
+            practitionerId: { // 医生自己的id
+                type: Number,
+                default: 1
+            }
         },
         components: {
             slideTab
@@ -166,7 +173,7 @@
         data () {
             return {
                 //人元列表
-                tabNum: 0,
+                tabNum: null,
                 personlistData: [
                     // {img: require("./../assets/logo.png"), personName: '刘奇', downHospital: '北医三院', downDoctor: '王主任', personSex: 0, personNumber: '00010220', mesNum: 0, finish: 3, unfinish: 4 ,mesType: 1,time: '2018.01.01',isRead: true},
                     // {img: require("./../assets/logo.png"), personName: '刘1', downHospital: '北医三院', downDoctor: '刘主任', personSex: 1, personNumber: '00010220', mesNum: 2, finish: 0, unfinish: 2,mesType: 2,time: '2018.01.02',isRead: true},
@@ -204,21 +211,23 @@
                     {isSelf:true,photo:require("./../assets/logo.png")},
                     {isSelf:false,photo:require("./../assets/photo.jpg")},
                 ],
-                toolPencilType: true,//铅笔的颜色 true 为红色  false 为青色
-                dropImg:'',//默认编辑的图片
-                isShowVideo: false,//是否显示视频界面
-                imDialogueHei: 400,//聊天信息部分默认高度
-                screenWidth: 1000,//屏幕宽度
-                screenHeight: 500,//屏幕高度
-                RTC: {},//视频流对象信息
-                imSendMes: '',//im部分聊天发送信息
+                toolPencilType: true, // 铅笔的颜色 true 为红色  false 为青色
+                dropImg: '', // 默认编辑的图片
+                isShowVideo: false, // 是否显示视频界面
+                imDialogueHei: 400, // 聊天信息部分默认高度
+                screenWidth: 1000, // 屏幕宽度
+                screenHeight: 500, // 屏幕高度
+                RTC: {}, // 视频流对象信息
+                imSendMes: '', // im部分聊天发送信息
+
+                chatSocket: null, // 消息推送
 
                 // 以下为音视频 im 白板部分所需要的字段
-                step:'first',
+                step: 'first',
                 pushModel: 0, // 1  自动推流 0 手动推流
                 account: localStorage.getItem('IIC_USERID'),
                 // userID: sessionStorage.getItem('IIC_USERNAME'),  //医生端登陆时的用户名
-                sdkAppId: '1400159415',   // 腾讯sdkAppId
+                sdkAppId: '1400159415',   //  腾讯sdkAppId
                 // userSig: '',    //用户签名
                 nickName: sessionStorage.getItem('IIC_NICKNAME'), //用户名称+userID
                 roomID:'',
@@ -238,9 +247,17 @@
                 cameraIndex: 0,
                 micIndex: 0,
 
-                imMsg: {
-                    common: {},
-                    custom: {}
+                imMsg: { // im聊天 发送信息 内容和对方的id
+                    common: { // 普通消息文本
+                        data: '',
+                        toUser: ''
+                    },
+                    custom: { // 自定义消息文本
+                        data: '',
+                        desc: '',
+                        ext: '',
+                        toUser: ''
+                    }
                 },
 
                 boardData: {
@@ -304,17 +321,46 @@
             this.screenWidth = document.documentElement.clientWidth;
             /*im 聊天部分高度设置*/
             this.imDialogueHei = this.screenHeight - this.$refs.imSend.offsetHeight - this.$refs.imTitle.offsetHeight;
-            this.boardroomnum()
+
             this.getTencentConf()
+            // this.notification()//消息推送
+            this.boardroomnum()
         },
         watch: {
             'imDialogue': 'scrollToBottom'
         },
         methods: {
             /**
+             * 消息推送
+             */
+            notification(){
+                let baseUrl = '47.94.6.105:80';
+                // alert(this.practitionerId)
+                this.chatSocket = new WebSocket(`ws://47.94.6.105:80/ws/notification/${this.practitionerId}/`);
+                this.chatSocket.onopen = this.websocketopen;
+                this.chatSocket.onmessage = this.websocketonmessage;
+                this.chatSocket.onclose = this.websocketclose;
+                this.chatSocket.onerror = this.websocketerror;
+
+            },
+            websocketopen(){//打开
+                console.log("WebSocket连接成功")
+            },
+            websocketonmessage(e){ //数据接收
+                console.log(e)
+                // this.productinfos = JSON.parse(e.data);
+            },
+            websocketclose(){  //关闭
+                console.log("WebSocket关闭");
+            },
+            websocketerror(){  //失败
+                console.log("WebSocket连接失败");
+            },
+            /**
              * 设置医生的默认信息
              */
             getTencentConf () {
+                this.nickName = '用户昵称' + this.userID
                 this.loginConfig = {
                     identifier: this.userID,
                     identifierNick: '用户昵称' + this.userID,
@@ -526,6 +572,7 @@
 
                 // 接收到普通消息
                 this.ticSdk.on(TICSDK.CONSTANT.EVENT.IM.MSG_NOTIFY, msgs => {
+                    alert(msgs,'消息提示')
                     console.log('TICSDK.CONSTANT.EVENT.IM.MSG_NOTIFY');
                 });
 
@@ -669,7 +716,10 @@
                         v.img =  require("./../assets/logo.png")
                     })
                     this.personlistData = res
-                    this.personDetail = this.personlistData[0];
+                    // this.personDetail = this.personlistData[0];
+                    this.changeList(this.personlistData[0], 0)
+                    // im信息发送的 对方id
+                    // this.imMsg.common.toUser = this.personDetail.to_practitioner
                 })
             },
             /**
@@ -705,17 +755,17 @@
                 itemImg.style.opacity = '1'
             },
             /**
-             * im信息发送
+             *  im 发送普通文本消息
              */
-            sendMes () {
-                // this.imSendMes    imDialogue
+            sendMsg () {
                 if(this.imSendMes == ''){
                     return
                 }
                 let newMes = {isSelf:true,title:this.imSendMes};
                 this.imDialogue.push(newMes);
-                this.imSendMes = '';
                 console.log('11s')
+                this.ticSdk.sendTextMessage(this.imSendMes, this.imMsg.common.toUser);
+                this.imSendMes = '';
             },
             /**
              * 跳转到滚动跳底部
@@ -745,6 +795,8 @@
 
                 this.tabNum = index
                 this.personDetail = item;
+                // im信息发送的 对方id
+                this.imMsg.common.toUser = this.personDetail.to_practitioner
             },
             showVideo () {
                 this.isShowVideo = true
