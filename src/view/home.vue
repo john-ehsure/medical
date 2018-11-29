@@ -180,7 +180,7 @@ export default {
        */
       notification(){
           let baseUrl = '47.94.6.105:80';
-          alert(this.practitionersEditId)
+          // alert(this.practitionersEditId)
           this.chatSocket = new WebSocket(`ws://47.94.6.105:80/ws/notification/${this.formPractitioner.user}/`);
           this.chatSocket.onopen = this.websocketopen;
           this.chatSocket.onmessage = this.websocketonmessage;

@@ -807,6 +807,7 @@
                     to_practitioner: this.personDetail.to_practitioner,
                     content: ''
                 }
+                console.log(params)
                 // 判断好友是否在线
                 if(this.personDetail.online){
                     params.content = '通话请求'
