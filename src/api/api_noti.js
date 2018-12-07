@@ -16,4 +16,5 @@ export default {
   noterequest: params => {
     return API.POST('/noti_api/note', qs.stringify(params))
   },
+
 }

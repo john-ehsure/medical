@@ -497,7 +497,9 @@
                                     <el-col :span="24">
                                         <div class="personList-formBox_btn">
                                             <el-button type="primary" size="mini" icon="el-icon-check" @click="submitBasicCheck('womenReproductiveCheckData', fBox, itemNum, fBoxNum)"></el-button>
-                                            <el-button size="mini" icon="el-icon-view"></el-button>
+                                            <el-button size="mini" icon="el-icon-view">
+                                                <input type="file" @change="upload(fBoxNum)"/>
+                                            </el-button>
                                         </div>
                                     </el-col>
                                 </el-row>
@@ -1303,6 +1305,9 @@ export default {
   mounted () {
   },
   methods: {
+      upload(num){
+        alert(num)
+      },
     //  添加新患者
     addTabPerson () {
       this.newAddPerson = true
@@ -1325,7 +1330,7 @@ export default {
         if (this.firstEnter) { //  判断是否是第一次进入患者列表
           this.changeList(this.personDetail.topTitle, 0) // 获取患者列表相关信息
         } else {
-          this.changeList(this.tablistData[this.tabNum], this.tabNum)
+          this.changeList(this.tablistData[this.tabNum], null)
         }
         // this.firstEnter = false
       })
@@ -1401,6 +1406,7 @@ export default {
     },
     //  列表选择事件
     changeList (item ,index) {
+          console.log(this.tabNum,index)
       if (this.tabNum == index) {
         return;
       }
@@ -1618,6 +1624,8 @@ export default {
     },
     //    基础病要表单提交
     submitBasicCheck (dataPageName, fBox, itemNum,fBoxNum) { // dataPageName 栏目的字段名称 fBox  单个表单集合  itemNum 页码  fBoxNum 单页的form序号
+      // console.log( itemNum,fBoxNum)
+      //   return
       let formName = fBox.formName
       let self = this
       let planitem = []

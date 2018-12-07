@@ -283,7 +283,7 @@
                     closeLocalMedia: true,
                     audio: true,
                     video: true,
-                    role: null
+                    role: 'user'
                 },
 
                 boardConfig: {
@@ -323,39 +323,13 @@
             this.imDialogueHei = this.screenHeight - this.$refs.imSend.offsetHeight - this.$refs.imTitle.offsetHeight;
 
             this.getTencentConf()
-            // this.notification()//消息推送
             this.boardroomnum()
         },
         watch: {
             'imDialogue': 'scrollToBottom'
         },
         methods: {
-            /**
-             * 消息推送
-             */
-            notification(){
-                let baseUrl = '47.94.6.105:80';
-                // alert(this.practitionerId)
-                this.chatSocket = new WebSocket(`ws://47.94.6.105:80/ws/notification/${this.practitionerId}/`);
-                this.chatSocket.onopen = this.websocketopen;
-                this.chatSocket.onmessage = this.websocketonmessage;
-                this.chatSocket.onclose = this.websocketclose;
-                this.chatSocket.onerror = this.websocketerror;
 
-            },
-            websocketopen(){//打开
-                console.log("WebSocket连接成功")
-            },
-            websocketonmessage(e){ //数据接收
-                console.log(e)
-                // this.productinfos = JSON.parse(e.data);
-            },
-            websocketclose(){  //关闭
-                console.log("WebSocket关闭");
-            },
-            websocketerror(){  //失败
-                console.log("WebSocket连接失败");
-            },
             /**
              * 设置医生的默认信息
              */
@@ -464,6 +438,7 @@
                 });
 
                 this.ticSdk.on(TICSDK.CONSTANT.EVENT.WEBRTC.WEBSOCKET_NOTIFY, data => {
+                    console.log(data,'441行')
                     console.log('WebRTC WEBSOCKET_NOTIFY');
                     this.showTip('WebRTC WEBSOCKET_NOTIFY');
                 });
@@ -572,7 +547,7 @@
 
                 // 接收到普通消息
                 this.ticSdk.on(TICSDK.CONSTANT.EVENT.IM.MSG_NOTIFY, msgs => {
-                    alert(msgs,'消息提示')
+                    console.log(msgs,'消息提示')
                     console.log('TICSDK.CONSTANT.EVENT.IM.MSG_NOTIFY');
                 });
 
@@ -706,6 +681,9 @@
                 alert('Error:' + title)
                 console.log('Error:' + title)
             },
+            showTip(mes){
+              alert(mes)
+            },
             /**
              * 获取左侧医生好友列表
              */
@@ -785,18 +763,21 @@
                 if (this.tabNum == index) {
                     return;
                 }
-                // let params = {
-                //     "to_practitioner" : item.to_practitioner,
-                //     "from_practitioner":item.from_practitioner
-                // }
-                // APINOTI.creatboardroomnum(params).then(res=>{
-                //     console.log(res)
-                // })
+
 
                 this.tabNum = index
                 this.personDetail = item;
+                this.joinRoom(item.id)
                 // im信息发送的 对方id
                 this.imMsg.common.toUser = this.personDetail.to_practitioner
+            },
+            // 加入房间
+            joinRoom(roomnum) {
+                console.log(roomnum,'房间号')
+                this.ticSdk.joinClassroom(roomnum, this.webrtcConfig, this.boardConfig);
+                console.log('joinRoom succesfully');
+                //this.chatting();
+                //this.streaming();
             },
             showVideo () {
                 this.isShowVideo = true

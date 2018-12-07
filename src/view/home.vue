@@ -64,6 +64,7 @@
 <script>
 import APIUSER from '@/api/api_user.js'
 import APIDATA from '@/api/api_data.js'
+import APINOTI from '@/api/api_noti.js'
 import {bus} from '@/bus/bus.js'
 export default {
   name: 'Home',
@@ -137,6 +138,18 @@ export default {
         this.isFristLogin = false
       })
     },
+    //  群发消息
+      sendAllMes(){
+        let params = {
+            from_practitioner: this.practitionersEditId,
+            to_practitioner: 2,
+            content: '@online@',
+            sent:'1'
+        }
+          APINOTI.noterequest(params).then(res=>{
+              console.log(res)
+          })
+      },
     //  获取个人信息
     practitionersDetail (id) {
       APIDATA.practitionersDetail({user:id}).then((res) => {
@@ -152,6 +165,7 @@ export default {
         this.formPractitioner.qualification_period = res[0].qualification_period
         this.formPractitioner.photo = res[0].photo
         this.notification() // 消息推送 websocket
+          this.sendAllMes()
       })
     },
     //  获取用户信息
